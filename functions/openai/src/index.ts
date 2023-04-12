@@ -13,7 +13,7 @@ export const hello = onRequest(helloSpec, async (req, res) => {
     const userId = '1'
     const model = 'gpt-3.5-turbo'
     const maxTokens = 100
-    const temperature = 0.9
+    const temperature = 1
     const result = await addChatRoom(userId, model, maxTokens, temperature)
     res.json({
       status: 'Successfully Created ChatRoom!',
