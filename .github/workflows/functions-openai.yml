@@ -12,6 +12,10 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+      - id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.SKEET_GCP_SA_KEY }}
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Install Node.js
@@ -27,4 +31,4 @@ jobs:
       - name: Build App
         run: cd ./functions/openai && yarn build
       - name: Deploy to Firebase
-        run: firebase deploy --token ${{ secrets.FIREBASE_DEPLOY_TOKEN }} --only functions
+        run: firebase deploy --only functions
