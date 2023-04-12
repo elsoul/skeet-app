@@ -1,0 +1,8 @@
+18:23:07.594 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+18:23:07.661 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+18:23:09.037 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - skeet-example-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 50ms, init: 0ms
+18:23:09.065 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace skeet-example-default-rtdb status Active to Active
+18:26:05.514 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+18:26:05.518 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: skeet-example-default-rtdb
+18:26:05.522 [NamespaceSystem-akka.actor.default-dispatcher-11] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for skeet-example-default-rtdb
+18:26:05.524 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.

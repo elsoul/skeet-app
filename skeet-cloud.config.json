@@ -1,0 +1,73 @@
+{
+  "app": {
+    "name": "skeet-app",
+    "projectId": "skeet-example",
+    "region": "europe-west4",
+    "appUrl": ""
+  },
+  "functions": [
+    {
+      "name": "openai",
+      "methods": [
+        {
+          "name": "hello",
+          "url": "",
+          "pubsub": false,
+          "scheduler": ""
+        },
+        {
+          "name": "openaichatroom",
+          "url": "",
+          "pubsub": true,
+          "scheduler": "every 24 hours"
+        }
+      ]
+    }
+  ],
+  "cloudArmor": [
+    {
+      "securityPolicyName": "skeet-skeet-example-armor",
+      "rules": [
+        {
+          "priority": "10",
+          "description": "Allow Your Home IP addresses",
+          "options": {
+            "src-ip-ranges": "77.164.253.253,24.132.70.177",
+            "action": "allow"
+          }
+        },
+        {
+          "priority": "100",
+          "description": "Defense from SQLi attack",
+          "options": {
+            "action": "deny-403",
+            "expression": "evaluatePreconfiguredExpr('sqli-stable')"
+          }
+        },
+        {
+          "priority": "200",
+          "description": "Defense from XSS attack",
+          "options": {
+            "action": "deny-403",
+            "expression": "evaluatePreconfiguredExpr('xss-stable')"
+          }
+        },
+        {
+          "priority": "300",
+          "description": "Defense from NodeJS attack",
+          "options": {
+            "action": "deny-403",
+            "expression": "evaluatePreconfiguredExpr('nodejs-v33-stable')"
+          }
+        },
+        {
+          "priority": "2147483647",
+          "description": "Deny All IP addresses",
+          "options": {
+            "action": "deny-403"
+          }
+        }
+      ]
+    }
+  ]
+}
