@@ -16,10 +16,10 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          service_account: 'skeet-example@skeet-example.iam.gserviceaccount.com'
+          credentials_json: ${{ secrets.SKEET_GCP_SA_KEY }}
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-cloud-functions@v1'
         with:
-          name: 'openai'
+          name: 'skeet-openai'
           runtime: 'nodejs18'
