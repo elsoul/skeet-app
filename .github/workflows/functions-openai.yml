@@ -23,8 +23,8 @@ jobs:
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
       - name: Install dependencies
-        run: cd ./functions/openai yarn install --frozen-lockfile
+        run: cd ./functions/openai && yarn install --frozen-lockfile
       - name: Build App
-        run: cd ./functions/openai yarn build
+        run: cd ./functions/openai && yarn build
       - name: Deploy to Firebase
         run: firebase deploy --token ${{ secrets.FIREBASE_DEPLOY_TOKEN }} --only functions
