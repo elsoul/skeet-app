@@ -16,10 +16,10 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          service_account: 'figaro-lab2@figaro-lab2.iam.gserviceaccount.com'
+          service_account: 'skeet-example@skeet-example.iam.gserviceaccount.com'
 
       - id: 'deploy'
-        uses: 'google-github-actions/deploy-cloud-functions@v2'
+        uses: 'google-github-actions/deploy-cloud-functions@v1'
         with:
           name: 'openai'
           runtime: 'nodejs18'
