@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import { onRequest } from 'firebase-functions/v2/https'
 import { chat } from '@/lib/openai/openAi'
 import { helloSpec, openaichatroomSpec } from '@/spec'
-import { addChatRoom, addMessage, getRoomMessages, getUser } from '@/models'
+import { addChatRoom, getUserAuth, addMessage, getRoomMessages } from '@/models'
 
 dotenv.config()
 admin.initializeApp()
@@ -40,7 +40,7 @@ export const openaichatroom = onRequest(
         maxTokens: req.body.maxTokens || 700,
         temperature: req.body.temperature || 1,
       }
-      const user = await getUser(req)
+      const user = await getUserAuth(req)
       if (body.chatRoomId == '') {
         const chatRoom = await addChatRoom(
           user.uid,
