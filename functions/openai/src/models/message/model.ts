@@ -1,4 +1,4 @@
-import { ChatRoom } from '@/models/chatRoom/model'
+import { ChatRoom } from '@/models'
 import { Ref } from 'typesaurus'
 
 export type Message = {

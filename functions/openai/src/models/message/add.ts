@@ -2,6 +2,10 @@ import { format } from 'date-fns'
 import { add, collection, ref, subcollection } from 'typesaurus'
 import { ChatRoom, Message, User } from '@/models'
 
+const collectionName = 'messages'
+const parentCollectionName = 'users'
+const parent2CollectionName = 'chatRooms'
+
 export const addMessage = async (
   userId: string,
   chatRoomId: string,
@@ -9,23 +13,21 @@ export const addMessage = async (
   role = 'user'
 ) => {
   try {
-    const usersCollection = collection<User>('users')
-    const chatRoomsCollection = subcollection<ChatRoom, User>(
-      'chatRooms',
-      usersCollection
+    const parentCollection = collection<User>(parentCollectionName)
+    const parent2Collection = subcollection<ChatRoom, User>(
+      parent2CollectionName,
+      parentCollection
     )
-    const user = ref(usersCollection, userId)
+    const user = ref(parentCollection, userId)
     const messagesCollection = subcollection<Message, ChatRoom, User>(
-      'messages',
-      chatRoomsCollection
+      collectionName,
+      parent2Collection
     )
-    const userChatRooms = ref(chatRoomsCollection(user), chatRoomId)
-    const message = messagesCollection(
-      ref(chatRoomsCollection(user), chatRoomId)
-    )
+    const parent2Ref = ref(parent2Collection(user), chatRoomId)
+    const message = messagesCollection(ref(parent2Collection(user), chatRoomId))
     const today = format(new Date(), 'yyyy-MM-dd-HH:mm:ss')
     add(message, {
-      chatRoom: userChatRooms,
+      chatRoom: parent2Ref,
       role,
       content,
       createdAt: today,

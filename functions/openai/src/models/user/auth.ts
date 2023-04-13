@@ -8,6 +8,6 @@ export const getUserAuth = async (req: Request) => {
     const bearer = token.split('Bearer ')[1]
     return await auth().verifyIdToken(bearer)
   } catch (error) {
-    throw new Error(`getUser: ${error}`)
+    throw new Error(`getUserAuth: ${error}`)
   }
 }

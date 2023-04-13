@@ -2,16 +2,20 @@ import { collection, get, order, query, ref, subcollection } from 'typesaurus'
 import { ChatRoom, Message, User } from '@/models'
 import { CreateChatCompletionRequest } from 'openai'
 
+const collectionName = 'messages'
+const parentCollectionName = 'users'
+const parent2CollectionName = 'chatRooms'
+
 export const getMessages = async (userId: string, chatRoomId: string) => {
   try {
-    const usersCollection = collection<User>('users')
+    const usersCollection = collection<User>(parentCollectionName)
     const chatRoomsCollection = subcollection<ChatRoom, User>(
-      'chatRooms',
+      parent2CollectionName,
       usersCollection
     )
     const user = ref(usersCollection, userId)
     const messagesCollection = subcollection<Message, ChatRoom, User>(
-      'messages',
+      collectionName,
       chatRoomsCollection
     )
     const userChatRooms = ref(chatRoomsCollection(user), chatRoomId)
@@ -27,14 +31,14 @@ export const getMessages = async (userId: string, chatRoomId: string) => {
 
 export const getRoomMessages = async (userId: string, chatRoomId: string) => {
   try {
-    const usersCollection = collection<User>('users')
+    const usersCollection = collection<User>(parentCollectionName)
     const chatRoomsCollection = subcollection<ChatRoom, User>(
-      'chatRooms',
+      parent2CollectionName,
       usersCollection
     )
     const user = ref(usersCollection, userId)
     const messagesCollection = subcollection<Message, ChatRoom, User>(
-      'messages',
+      collectionName,
       chatRoomsCollection
     )
     const userChatRooms = ref(chatRoomsCollection(user), chatRoomId)
