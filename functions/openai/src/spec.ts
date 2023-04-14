@@ -3,12 +3,13 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 const project = process.env.PROJECT_ID || ''
+const region = process.env.REGION || ''
 const serviceAccount = `${project}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${project}-con`
 const cors = ['http://localhost:4000']
 
 export const helloSpec: HttpsOptions = {
-  region: 'europe-west4',
+  region,
   cpu: 1,
   memory: '1GiB',
   maxInstances: 100,
@@ -22,7 +23,7 @@ export const helloSpec: HttpsOptions = {
 }
 
 export const openaichatroomSpec: HttpsOptions = {
-  region: 'europe-west4',
+  region,
   cpu: 1,
   memory: '1GiB',
   maxInstances: 100,
