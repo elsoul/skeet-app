@@ -2,11 +2,23 @@ import admin from 'firebase-admin'
 import dotenv from 'dotenv'
 import { onRequest } from 'firebase-functions/v2/https'
 import { chat } from '@/lib/openai/openAi'
-import { helloSpec, openaichatroomSpec } from '@/spec'
+import { helloSpec, openaichatroomSpec, rootSpec } from '@/spec'
 import { addChatRoom, getUserAuth, addMessage, getRoomMessages } from '@/models'
 
 dotenv.config()
 admin.initializeApp()
+
+export const root = onRequest(rootSpec, async (req, res) => {
+  try {
+    res.json({
+      status: 'Skeet APP is Running!',
+    })
+  } catch (error) {
+    const errorLog = `root - ${error}`
+    console.log(errorLog)
+    res.status(400).json({ result: 'root error!' })
+  }
+})
 
 export const hello = onRequest(helloSpec, async (req, res) => {
   try {
