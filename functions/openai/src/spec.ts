@@ -1,6 +1,8 @@
 import { HttpsOptions } from 'firebase-functions/v2/https'
+import dotenv from 'dotenv'
 
-const project = 'skeet-example'
+dotenv.config()
+const project = process.env.PROJECT_ID || ''
 const serviceAccount = `${project}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${project}-con`
 const cors = ['http://localhost:4000']
