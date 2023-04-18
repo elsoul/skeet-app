@@ -2,7 +2,7 @@
   "app": {
     "name": "skeet-app",
     "projectId": "skeet-example",
-    "region": "europe-west4",
+    "region": "europe-west6",
     "appUrl": ""
   },
   "functions": [

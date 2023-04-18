@@ -19,6 +19,9 @@
     "indexes": "firestore.indexes.json"
   },
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "functions": {
       "port": 5001
     },
@@ -32,5 +35,9 @@
       "enabled": true
     },
     "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "src/public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
