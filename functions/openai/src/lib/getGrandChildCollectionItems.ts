@@ -1,6 +1,6 @@
 import { collection, subcollection, query, order } from 'typesaurus'
 
-export const getGrandChildCollectionItems = async <GrandChild, Parent, Child>(
+export const getGrandChildCollectionItems = async <GrandChild, Child, Parent>(
   parentCollectionName: string,
   childCollectionName: string,
   grandChildCollectionName: string,

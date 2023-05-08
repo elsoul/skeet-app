@@ -7,12 +7,16 @@ import {
   ChatCompletionRequestMessageRoleEnum,
   CreateChatCompletionRequest,
 } from 'openai'
-import { createUserChatRoom, getUserChatRoomMessages } from '@/route'
+import {
+  createUserChatRoom,
+  getUserChatRoomMessages,
+  addUserChatRoomMessage,
+} from '@/route'
 
 dotenv.config()
 admin.initializeApp()
 
-export { createUserChatRoom, getUserChatRoomMessages }
+export { createUserChatRoom, getUserChatRoomMessages, addUserChatRoomMessage }
 
 export const root = onRequest(rootSpec, async (req, res) => {
   try {

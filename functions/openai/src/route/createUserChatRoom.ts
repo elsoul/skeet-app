@@ -12,8 +12,6 @@ export const createUserChatRoom = onRequest(rootSpec, async (req, res) => {
       systemContent:
         req.body.systemContent ||
         '優秀な女性アシスタント。物事を段階的に考えるのが得意です。優しい口調。できないことは言わない。',
-      userChatRoomId: req.body.userChatRoomId || '',
-      content: req.body.content,
       maxTokens: req.body.maxTokens || 700,
       temperature: req.body.temperature || 1,
       stream: req.body.stream || false,
@@ -29,7 +27,7 @@ export const createUserChatRoom = onRequest(rootSpec, async (req, res) => {
       email: user.email || '',
       iconUrl: user.photoURL || '',
     }
-    const userRef = await addCollectionItem(
+    const userRef = await addCollectionItem<User>(
       userCollectionName,
       userBody,
       user.uid
@@ -43,7 +41,7 @@ export const createUserChatRoom = onRequest(rootSpec, async (req, res) => {
       temperature: body.temperature,
       stream: body.stream,
     }
-    const userChatRoomRef = await addChildCollectionItem<User, UserChatRoom>(
+    const userChatRoomRef = await addChildCollectionItem<UserChatRoom, User>(
       userCollectionName,
       userChatRoomCollectionName,
       parentId,
@@ -55,26 +53,13 @@ export const createUserChatRoom = onRequest(rootSpec, async (req, res) => {
       role: 'system',
       content: body.systemContent,
     }
-    await addGrandChildCollectionItem<User, UserChatRoom, UserChatRoomMessage>(
+    await addGrandChildCollectionItem<UserChatRoomMessage, UserChatRoom, User>(
       userCollectionName,
       userChatRoomCollectionName,
       userChatRoomMessageCollectionName,
       user.uid,
       userChatRoomRef.id,
       systemMessage
-    )
-    const userMessage: UserChatRoomMessage = {
-      userChatRoomRef,
-      role: 'user',
-      content: body.content,
-    }
-    await addGrandChildCollectionItem<User, UserChatRoom, UserChatRoomMessage>(
-      userCollectionName,
-      userChatRoomCollectionName,
-      userChatRoomMessageCollectionName,
-      user.uid,
-      userChatRoomRef.id,
-      userMessage
     )
     res.json({ result: 'success!', userChatRoomRef })
   } catch (error) {

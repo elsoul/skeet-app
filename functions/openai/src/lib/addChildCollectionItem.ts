@@ -1,7 +1,7 @@
 import { add, collection, subcollection } from 'typesaurus'
 import { getTimestamp } from '@/utils/time'
 
-export const addChildCollectionItem = async <Parent, Child>(
+export const addChildCollectionItem = async <Child, Parent>(
   parentCollectionName: string,
   childCollectionName: string,
   parentId: string,
