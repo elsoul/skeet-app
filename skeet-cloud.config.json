@@ -16,7 +16,7 @@
           "scheduler": ""
         },
         {
-          "name": "openaichatroom",
+          "name": "createUserChatRoom",
           "url": "",
           "pubsub": true,
           "scheduler": "every 24 hours"

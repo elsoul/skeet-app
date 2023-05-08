@@ -14,7 +14,7 @@ export const rootSpec: HttpsOptions = {
   memory: '1GiB',
   maxInstances: 100,
   minInstances: 0,
-  concurrency: 1,
+  concurrency: 80,
   serviceAccount,
   ingressSettings: 'ALLOW_INTERNAL_AND_GCLB',
   vpcConnector,
@@ -22,7 +22,7 @@ export const rootSpec: HttpsOptions = {
   cors,
 }
 
-export const helloSpec: HttpsOptions = {
+export const privateSpec: HttpsOptions = {
   region,
   cpu: 1,
   memory: '1GiB',
@@ -30,21 +30,7 @@ export const helloSpec: HttpsOptions = {
   minInstances: 0,
   concurrency: 1,
   serviceAccount,
-  ingressSettings: 'ALLOW_INTERNAL_AND_GCLB',
-  vpcConnector,
-  vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
-  cors,
-}
-
-export const openaichatroomSpec: HttpsOptions = {
-  region,
-  cpu: 1,
-  memory: '1GiB',
-  maxInstances: 100,
-  minInstances: 0,
-  concurrency: 1,
-  serviceAccount,
-  ingressSettings: 'ALLOW_INTERNAL_AND_GCLB',
+  ingressSettings: 'ALLOW_INTERNAL_ONLY',
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
   cors,

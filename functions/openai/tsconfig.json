@@ -29,5 +29,6 @@
     "src/**/*",
     "lib/*",
     "lib/**/*",
+    "devBuild.ts"
   ]
 }
