@@ -1,4 +1,4 @@
-import { add, collection, subcollection } from 'typesaurus'
+import { add, collection, subcollection, set, get } from 'typesaurus'
 import { getTimestamp } from '@/utils/time'
 
 export const addGrandChildCollectionItem = async <GrandChild, Child, Parent>(
@@ -7,7 +7,8 @@ export const addGrandChildCollectionItem = async <GrandChild, Child, Parent>(
   grandChildCollectionName: string,
   parentId: string,
   childId: string,
-  params: GrandChild
+  params: GrandChild,
+  id?: string
 ) => {
   try {
     const parentCollection = collection<Parent>(parentCollectionName)
@@ -27,8 +28,15 @@ export const addGrandChildCollectionItem = async <GrandChild, Child, Parent>(
       createdAt: datetimeNow,
       updatedAt: datetimeNow,
     }
-    const res = await add(body, data)
-    return res
+    if (!id) {
+      return await add(body, data)
+    } else {
+      const collectionId = id || '1'
+      await set(body, collectionId, data)
+      const collectionRef = await get(body, collectionId)
+      if (!collectionRef) throw new Error('collectionRef is undefined')
+      return collectionRef.ref
+    }
   } catch (error) {
     throw new Error(`addSubcollectionItem: ${error}`)
   }

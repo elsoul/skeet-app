@@ -1,8 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { rootSpec } from '@/spec'
 import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
-import { addCollectionItem } from '@/lib/firestore/addCollectionItem'
 import {
+  addCollectionItem,
   addChildCollectionItem,
   addGrandChildCollectionItem,
 } from '@/lib/firestore'
