@@ -1,6 +1,6 @@
 import admin from 'firebase-admin'
 import dotenv from 'dotenv'
-import { onRequest } from 'firebase-functions/v2/https'
+import { Request, onRequest } from 'firebase-functions/v2/https'
 import { chat } from '@/lib/openai/openAi'
 import { rootSpec } from '@/spec'
 import {
@@ -17,6 +17,10 @@ dotenv.config()
 admin.initializeApp()
 
 export { createUserChatRoom, getUserChatRoomMessages, addUserChatRoomMessage }
+
+export interface TypedRequestBody<T> extends Request {
+  body: T
+}
 
 export const root = onRequest(rootSpec, async (req, res) => {
   try {
