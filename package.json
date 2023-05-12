@@ -1,6 +1,6 @@
 {
   "name": "skeet-example",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Skeet App",
   "main": "dist/index.js",
   "author": "ELSOUL LABO B.V.",

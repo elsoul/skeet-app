@@ -5,7 +5,7 @@ import {
   addCollectionItem,
   addChildCollectionItem,
   addGrandChildCollectionItem,
-} from '@/lib/firestore'
+} from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 

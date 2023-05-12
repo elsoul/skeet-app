@@ -4,7 +4,7 @@ import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import {
   addGrandChildCollectionItem,
   getGrandChildCollectionItems,
-} from '@/lib/firestore'
+} from '@skeet-framework/firestore'
 import { collection, get, ref, subcollection } from 'typesaurus'
 import {
   ChatCompletionRequestMessage,

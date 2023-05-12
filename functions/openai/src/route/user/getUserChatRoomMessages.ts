@@ -1,7 +1,7 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { rootSpec } from '@/spec'
 import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
-import { getGrandChildCollectionItems } from '@/lib/firestore'
+import { getGrandChildCollectionItems } from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
 import { GetUserChatRoomMessagesParams } from '@/types/http/getUserChatRoomParams'
 
