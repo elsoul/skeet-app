@@ -5,25 +5,6 @@
     "region": "europe-west6",
     "appUrl": ""
   },
-  "functions": [
-    {
-      "name": "openai",
-      "methods": [
-        {
-          "name": "hello",
-          "url": "",
-          "pubsub": false,
-          "scheduler": ""
-        },
-        {
-          "name": "createUserChatRoom",
-          "url": "",
-          "pubsub": true,
-          "scheduler": "every 24 hours"
-        }
-      ]
-    }
-  ],
   "cloudArmor": [
     {
       "securityPolicyName": "skeet-skeet-example-armor",

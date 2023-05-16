@@ -23,12 +23,5 @@
     }
   },
   "compileOnSave": true,
-  "include": [
-    ".eslintrc.json",
-    "src/*",
-    "src/**/*",
-    "lib/*",
-    "lib/**/*",
-    "devBuild.ts"
-  ]
+  "include": ["src/*", "src/**/*"]
 }

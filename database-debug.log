@@ -1,8 +1,8 @@
-21:28:31.479 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-21:28:31.546 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
-21:28:37.442 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - skeet-example-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 51ms, init: 0ms
-21:28:37.469 [NamespaceSystem-blocking-namespace-operation-dispatcher-6] INFO com.firebase.core.namespace.StateManager - Namespace skeet-example-default-rtdb status Active to Active
-21:36:53.871 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
-21:36:53.876 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: skeet-example-default-rtdb
-21:36:53.880 [NamespaceSystem-akka.actor.default-dispatcher-11] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for skeet-example-default-rtdb
-21:36:53.882 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
+18:22:57.222 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+18:22:57.305 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+18:23:03.302 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - skeet-example-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 55ms, init: 0ms
+18:23:03.330 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace skeet-example-default-rtdb status Active to Active
+18:23:15.975 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+18:23:15.979 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: skeet-example-default-rtdb
+18:23:15.982 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for skeet-example-default-rtdb
+18:23:15.984 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.

@@ -7,25 +7,9 @@ import {
 } from 'firebase/auth'
 import dotenv from 'dotenv'
 import { User } from '@/models'
+import firebaseConfig from '@/lib/firebaseConfig'
 dotenv.config()
 
-const apiKey = process.env.API_KEY_DEV || ''
-const authDomain = process.env.AUTH_DOMAIN_DEV || ''
-const projectId = process.env.PROJECT_ID_DEV || ''
-const storageBucket = process.env.STORAGE_BUCKET_DEV || ''
-const messagingSenderId = process.env.MESSAGING_SENDER_ID_DEV || ''
-const appId = process.env.APP_ID_DEV || ''
-const measurementId = process.env.MEASUREMENT_ID_DEV || ''
-
-const firebaseConfig = {
-  apiKey,
-  authDomain,
-  projectId,
-  storageBucket,
-  messagingSenderId,
-  appId,
-  measurementId,
-}
 const firebaseApp = initializeApp(firebaseConfig)
 const auth = getAuth(firebaseApp)
 const SkeetEnv = process.env.NODE_ENV || 'development'

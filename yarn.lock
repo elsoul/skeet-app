@@ -1061,10 +1061,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@skeet-framework/firestore@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-0.1.0.tgz#edeecbe898b6ad218346813366b55c5635878cb0"
-  integrity sha512-/GRWOQdtNd5X0h+vkGpL6QZSusBHdkGM7MUGq8zUku2THAIRHjEhYLzVt0VBlRu/In/mUiHsEIw/yZK2WTCJRA==
+"@skeet-framework/firestore@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-0.5.0.tgz#1afcacfd3290294cd71cf14f323c8aef74e9f9e1"
+  integrity sha512-dinNn38cDf1JFN45JYkPESLA3PrQIn+KKeHt/92ZGAgTyiRNOkruQNlOpDtDVxFh4+ndlM6CWmO/UDPICNFbfA==
   dependencies:
     date-fns "2.30.0"
     date-fns-tz "2.0.0"
@@ -1266,10 +1266,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.11.tgz#b3b790f09cb1696cffcec605de025b088fa4225f"
   integrity sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==
 
-"@types/node@18.11.18":
-  version "18.11.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
-  integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
+"@types/node@18.16.0":
+  version "18.16.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.16.0.tgz#4668bc392bb6938637b47e98b1f2ed5426f33316"
+  integrity sha512-BsAaKhB+7X+H4GnSjGhJG9Qi8Tw+inU9nJDwmD5CgOmBLEI6ArdhikpLX7DjbjDRDTbqZzU2LSQNZg8WGPiSZQ==
 
 "@types/prettier@^2.1.5":
   version "2.7.2"
@@ -6106,10 +6106,10 @@ typesaurus@7:
   resolved "https://registry.yarnpkg.com/typesaurus/-/typesaurus-7.2.0.tgz#e0d581b27000f0af728b8b9e07be18f67dda08e7"
   integrity sha512-qngW0ECsnEoPmX/nI2hNarmkQKGDH7R48InIZWsxmQa07NHVICutUZUkY2HdJX4LvcdDWZdcBedh0wudNMu1NA==
 
-typescript@5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.2.tgz#891e1a90c5189d8506af64b9ef929fca99ba1ee5"
-  integrity sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==
+typescript@5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"
