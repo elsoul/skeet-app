@@ -2,9 +2,9 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import {
   addGrandChildCollectionItem,
-  getGrandChildCollectionItems,
+  queryGrandChildCollectionItem,
 } from '@skeet-framework/firestore'
-import { collection, get, ref, subcollection } from 'typesaurus'
+import { collection, get, order, ref, subcollection } from 'typesaurus'
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest,
@@ -57,7 +57,7 @@ export const addUserChatRoomMessage = onRequest(
         body.userChatRoomId,
         newMessage
       )
-      const userChatRoomMessages = await getGrandChildCollectionItems<
+      const userChatRoomMessages = await queryGrandChildCollectionItem<
         UserChatRoomMessage,
         UserChatRoom,
         User
@@ -66,13 +66,14 @@ export const addUserChatRoomMessage = onRequest(
         userChatRoomCollectionName,
         userChatRoomMessageCollectionName,
         user.uid,
-        body.userChatRoomId
+        body.userChatRoomId,
+        [order('createdAt', 'asc')]
       )
       const messages = []
       for await (const message of userChatRoomMessages) {
         messages.push({
-          role: message.role,
-          content: message.content,
+          role: message.data.role,
+          content: message.data.content,
         } as ChatCompletionRequestMessage)
       }
       const openAiBody: CreateChatCompletionRequest = {
