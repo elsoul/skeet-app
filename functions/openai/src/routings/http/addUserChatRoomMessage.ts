@@ -1,5 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
+import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import {
   addGrandChildCollectionItem,
   queryGrandChildCollectionItem,
@@ -13,6 +13,7 @@ import { chat } from '@/lib/openai/openAi'
 import { TypedRequestBody } from '@/index'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
 import { defaultHttpOption } from '@/routings/options'
+import { getUserAuth } from '@/lib/auth'
 
 export const addUserChatRoomMessage = onRequest(
   defaultHttpOption,

@@ -1,10 +1,11 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
+import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import { queryGrandChildCollectionItem } from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
 import { GetUserChatRoomMessagesParams } from '@/types/http/getUserChatRoomParams'
 import { defaultHttpOption } from '@/routings/options'
 import { order } from 'typesaurus'
+import { getUserAuth } from '@/lib/auth'
 
 export const getUserChatRoomMessages = onRequest(
   defaultHttpOption,

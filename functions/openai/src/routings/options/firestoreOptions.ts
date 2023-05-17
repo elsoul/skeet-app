@@ -1,5 +1,11 @@
-import { region, serviceAccount, vpcConnector } from './index'
 import { DocumentOptions } from 'firebase-functions/v2/firestore'
+import dotenv from 'dotenv'
+dotenv.config()
+
+const project = process.env.PROJECT_ID || 'skeet-example'
+const region = process.env.REGION || 'europe-west6'
+const serviceAccount = `${project}@${project}.iam.gserviceaccount.com`
+const vpcConnector = `${project}-con`
 
 export const firestoreDefaultOption: (document: string) => DocumentOptions = (
   document

@@ -1,5 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { getUserAuth, User, UserChatRoom, UserChatRoomMessage } from '@/models'
+import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import {
   addCollectionItem,
   addChildCollectionItem,
@@ -8,6 +8,7 @@ import {
 import { TypedRequestBody } from '@/index'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { defaultHttpOption } from '@/routings/options'
+import { getUserAuth } from '@/lib/auth'
 
 export const createUserChatRoom = onRequest(
   defaultHttpOption,
