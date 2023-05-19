@@ -3353,7 +3353,7 @@ firebase-functions@4.4.0:
     node-fetch "^2.6.7"
     protobufjs "^7.2.2"
 
-firebase-tools@^12.0.1:
+firebase-tools@12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-12.0.1.tgz#12b1056762698975347712852bc30daf3d9fb40b"
   integrity sha512-VJwC2Tyojle/2faMA70PdyWxs5/OoUN83mASWEOcf24JhwyjIoNZIdOWiSAfRzEu/SZmGI9BhvNF/PELNcexJA==
