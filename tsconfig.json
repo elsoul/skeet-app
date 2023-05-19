@@ -21,7 +21,7 @@
     }
   },
   "files": ["package.json"],
-  "include": ["src/**/*", "skeet-cloud.config.ts"],
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"],
   "compileOnSave": false
 }
