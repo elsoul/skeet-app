@@ -1,6 +1,6 @@
 import { Ref } from 'typesaurus'
 
-// CollectionId: auto
+// CollectionId: User
 // DocumentId: uid
 export type User = {
   uid: string
@@ -11,7 +11,7 @@ export type User = {
   updatedAt?: string
 }
 
-// CollectionId: auto
+// CollectionId: UserChatRoom
 // DocumentId: auto
 export type UserChatRoom = {
   userRef: Ref<User>
@@ -23,7 +23,7 @@ export type UserChatRoom = {
   updatedAt?: string
 }
 
-// CollectionId: auto
+// CollectionId: UserChatRoomMessage
 // DocumentId: auto
 export type UserChatRoomMessage = {
   userChatRoomRef: Ref<UserChatRoom>
