@@ -7,9 +7,7 @@ const region = process.env.REGION || 'europe-west6'
 const serviceAccount = `${project}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${project}-con`
 
-export const firestoreDefaultOption: (document: string) => DocumentOptions = (
-  document
-) => ({
+export const firestoreDefaultOption = (document: string): DocumentOptions => ({
   document,
   region,
   cpu: 1,
