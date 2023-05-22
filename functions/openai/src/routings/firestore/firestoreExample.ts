@@ -8,8 +8,7 @@ export const firestoreExample = onDocumentCreated(
     try {
       console.log(event.params)
     } catch (error) {
-      const errorLog = `firestoreExample - ${error}`
-      console.log(errorLog)
+      console.log({ status: 'error', message: String(error) })
     }
   }
 )

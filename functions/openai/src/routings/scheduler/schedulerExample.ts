@@ -7,9 +7,9 @@ export const schedulerExample = onSchedule(
   schedulerDefaultOption,
   async (event) => {
     try {
-      console.log({ result: 'success', topic: TOPIC_NAME, event })
+      console.log({ status: 'success', topic: TOPIC_NAME, event })
     } catch (error) {
-      console.log({ result: 'error', message: String(error) })
+      console.log({ status: 'error', message: String(error) })
     }
   }
 )

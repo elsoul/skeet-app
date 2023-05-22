@@ -23,6 +23,6 @@ export const authOnCreateUser = functions
       const userRef = await addCollectionItem<User>('User', userParams, uid)
       console.log({ status: 'success', userRef })
     } catch (error) {
-      console.log(`error - ${String(error)}`)
+      console.log({ status: 'error', message: String(error) })
     }
   })
