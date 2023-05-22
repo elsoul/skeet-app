@@ -1,6 +1,6 @@
 {
   "name": "skeet-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Skeet Framework Backend Boilerplate",
   "main": "dist/index.js",
   "author": "ELSOUL LABO B.V.",

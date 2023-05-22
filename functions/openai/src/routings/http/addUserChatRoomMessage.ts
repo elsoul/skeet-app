@@ -2,9 +2,10 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import {
   addGrandChildCollectionItem,
+  getChildCollectionItem,
   queryGrandChildCollectionItem,
 } from '@skeet-framework/firestore'
-import { collection, get, order, ref, subcollection } from 'typesaurus'
+import { order } from 'typesaurus'
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest,
@@ -13,7 +14,7 @@ import { chat } from '@/lib/openai/openAi'
 import { TypedRequestBody } from '@/index'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
 import { defaultHttpOption } from '@/routings/options'
-import { getUserAuth } from '@/lib/auth'
+import { getUserAuth } from '@/lib/getUserAuth'
 
 export const addUserChatRoomMessage = onRequest(
   defaultHttpOption,
@@ -28,21 +29,18 @@ export const addUserChatRoomMessage = onRequest(
       const userCollectionName = 'User'
       const userChatRoomCollectionName = 'UserChatRoom'
       const userChatRoomMessageCollectionName = 'UserChatRoomMessage'
-      const userCollection = collection<User>(userCollectionName)
-      const userChatRoomCollection = subcollection<UserChatRoom, User>(
+      const userChatRoom = await getChildCollectionItem<UserChatRoom, User>(
+        userCollectionName,
         userChatRoomCollectionName,
-        userCollection
-      )
-      const userChatRoom = await get(
-        userChatRoomCollection(user.uid),
+        user.uid,
         body.userChatRoomId
       )
       if (!userChatRoom) throw new Error('userChatRoom not found')
+      if (userChatRoom.data.stream === true)
+        throw new Error('stream must be false')
+
       const newMessage: UserChatRoomMessage = {
-        userChatRoomRef: ref(
-          userChatRoomCollection(user.uid),
-          body.userChatRoomId
-        ),
+        userChatRoomRef: userChatRoom.ref,
         role: 'user',
         content: body.content,
       }
@@ -90,10 +88,7 @@ export const addUserChatRoomMessage = onRequest(
       if (!openAiResponse) throw new Error('openAiResponse not found')
       const content = String(openAiResponse.content) || ''
       const openAiResponseMessage: UserChatRoomMessage = {
-        userChatRoomRef: ref(
-          userChatRoomCollection(user.uid),
-          body.userChatRoomId
-        ),
+        userChatRoomRef: userChatRoom.ref,
         role: 'assistant',
         content,
       }
@@ -109,11 +104,9 @@ export const addUserChatRoomMessage = onRequest(
         body.userChatRoomId,
         openAiResponseMessage
       )
-      res.json({ result: 'success!', openAiResponse })
+      res.json({ status: 'success', openAiResponse })
     } catch (error) {
-      const errorLog = `createUserChatRoom - ${error}`
-      console.log(errorLog)
-      res.status(400).json({ result: error })
+      res.status(500).json({ status: 'error', message: String(error) })
     }
   }
 )

@@ -1,14 +1,14 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
 import {
-  addCollectionItem,
   addChildCollectionItem,
   addGrandChildCollectionItem,
+  getCollectionItem,
 } from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
-import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { defaultHttpOption } from '@/routings/options'
-import { getUserAuth } from '@/lib/auth'
+import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
+import { getUserAuth } from '@/lib/getUserAuth'
 
 export const createUserChatRoom = onRequest(
   defaultHttpOption,
@@ -18,7 +18,7 @@ export const createUserChatRoom = onRequest(
         model: req.body.model || 'gpt-3.5-turbo',
         systemContent:
           req.body.systemContent ||
-          '優秀なアシスタント。物事を段階的に考えるのが得意です。優しい口調。できないことは言わない。',
+          'This is a great chatbot. This Assistant is very kind and helpful.',
         maxTokens: req.body.maxTokens || 256,
         temperature: req.body.temperature || 1,
         stream: req.body.stream || false,
@@ -28,21 +28,15 @@ export const createUserChatRoom = onRequest(
       const childCollectionName = 'UserChatRoom'
       const grandChildCollectionName = 'UserChatRoomMessage'
 
-      const userBody: User = {
-        uid: user.uid,
-        username: user.displayName || '',
-        email: user.email || '',
-        iconUrl: user.photoURL || '',
-      }
-      const userRef = await addCollectionItem<User>(
+      const userDoc = await getCollectionItem<User>(
         parentCollectionName,
-        userBody,
         user.uid
       )
+      console.log(`userDoc: ${userDoc}`)
 
       const parentId = user.uid || ''
       const params: UserChatRoom = {
-        userRef,
+        userRef: userDoc.ref,
         model: body.model,
         maxTokens: body.maxTokens,
         temperature: body.temperature,
@@ -60,7 +54,7 @@ export const createUserChatRoom = onRequest(
         role: 'system',
         content: body.systemContent,
       }
-      await addGrandChildCollectionItem<
+      const userChatRoomMessageRef = await addGrandChildCollectionItem<
         UserChatRoomMessage,
         UserChatRoom,
         User
@@ -72,11 +66,9 @@ export const createUserChatRoom = onRequest(
         userChatRoomRef.id,
         systemMessage
       )
-      res.json({ result: 'success!', userChatRoomRef })
+      res.json({ status: 'success', userChatRoomRef, userChatRoomMessageRef })
     } catch (error) {
-      const errorLog = `createUserChatRoom - ${error}`
-      console.log(errorLog)
-      res.status(400).json({ result: error })
+      res.status(500).json({ status: 'error', message: String(error) })
     }
   }
 )

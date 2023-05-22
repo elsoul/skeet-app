@@ -5,7 +5,7 @@ import { TypedRequestBody } from '@/index'
 import { GetUserChatRoomMessagesParams } from '@/types/http/getUserChatRoomParams'
 import { defaultHttpOption } from '@/routings/options'
 import { order } from 'typesaurus'
-import { getUserAuth } from '@/lib/auth'
+import { getUserAuth } from '@/lib/getUserAuth'
 
 export const getUserChatRoomMessages = onRequest(
   defaultHttpOption,
@@ -32,13 +32,11 @@ export const getUserChatRoomMessages = onRequest(
         [order('createdAt', 'asc')]
       )
       res.json({
-        result: 'success!',
+        status: 'success',
         messages: messages.map((message) => message.data),
       })
     } catch (error) {
-      const errorLog = `getUserChatRoomMessages - ${error}`
-      console.log(errorLog)
-      res.status(400).json({ result: error })
+      res.status(500).json({ status: 'error', message: String(error) })
     }
   }
 )
