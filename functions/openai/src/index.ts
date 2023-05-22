@@ -11,6 +11,7 @@ admin.initializeApp()
 
 export {
   root,
+  authOnCreateUser,
   createUserChatRoom,
   getUserChatRoomMessages,
   addUserChatRoomMessage,

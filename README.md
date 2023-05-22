@@ -1,6 +1,6 @@
-# Skeet Framework
+# Skeet Framework - Backend Boilerplate
 
-Skeet App Template
+This repo will be generated from _skeet create <project-name>_ .
 
 ## Usage
 
@@ -9,15 +9,13 @@ $ npm i -g firebase-tools
 $ npm i -g @skeet-framework/cli
 ```
 
-### Get Firebase Token
-
-Get $YOUR_FIREBASE_DEPLOY_TOKEN
-
 ```bash
-$ yarn
-$ firebase login:cli
+$ skeet create <project-name>
 ```
 
 ```bash
-$ gh secret set FIREBASE_DEPLOY_TOKEN -b $YOUR_FIREBASE_DEPLOY_TOKEN
+$ cd <project-name>
+$ skeet s
 ```
+
+(Open http://localhost:4000)[http://localhost:4000]

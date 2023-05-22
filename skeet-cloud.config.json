@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "skeet-app",
-    "projectId": "skeet-example",
+    "projectId": "skeet-app",
     "region": "europe-west6",
     "appUrl": ""
   },
