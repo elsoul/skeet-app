@@ -11,7 +11,7 @@ export const authOnCreateUser = auth.user().onCreate(async (user) => {
       username: displayName || '',
       iconUrl: photoURL || '',
     }
-    const userRef = await addCollectionItem<User>('User', userParams)
+    const userRef = await addCollectionItem<User>('User', userParams, uid)
     console.log({ status: 'success', userRef })
   } catch (error) {
     console.log(`authOnCreateUser - ${String(error)}`)
