@@ -7,7 +7,7 @@
   },
   "cloudArmor": [
     {
-      "securityPolicyName": "skeet-skeet-example-armor",
+      "securityPolicyName": "skeet-skeet-app-armor",
       "rules": [
         {
           "priority": "10",

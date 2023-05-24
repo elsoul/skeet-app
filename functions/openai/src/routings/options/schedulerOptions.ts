@@ -2,7 +2,7 @@ import { ScheduleOptions } from 'firebase-functions/v2/scheduler'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const project = process.env.PROJECT_ID || 'skeet-example'
+const project = process.env.PROJECT_ID || 'skeet-app'
 const region = process.env.REGION || 'europe-west6'
 const serviceAccount = `${project}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${project}-con`

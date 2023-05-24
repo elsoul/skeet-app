@@ -11,3 +11,4 @@ keyfile.json
 .env
 functions/**/.env
 functions/**/*.log
+*.log
