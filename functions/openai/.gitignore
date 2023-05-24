@@ -7,5 +7,5 @@ typings/
 
 # Node.js dependency directory
 node_modules/
-./env
-./*.log
+.env
+*.log

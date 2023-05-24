@@ -1,7 +1,7 @@
 {
   "name": "skeet-app",
   "version": "0.2.0",
-  "description": "Skeet Framework Backend Boilerplate",
+  "description": "Skeet Framework Boilerplate",
   "main": "dist/index.js",
   "author": "ELSOUL LABO B.V.",
   "license": "Apache-2.0",

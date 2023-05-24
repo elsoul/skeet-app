@@ -17,11 +17,12 @@
     "lib": ["esnext"],
     "sourceMap": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@lib/*": ["lib/*"]
     }
   },
   "files": ["package.json"],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "lib/**/*"],
   "exclude": ["dist", "node_modules"],
   "compileOnSave": false
 }
