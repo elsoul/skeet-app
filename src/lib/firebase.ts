@@ -10,7 +10,7 @@ export const firebaseApp = !getApps().length
 const getFirebaseAuth = () => {
   const auth = getAuth(firebaseApp)
   if (process.env.NODE_ENV !== 'production') {
-    connectAuthEmulator(auth, 'http://localhost:9099')
+    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true })
   }
   return auth
 }
