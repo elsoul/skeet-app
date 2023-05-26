@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "skeet-app",
+    "slug": "skeet-app",
+    "scheme": "skeetapp",
+    "owner": "elsoul-labo",
+    "platforms": ["web", "ios", "android"],
+    "githubUrl": "https://github.com/elsoul/skeet-app",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "primaryColor": "#111827",
+    "icon": "./assets/favicon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.elsoullabo.skeetapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/favicon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.elsoullabo.skeetapp"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

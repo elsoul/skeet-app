@@ -1,28 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
-    "outDir": "./dist",
-    "rootDir": ".",
+  "extends": "expo/tsconfig.base",
+    "compilerOptions": {
     "strict": true,
-    "moduleResolution": "node",
     "baseUrl": ".",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "resolveJsonModule": true,
-    "lib": ["esnext"],
-    "sourceMap": true,
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
+      "@assets/*": ["./assets/*"],
       "@lib/*": ["lib/*"]
     }
   },
-  "files": ["package.json"],
-  "include": ["src/**/*", "lib/**/*"],
-  "exclude": ["dist", "node_modules"],
-  "compileOnSave": false
+  "include": ["**/*.ts", "**/*.tsx", "src/**/*", "lib/**/*", "custom.d.ts", "App.tsx"],
+  "exclude": ["node_modules", ".expo", "dist"]
 }
