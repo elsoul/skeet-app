@@ -12,6 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 type Props = {
   children: ReactNode
 }
+
 export default function UserLayout({ children }: Props) {
   useColorModeRefresh()
   const navigation = useNavigation()
