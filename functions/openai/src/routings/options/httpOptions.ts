@@ -6,7 +6,7 @@ const appName = process.env.SKEET_APP_NAME || 'skeet-app'
 const project = process.env.PROJECT_ID || 'skeet-app'
 const region = process.env.REGION || 'europe-west6'
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
-const vpcConnector = `${project}-con`
+const vpcConnector = `${appName}-con`
 const cors = ['http://localhost:4000', 'https://app.skeet.dev']
 
 export const defaultHttpOption: HttpsOptions = {

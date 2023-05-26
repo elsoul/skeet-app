@@ -5,7 +5,7 @@ dotenv.config()
 const appName = process.env.SKEET_APP_NAME || 'skeet-app'
 const project = process.env.PROJECT_ID || 'skeet-app'
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
-const vpcConnector = `${project}-con`
+const vpcConnector = `${appName}-con`
 
 export const authDefaultOption: RuntimeOptions = {
   memory: '1GB',
