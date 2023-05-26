@@ -38,16 +38,5 @@
       "enabled": true
     },
     "singleProjectMode": true
-  },
-  "hosting": {
-    "target": "skeet-app",
-    "public": "web-build",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
   }
 }
