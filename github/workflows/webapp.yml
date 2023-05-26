@@ -31,6 +31,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build App
-        run: yarn build:production:web
+        run: yarn build:production:webapp
       - name: Deploy to Firebase
         run: firebase deploy --only hosting
