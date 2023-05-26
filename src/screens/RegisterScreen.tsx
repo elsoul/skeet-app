@@ -20,19 +20,7 @@ import { emailSchema, passwordSchema } from '@/utils/form'
 import { firebaseAuth } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
 import { sleep } from '@/utils/time'
-// import appConfig from '@/config/app'
-// const actionCodeSettings = {
-//   url: `https://${appConfig.domain}/action`,
-//   iOS: {
-//     bundleId: appConfig.iosId,
-//   },
-//   android: {
-//     packageName: appConfig.androidId,
-//     installApp: true,
-//     minimumVersion: '12',
-//   },
-//   handleCodeInApp: true,
-// }
+
 
 export default function RegisterScreen() {
   useColorModeRefresh()

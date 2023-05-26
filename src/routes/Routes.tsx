@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import AppLoading from '@/components/loading/AppLoading'
 import { useTranslation } from 'react-i18next'
 import * as Linking from 'expo-linking'
-import appConfig from '@/config/app'
+import skeetCloudConfig from '@root/skeet-cloud.config.json'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')
@@ -29,7 +29,7 @@ export default function Routes() {
 
   const linking = useMemo(
     () => ({
-      prefixes: [prefix, `https://${appConfig.domain}/`],
+      prefixes: [prefix, `https://${skeetCloudConfig.app.appDomain}/`],
       config: {
         screens: {
           Default: {
