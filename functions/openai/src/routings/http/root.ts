@@ -11,7 +11,7 @@ export const root = onRequest(
       res.json({
         status: 'success',
         message: 'Skeet Backend is running!',
-        body,
+        name: body.name || 'Skeet',
       })
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })

@@ -32,6 +32,7 @@ export const createUserChatRoom = onRequest(
         parentCollectionName,
         user.uid
       )
+      if (!userDoc) throw new Error('userDoc is not found')
       console.log(`userDoc: ${userDoc}`)
 
       const parentId = user.uid || ''
