@@ -2,9 +2,10 @@ import { DocumentOptions } from 'firebase-functions/v2/firestore'
 import dotenv from 'dotenv'
 dotenv.config()
 
+const appName = process.env.SKEET_APP_NAME || 'skeet-app'
 const project = process.env.PROJECT_ID || 'skeet-app'
 const region = process.env.REGION || 'europe-west6'
-const serviceAccount = `${project}@${project}.iam.gserviceaccount.com`
+const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${project}-con`
 
 export const firestoreDefaultOption = (document: string): DocumentOptions => ({
@@ -19,5 +20,5 @@ export const firestoreDefaultOption = (document: string): DocumentOptions => ({
   ingressSettings: 'ALLOW_INTERNAL_ONLY',
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
-  retry: true,
+  timeoutSeconds: 540,
 })
