@@ -6,7 +6,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@root/*": ["./*"],
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "src/**/*", "lib/**/*", "custom.d.ts", "App.tsx"],

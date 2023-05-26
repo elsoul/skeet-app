@@ -78,6 +78,7 @@ export default function LoginScreen() {
         })
         setUser({
           ...user,
+          skeetToken: fbToken,
           uid: userCredential.user.uid,
         })
       } catch (err) {
