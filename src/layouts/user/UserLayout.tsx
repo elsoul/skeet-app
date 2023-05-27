@@ -1,13 +1,17 @@
 import tw from '@/lib/tailwind'
 import type { ReactNode } from 'react'
-import { Pressable, View } from 'react-native'
+import { useState } from 'react'
+import { Modal, Pressable, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useColorModeRefresh from '@/hooks/useColorModeRefresh'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { ArrowLeftIcon } from 'react-native-heroicons/outline'
 import clsx from 'clsx'
 import UserMenu from './UserMenu'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
+import { userRoutes } from '@/routes/UserRoutes'
+import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 
 type Props = {
   children: ReactNode
@@ -16,40 +20,143 @@ type Props = {
 export default function UserLayout({ children }: Props) {
   useColorModeRefresh()
   const navigation = useNavigation()
+  const route = useRoute()
+  console.log(route)
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <>
       <ScrollView style={tw`relative w-full h-full bg-white dark:bg-gray-900`}>
         <SafeAreaView>
-          <View style={tw`h-24 w-full bg-white dark:bg-gray-900`}>
-            <View
-              style={tw`flex flex-row items-center justify-between p-6 md:justify-start md:gap-10`}
-            >
-              <View style={tw`flex flex-1`}>
-                {navigation.canGoBack() && (
-                  <>
-                    <Pressable
-                      onPress={() => {
-                        navigation.goBack()
-                      }}
-                      style={({ pressed }) =>
-                        tw`${clsx(
-                          pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                          'w-5 h-5'
-                        )}`
-                      }
-                    >
-                      <ArrowLeftIcon style={tw`w-5 h-5 dark:text-gray-50`} />
-                    </Pressable>
-                  </>
-                )}
+          <Modal
+            animationType="fade"
+            visible={isMenuOpen}
+            onRequestClose={() => {
+              setIsMenuOpen(false)
+            }}
+          >
+            <View style={tw`w-full h-full`}>
+              <View style={tw`flex flex-shrink-0 items-center px-4`}>
+                <LogoHorizontal />
               </View>
-              <View style={tw`flex flex-row items-center justify-end gap-6`}>
-                <UserMenu />
+              <View
+                style={tw`scrollbar-hide flex flex-grow flex-col overflow-y-auto break-words bg-white pt-5 dark:bg-gray-900`}
+              >
+                <View style={tw`flex flex-shrink-0 items-center px-4`}>
+                  <LogoHorizontal />
+                </View>
+                <View style={tw`mt-5 flex flex-1 flex-col`}>
+                  <View style={tw`flex-1 space-y-1 px-2 pb-4`}>
+                    {userRoutes.map((item) => (
+                      <Pressable
+                        key={`DocLayout Menu ${item.name}`}
+                        style={tw`${clsx(
+                          route.name === item.name
+                            ? 'bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white'
+                            : 'text-gray-700 hover:bg-gray-50 dark:text-gray-50 dark:hover:bg-gray-800',
+                          'group flex items-center px-2 py-2 text-sm font-medium'
+                        )}`}
+                      >
+                        <item.icon
+                          style={tw`${clsx(
+                            route.name === item.name
+                              ? 'text-gray-900  dark:text-white'
+                              : 'text-gray-700 dark:text-gray-50',
+                            'mr-3 h-6 w-6 flex-shrink-0'
+                          )}`}
+                        />
+                        {t(item.name)}
+                      </Pressable>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          <View style={tw`flex flex-row`}>
+            <View
+              style={tw`z-10 hidden lg:inset-y-0 lg:flex lg:w-64 lg:flex-col`}
+            >
+              <View
+                style={tw`scrollbar-hide flex flex-grow flex-col overflow-y-auto break-words bg-white pt-5 dark:bg-gray-900`}
+              >
+                <View style={tw`flex flex-shrink-0 items-center px-4`}>
+                  <LogoHorizontal />
+                </View>
+                <View style={tw`mt-5 flex flex-1 flex-col`}>
+                  <View style={tw`flex-1 space-y-1 px-2 pb-4`}>
+                    {userRoutes.map((item) => (
+                      <Pressable
+                        key={`DocLayout Menu ${item.name}`}
+                        style={tw`${clsx(
+                          route.name === item.name
+                            ? 'bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white'
+                            : 'text-gray-700 hover:bg-gray-50 dark:text-gray-50 dark:hover:bg-gray-800',
+                          'group flex items-center px-2 py-2 text-sm font-medium'
+                        )}`}
+                      >
+                        <item.icon
+                          style={tw`${clsx(
+                            route.name === item.name
+                              ? 'text-gray-900  dark:text-white'
+                              : 'text-gray-700 dark:text-gray-50',
+                            'mr-3 h-6 w-6 flex-shrink-0'
+                          )}`}
+                        />
+                        {t(item.name)}
+                      </Pressable>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={tw`flex flex-1 flex-col`}>
+              <View
+                style={tw`flex-shrink- top-0 z-10 flex h-16 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
+              >
+                <View
+                  style={tw`flex flex-row items-center justify-between p-6 md:justify-start md:gap-10`}
+                >
+                  <View style={tw`flex flex-1`}>
+                    {navigation.canGoBack() && (
+                      <>
+                        <Pressable
+                          onPress={() => {
+                            navigation.goBack()
+                          }}
+                          style={({ pressed }) =>
+                            tw`${clsx(
+                              pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                              'w-5 h-5'
+                            )}`
+                          }
+                        >
+                          <ArrowLeftIcon
+                            style={tw`w-5 h-5 dark:text-gray-50`}
+                          />
+                        </Pressable>
+                      </>
+                    )}
+                  </View>
+                  <View
+                    style={tw`flex flex-row items-center justify-end gap-6`}
+                  >
+                    <UserMenu />
+                  </View>
+                </View>
+              </View>
+              <View style={tw`py-6`}>
+                <View
+                  style={tw`mx-auto min-h-screen px-4 sm:px-6 lg:max-w-7xl lg:px-8`}
+                >
+                  {children}
+                </View>
               </View>
             </View>
           </View>
-          {children}
         </SafeAreaView>
       </ScrollView>
     </>

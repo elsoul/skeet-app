@@ -5,6 +5,29 @@ import ResetPasswordScreen from '@/screens/ResetPasswordScreen'
 import CheckEmailScreen from '@/screens/CheckEmailScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+export const defaultRoutes = [
+  {
+    name: 'Login',
+    component: LoginScreen,
+  },
+  {
+    name: 'Register',
+    component: RegisterScreen,
+  },
+  {
+    name: 'ResetPassword',
+    component: ResetPasswordScreen,
+  },
+  {
+    name: 'CheckEmail',
+    component: CheckEmailScreen,
+  },
+  {
+    name: 'Action',
+    component: ActionScreen,
+  },
+]
+
 const Stack = createNativeStackNavigator()
 
 export default function DefaultRoutes() {
@@ -14,11 +37,13 @@ export default function DefaultRoutes() {
         initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-        <Stack.Screen name="CheckEmail" component={CheckEmailScreen} />
-        <Stack.Screen name="Action" component={ActionScreen} />
+        {defaultRoutes.map((route) => (
+          <Stack.Screen
+            key={`DefaultRoutes ${route.name}`}
+            name={route.name}
+            component={route.component}
+          />
+        ))}
       </Stack.Navigator>
     </>
   )

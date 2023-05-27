@@ -205,7 +205,7 @@ export default function LoginScreen() {
                     login()
                   }}
                   disabled={isLoading}
-                  className="w-full py-2 px-3"
+                  className="w-full px-3 py-2"
                 >
                   <Text
                     style={tw`text-center font-loaded-bold text-lg text-white`}
