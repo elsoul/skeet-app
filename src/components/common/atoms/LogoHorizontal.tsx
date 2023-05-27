@@ -5,10 +5,8 @@ import SkeetLogoHorizontalInvert from '@assets/logo/SkeetLogoHorizontalInvert.sv
 export default function LogoHorizontal() {
   return (
     <>
-      <SkeetLogoHorizontal style={tw`h-10 mx-auto w-28 dark:hidden`} />
-      <SkeetLogoHorizontalInvert
-        style={tw`hidden h-10 mx-auto w-28 dark:flex`}
-      />
+      <SkeetLogoHorizontal style={tw`h-10 w-28 dark:hidden`} />
+      <SkeetLogoHorizontalInvert style={tw`hidden h-10 w-28 dark:flex`} />
     </>
   )
 }
