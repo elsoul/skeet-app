@@ -9,6 +9,7 @@ import AppLoading from '@/components/loading/AppLoading'
 import { useTranslation } from 'react-i18next'
 import * as Linking from 'expo-linking'
 import skeetCloudConfig from '@root/skeet-cloud.config.json'
+import useScreens from '@/hooks/useScreens'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')
@@ -27,33 +28,25 @@ export default function Routes() {
     return user.uid !== ''
   }, [user])
 
-  const linking = useMemo(
-    () => ({
+  const { defaultScreens, userScreens } = useScreens()
+
+  const linking = useMemo(() => {
+    return {
       prefixes: [prefix, `https://${skeetCloudConfig.app.appDomain}/`],
       config: {
         screens: {
           Default: {
             path: '',
-            screens: {
-              Login: 'login',
-              Register: 'register',
-              ResetPassword: 'reset-password',
-              CheckEmail: 'check-email',
-              Action: 'action',
-            },
+            screens: defaultScreens,
           },
           User: {
             path: 'user',
-            screens: {
-              UserDashboard: 'dashboard',
-              UserSettings: 'settings',
-            },
+            screens: userScreens,
           },
         },
       },
-    }),
-    []
-  )
+    }
+  }, [defaultScreens, userScreens])
 
   return (
     <>

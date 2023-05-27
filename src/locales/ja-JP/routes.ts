@@ -4,8 +4,8 @@ const routesJA = {
   ResetPassword: 'パスワードリセット',
   CheckEmail: 'メールを確認してください',
   Action: 'アカウントアクション',
-  UserDashboard: 'ダッシュボード',
-  UserSettings: '設定',
+  Dashboard: 'ダッシュボード',
+  Settings: '設定',
 }
 
 export default routesJA

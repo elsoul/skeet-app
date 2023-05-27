@@ -113,7 +113,9 @@ export default function LoginScreen() {
           style={tw`flex h-full flex-col items-center justify-start py-12 sm:px-6 lg:px-8`}
         >
           <View style={tw`sm:mx-auto sm:w-full sm:max-w-md`}>
-            <LogoHorizontal />
+            <View style={tw`mx-auto`}>
+              <LogoHorizontal />
+            </View>
             <Text
               style={tw`font-loaded-bold mt-6 text-center text-3xl tracking-tight text-gray-900 dark:text-white`}
             >
@@ -205,7 +207,7 @@ export default function LoginScreen() {
                     login()
                   }}
                   disabled={isLoading}
-                  className="w-full py-2 px-3"
+                  className="w-full px-3 py-2"
                 >
                   <Text
                     style={tw`text-center font-loaded-bold text-lg text-white`}
