@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler'
 import '@/lib/i18n'
+import '@/lib/firebase'
 import { useDeviceContext } from 'twrnc'
 import tw from '@/lib/tailwind'
 import { useFonts } from 'expo-font'
