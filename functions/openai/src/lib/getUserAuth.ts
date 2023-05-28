@@ -20,7 +20,10 @@ export const getUserAuth = async (req: Request) => {
       uid,
       username: displayName || '',
       email: email || '',
-      iconUrl: photoURL || gravatarIconUrl(email ?? 'info@skeet.dev') || '',
+      iconUrl:
+        photoURL == '' || !photoURL
+          ? gravatarIconUrl(email ?? 'info@skeet.dev')
+          : photoURL,
     }
     return response
   } catch (error) {

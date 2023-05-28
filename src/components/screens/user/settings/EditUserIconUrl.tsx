@@ -8,13 +8,13 @@ const blurhash =
 export default function EditUserIconUrl() {
   return (
     <>
-      <View style={tw`w-6 h-6`}>
-        {/* <Image
-          source={`${gravatarIconUrl('s.kishi@elsoul.nl')}`}
+      <View style={tw`p-8`}>
+        <Image
+          source={`${'https://www.gravatar.com/avatar/14850fd9725c6e36a6642a4155005b82?d=retro'}`}
           placeholder={blurhash}
           contentFit="cover"
-          transition={1000}
-        /> */}
+          style={tw`w-10 h-10 rounded-full`}
+        />
       </View>
     </>
   )
