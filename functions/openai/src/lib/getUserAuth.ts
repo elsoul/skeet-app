@@ -1,3 +1,4 @@
+import { gravatarIconUrl } from '@/utils/placeholder'
 import { auth } from 'firebase-admin'
 import { Request } from 'firebase-functions/v2/https'
 
@@ -19,7 +20,7 @@ export const getUserAuth = async (req: Request) => {
       uid,
       username: displayName || '',
       email: email || '',
-      iconUrl: photoURL || '',
+      iconUrl: photoURL || gravatarIconUrl(email ?? 'info@skeet.dev') || '',
     }
     return response
   } catch (error) {

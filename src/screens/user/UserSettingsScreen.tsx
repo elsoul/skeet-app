@@ -6,6 +6,8 @@ import useColorModeRefresh from '@/hooks/useColorModeRefresh'
 import { useTranslation } from 'react-i18next'
 import UserLayout from '@/layouts/user/UserLayout'
 import useAnalytics from '@/hooks/useAnalytics'
+import EditUserIconUrl from '@/components/screens/user/settings/EditUserIconUrl'
+import EditUserProfile from '@/components/screens/user/settings/EditUserProfile'
 
 export default function UserSettingsScreen() {
   useColorModeRefresh()
@@ -30,6 +32,14 @@ export default function UserSettingsScreen() {
               <LanguageChanger />
               <ColorModeChanger />
             </View>
+          </View>
+        </View>
+        <View style={tw`flex flex-col sm:flex-row`}>
+          <View style={tw`flex flex-col`}>
+            <EditUserIconUrl />
+          </View>
+          <View style={tw`flex flex-col`}>
+            <EditUserProfile />
           </View>
         </View>
       </UserLayout>

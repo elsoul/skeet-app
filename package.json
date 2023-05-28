@@ -50,6 +50,7 @@
     "expo": "48.0.5",
     "expo-checkbox": "2.3.1",
     "expo-font": "11.1.1",
+    "expo-image": "1.0.1",
     "expo-linking": "4.0.1",
     "firebase": "9.17.2",
     "framer-motion": "10.3.4",
