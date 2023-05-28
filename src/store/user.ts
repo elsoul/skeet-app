@@ -6,7 +6,6 @@ export type UserState = {
   email: string
   username: string
   iconUrl: string
-  role: string
   skeetToken: string
 }
 
@@ -17,7 +16,6 @@ export const userState = atom<UserState>({
     email: '',
     username: '',
     iconUrl: '',
-    role: 'USER',
     skeetToken: '',
   },
   effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
