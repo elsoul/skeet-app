@@ -18,7 +18,7 @@ export const authOnCreateUser = functions
       const userParams = {
         uid,
         email: email || '',
-        username: displayName || '',
+        username: displayName || email?.split('@')[0] || '',
         iconUrl:
           photoURL == '' || !photoURL
             ? gravatarIconUrl(email ?? 'info@skeet.dev')

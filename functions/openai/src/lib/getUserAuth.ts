@@ -18,7 +18,7 @@ export const getUserAuth = async (req: Request) => {
     const { uid, displayName, email, photoURL } = user
     const response: UserAuthType = {
       uid,
-      username: displayName || '',
+      username: displayName || email?.split('@')[0] || '',
       email: email || '',
       iconUrl:
         photoURL == '' || !photoURL

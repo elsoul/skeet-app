@@ -34,12 +34,14 @@ export default function UserSettingsScreen() {
             </View>
           </View>
         </View>
-        <View style={tw`flex flex-col sm:flex-row`}>
-          <View style={tw`flex flex-col`}>
-            <EditUserIconUrl />
-          </View>
-          <View style={tw`flex flex-col`}>
-            <EditUserProfile />
+        <View style={tw`flex flex-col items-center justify-center`}>
+          <View style={tw`flex flex-col sm:flex-row items-center max-w-md`}>
+            <View style={tw`flex flex-col items-center`}>
+              <EditUserIconUrl />
+            </View>
+            <View style={tw`flex flex-col`}>
+              <EditUserProfile />
+            </View>
           </View>
         </View>
       </UserLayout>

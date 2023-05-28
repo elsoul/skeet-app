@@ -12,7 +12,7 @@ export const firebaseApp = !getApps().length
 const getFirebaseAuth = () => {
   const auth = getAuth(firebaseApp)
   if (process.env.NODE_ENV !== 'production') {
-    connectAuthEmulator(auth, 'http://localhost:9099', {
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099', {
       disableWarnings: true,
     })
   }
@@ -24,7 +24,7 @@ export const firebaseAuth = firebaseApp ? getFirebaseAuth() : undefined
 const getFirebaseStorage = () => {
   const storage = getStorage(firebaseApp)
   if (process.env.NODE_ENV !== 'production') {
-    connectStorageEmulator(storage, 'http://localhost', 9199)
+    connectStorageEmulator(storage, '127.0.0.1', 9199)
   }
   return storage
 }
@@ -32,16 +32,14 @@ const getFirebaseStorage = () => {
 export const firebaseStorage = firebaseApp ? getFirebaseStorage() : undefined
 
 const getFirebaseFirestore = () => {
-  const firestore = getFirestore(firebaseApp)
+  const firestoreDb = getFirestore(firebaseApp)
   if (process.env.NODE_ENV !== 'production') {
-    connectFirestoreEmulator(firestore, 'http://localhost', 8080)
+    connectFirestoreEmulator(firestoreDb, '127.0.0.1', 8080)
   }
-  return firestore
+  return firestoreDb
 }
 
-export const firebaseFirestore = firebaseApp
-  ? getFirebaseFirestore()
-  : undefined
+export const db = firebaseApp ? getFirebaseFirestore() : undefined
 
 export const analytics =
   typeof window !== 'undefined' &&
