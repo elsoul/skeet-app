@@ -4,9 +4,9 @@ import { Image } from 'expo-image'
 import { View, Pressable, Text } from 'react-native'
 import { PencilSquareIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import * as ImagePicker from 'expo-image-picker'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import { useRecoilState } from 'recoil'
 import { userState } from '@/store/user'
 import { db, storage } from '@/lib/firebase'
@@ -18,29 +18,28 @@ import Toast from 'react-native-toast-message'
 export default function EditUserIconUrl() {
   const { t } = useTranslation()
   const [user, setUser] = useRecoilState(userState)
-  const [iconUrl, setIconUrl] = useState<string | null>(null)
 
-  const getUserIconUrl = useCallback(async () => {
-    if (db && user.uid !== '') {
-      const docRef = doc(db, 'User', user.uid)
-      const docSnap = await getDoc(docRef)
-      if (docSnap.exists()) {
-        setIconUrl(docSnap.data()?.iconUrl)
-      } else {
-        setUser({
-          uid: '',
-          email: '',
-          username: '',
-          iconUrl: '',
-          skeetToken: '',
-        })
-      }
-    }
-  }, [user.uid, setUser])
+  // const getUserIconUrl = useCallback(async () => {
+  //   if (db && user.uid !== '') {
+  //     const docRef = doc(db, 'User', user.uid)
+  //     const docSnap = await getDoc(docRef)
+  //     if (docSnap.exists()) {
+  //       setIconUrl(docSnap.data()?.iconUrl)
+  //     } else {
+  //       setUser({
+  //         uid: '',
+  //         email: '',
+  //         username: '',
+  //         iconUrl: '',
+  //         skeetToken: '',
+  //       })
+  //     }
+  //   }
+  // }, [user.uid, setUser])
 
-  useEffect(() => {
-    getUserIconUrl()
-  }, [getUserIconUrl])
+  // useEffect(() => {
+  //   getUserIconUrl()
+  // }, [getUserIconUrl])
 
   const pickImage = useCallback(async () => {
     try {
@@ -74,7 +73,7 @@ export default function EditUserIconUrl() {
           ...user,
           iconUrl: downloadUrl,
         })
-        getUserIconUrl()
+
         Toast.show({
           type: 'success',
           text1: t('settings.avatarUpdated') ?? 'Avatar Updated.',
@@ -93,13 +92,13 @@ export default function EditUserIconUrl() {
           'Something went wrong... Please try it again later.',
       })
     }
-  }, [user, setUser, getUserIconUrl, t])
+  }, [user, setUser, t])
 
   return (
     <>
       <View style={tw`p-2`}>
         <Image
-          source={iconUrl}
+          source={user.iconUrl === '' ? null : user.iconUrl}
           placeholder={blurhash}
           contentFit="cover"
           style={tw`w-32 h-32 rounded-full`}
