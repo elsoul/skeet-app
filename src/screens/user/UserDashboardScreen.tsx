@@ -15,7 +15,7 @@ export default function UserDashboardScreen() {
     <>
       <UserLayout>
         <View
-          style={tw`flex flex-col min-h-screen items-center justify-start py-18 sm:px-6 lg:px-8`}
+          style={tw`flex flex-colitems-center justify-start py-18 sm:px-6 lg:px-8`}
         >
           <View style={tw`sm:mx-auto sm:w-full sm:max-w-md`}>
             <View style={tw`mx-auto`}>

@@ -21,6 +21,7 @@ import { MenuProvider } from 'react-native-popup-menu'
 import Toast from 'react-native-toast-message'
 import { toastConfig } from '@/lib/toast'
 import Routes from '@/routes/Routes'
+import { View } from 'react-native'
 
 export default function App() {
   useDeviceContext(tw)
@@ -57,8 +58,10 @@ function SkeetApp() {
   return (
     <>
       <MenuProvider>
-        <Routes />
-        <Toast config={toastConfig} />
+        <View style={tw`bg-white dark:bg-gray-900`}>
+          <Routes />
+          <Toast config={toastConfig} />
+        </View>
       </MenuProvider>
     </>
   )
