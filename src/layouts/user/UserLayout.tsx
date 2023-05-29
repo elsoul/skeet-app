@@ -26,10 +26,8 @@ export default function UserLayout({ children }: Props) {
 
   return (
     <>
-      <View
-        style={tw`relative w-full max-h-screen max-w-full bg-white dark:bg-gray-900`}
-      >
-        <SafeAreaView>
+      <View style={tw`relative w-full bg-white dark:bg-gray-900`}>
+        <SafeAreaView style={tw`h-screen bg-white dark:bg-gray-900`}>
           <Modal
             animationType="fade"
             visible={isMenuOpen}
@@ -98,7 +96,7 @@ export default function UserLayout({ children }: Props) {
           </Modal>
           <View style={tw`flex flex-row max-w-full`}>
             <View
-              style={tw`z-10 hidden lg:inset-y-0 lg:flex lg:w-64 lg:flex-col min-h-screen`}
+              style={tw`z-10 hidden lg:inset-y-0 lg:flex lg:w-64 lg:flex-col`}
             >
               <View
                 style={tw`flex flex-grow flex-col bg-white pt-5 dark:bg-gray-900`}
@@ -130,7 +128,9 @@ export default function UserLayout({ children }: Props) {
                             'mr-3 h-6 w-6 flex-shrink-0'
                           )}`}
                         />
-                        <Text style={tw`py-1 font-loaded-medium text-lg`}>
+                        <Text
+                          style={tw`py-1 font-loaded-medium text-lg text-gray-900 dark:text-gray-50`}
+                        >
                           {t(item.name)}
                         </Text>
                       </Pressable>
@@ -140,7 +140,7 @@ export default function UserLayout({ children }: Props) {
               </View>
             </View>
 
-            <View style={tw`flex flex-col flex-1 max-h-screen`}>
+            <View style={tw`flex flex-col flex-1 h-screen`}>
               <View
                 style={tw`flex-shrink- top-0 z-10 flex h-16 md:h-18 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
               >
@@ -177,7 +177,7 @@ export default function UserLayout({ children }: Props) {
                 </View>
               </View>
               <ScrollView style={tw`py-6`}>
-                <View style={tw`w-full min-h-screen`}>{children}</View>
+                <View style={tw`w-full`}>{children}</View>
               </ScrollView>
             </View>
           </View>
