@@ -16,9 +16,10 @@ import {
   sendEmailVerification,
 } from 'firebase/auth'
 import { emailSchema, passwordSchema } from '@/utils/form'
-import { auth } from '@/lib/firebase'
+import { auth, db } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
 import { sleep } from '@/utils/time'
+import { doc, getDoc } from 'firebase/firestore'
 
 export default function LoginScreen() {
   useColorModeRefresh()
@@ -55,7 +56,7 @@ export default function LoginScreen() {
   }, [validateEmail, validatePassword])
 
   const login = useCallback(async () => {
-    if (auth && emailError === '' && passwordError === '') {
+    if (auth && emailError === '' && passwordError === '' && db) {
       try {
         setLoading(true)
         const userCredential = await signInWithEmailAndPassword(
@@ -69,18 +70,29 @@ export default function LoginScreen() {
         }
 
         const fbToken = await userCredential.user.getIdToken()
-        console.log({ fbToken })
+        if (process.env.NODE_ENV !== 'production') {
+          console.log({ fbToken })
+        }
 
-        Toast.show({
-          type: 'success',
-          text1: t('succeedLogin') ?? 'Succeed to sign in🎉',
-          text2: t('howdy') ?? 'Howdy?',
-        })
-        setUser({
-          ...user,
-          skeetToken: fbToken,
-          uid: userCredential.user.uid,
-        })
+        const docRef = doc(db, 'User', userCredential.user.uid)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          setUser({
+            ...user,
+            email: userCredential.user.email ?? '',
+            username: docSnap.data()?.username ?? '',
+            iconUrl: docSnap.data()?.iconUrl ?? '',
+            skeetToken: fbToken,
+            uid: userCredential.user.uid,
+          })
+          Toast.show({
+            type: 'success',
+            text1: t('succeedLogin') ?? 'Succeed to sign in🎉',
+            text2: t('howdy') ?? 'Howdy?',
+          })
+        } else {
+          throw new Error('Not verified')
+        }
       } catch (err) {
         console.error(err)
         if (err instanceof Error && err.message === 'Not verified') {
