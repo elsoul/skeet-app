@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import Toast from 'react-native-toast-message'
-import { firebaseAuth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase'
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth'
 import Button from '@/components/common/atoms/Button'
 import { passwordSchema } from '@/utils/form'
@@ -41,8 +41,8 @@ export default function ResetPasswordAction({ oobCode }: Props) {
   }, [validatePassword])
   const verifyEmail = useCallback(async () => {
     try {
-      if (!firebaseAuth) throw new Error('firebaseAuth not initialized')
-      const gotEmail = await verifyPasswordResetCode(firebaseAuth, oobCode)
+      if (!auth) throw new Error('auth not initialized')
+      const gotEmail = await verifyPasswordResetCode(auth, oobCode)
       setEmail(gotEmail)
       setLoading(false)
     } catch (err) {
@@ -65,8 +65,8 @@ export default function ResetPasswordAction({ oobCode }: Props) {
   const resetPassword = useCallback(async () => {
     try {
       setRegisterLoading(true)
-      if (!firebaseAuth) throw new Error('firebaseAuth not initialized')
-      await confirmPasswordReset(firebaseAuth, oobCode, password)
+      if (!auth) throw new Error('auth not initialized')
+      await confirmPasswordReset(auth, oobCode, password)
       Toast.show({
         type: 'success',
         text1: t('resetPasswordSuccessTitle') ?? 'Reset Success',
@@ -148,7 +148,7 @@ export default function ResetPasswordAction({ oobCode }: Props) {
                   isRegisterLoading
                     ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                     : '',
-                  'w-full py-2 px-3'
+                  'w-full px-3 py-2'
                 )}
               >
                 <Text

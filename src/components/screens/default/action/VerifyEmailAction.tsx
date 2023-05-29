@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import Toast from 'react-native-toast-message'
-import { firebaseAuth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase'
 import { applyActionCode } from 'firebase/auth'
 import Button from '@/components/common/atoms/Button'
 import { CheckCircleIcon } from 'react-native-heroicons/outline'
@@ -21,8 +21,8 @@ export default function VerifyEmailAction({ oobCode }: Props) {
 
   const verifyUser = useCallback(async () => {
     try {
-      if (!firebaseAuth) throw new Error('firebaseAuth not initialized')
-      await applyActionCode(firebaseAuth, oobCode)
+      if (!auth) throw new Error('auth not initialized')
+      await applyActionCode(auth, oobCode)
       Toast.show({
         type: 'success',
         text1: t('verifySuccessTitle') ?? 'Verify Success',

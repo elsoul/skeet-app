@@ -6,51 +6,94 @@ import { PencilSquareIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useRecoilState } from 'recoil'
 import { userState } from '@/store/user'
-import { db } from '@/lib/firebase'
+import { db, storage } from '@/lib/firebase'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { blurhash } from '@/utils/placeholder'
-// import { User } from '@/types/models'
+import { getImageBlob } from '@/utils/storage'
+import Toast from 'react-native-toast-message'
 
 export default function EditUserIconUrl() {
   const { t } = useTranslation()
   const [user, setUser] = useRecoilState(userState)
   const [iconUrl, setIconUrl] = useState<string | null>(null)
 
-  useEffect(() => {
-    ;(async () => {
-      if (db && user.uid !== '') {
-        const docRef = doc(db, 'User', user.uid)
-        const docSnap = await getDoc(docRef)
-        if (docSnap.exists()) {
-          setIconUrl(docSnap.data()?.iconUrl)
-        } else {
-          setUser({
-            uid: '',
-            email: '',
-            username: '',
-            iconUrl: '',
-            skeetToken: '',
-          })
-        }
+  const getUserIconUrl = useCallback(async () => {
+    if (db && user.uid !== '') {
+      const docRef = doc(db, 'User', user.uid)
+      const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        setIconUrl(docSnap.data()?.iconUrl)
+      } else {
+        setUser({
+          uid: '',
+          email: '',
+          username: '',
+          iconUrl: '',
+          skeetToken: '',
+        })
       }
-    })()
+    }
   }, [user.uid, setUser])
 
-  const pickImage = useCallback(async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
-      quality: 1,
-      exif: false,
-      allowsMultipleSelection: false,
-    })
+  useEffect(() => {
+    getUserIconUrl()
+  }, [getUserIconUrl])
 
-    if (!result.canceled && result.assets[0]) {
-      console.log(result.assets[0].uri)
+  const pickImage = useCallback(async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        quality: 1,
+        exif: false,
+        allowsMultipleSelection: false,
+      })
+
+      if (
+        !result.canceled &&
+        result.assets[0] &&
+        storage &&
+        user.uid !== '' &&
+        db
+      ) {
+        const blob: Blob = (await getImageBlob(result.assets[0].uri)) as Blob
+        const newProfileIconRef = ref(
+          storage,
+          `User/${user.uid}/profileIcon/profile.${blob.type.split('/')[1]}`
+        )
+        await uploadBytes(newProfileIconRef, blob)
+
+        const downloadUrl = await getDownloadURL(newProfileIconRef)
+
+        const docRef = doc(db, 'User', user.uid)
+        await updateDoc(docRef, { iconUrl: downloadUrl })
+        setUser({
+          ...user,
+          iconUrl: downloadUrl,
+        })
+        getUserIconUrl()
+        Toast.show({
+          type: 'success',
+          text1: t('settings.avatarUpdated') ?? 'Avatar Updated.',
+          text2:
+            t('settings.avatarUpdatedMessage') ??
+            'Successfully updated your avatar.',
+        })
+      }
+    } catch (err) {
+      console.error(err)
+      Toast.show({
+        type: 'error',
+        text1: t('settings.avatarUpdatedError') ?? 'Avatar Update Error.',
+        text2:
+          t('settings.avatarUpdatedErrorMessage') ??
+          'Something went wrong... Please try it again later.',
+      })
     }
-  }, [])
+  }, [user, setUser, getUserIconUrl, t])
 
   return (
     <>

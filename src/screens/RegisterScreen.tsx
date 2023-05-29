@@ -17,10 +17,9 @@ import {
 } from 'firebase/auth'
 import Toast from 'react-native-toast-message'
 import { emailSchema, passwordSchema } from '@/utils/form'
-import { firebaseAuth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
 import { sleep } from '@/utils/time'
-
 
 export default function RegisterScreen() {
   useColorModeRefresh()
@@ -57,12 +56,12 @@ export default function RegisterScreen() {
   }, [validateEmail, validatePassword])
 
   const signUp = useCallback(async () => {
-    if (firebaseAuth && emailError === '' && passwordError === '') {
+    if (auth && emailError === '' && passwordError === '') {
       try {
         setLoading(true)
-        firebaseAuth.languageCode = i18n.language === 'ja-JP' ? 'ja' : 'en'
+        auth.languageCode = i18n.language === 'ja-JP' ? 'ja' : 'en'
         const userCredential = await createUserWithEmailAndPassword(
-          firebaseAuth,
+          auth,
           email,
           password
         )
@@ -223,7 +222,7 @@ export default function RegisterScreen() {
                     !isChecked || isLoading
                       ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                       : '',
-                    'w-full py-2 px-3'
+                    'w-full px-3 py-2'
                   )}
                 >
                   <Text

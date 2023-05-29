@@ -13,7 +13,7 @@ import Button from '@/components/common/atoms/Button'
 import { emailSchema } from '@/utils/form'
 import { sleep } from '@/utils/time'
 import clsx from 'clsx'
-import { firebaseAuth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase'
 import { sendPasswordResetEmail } from 'firebase/auth'
 
 export default function ResetPasswordScreen() {
@@ -38,10 +38,10 @@ export default function ResetPasswordScreen() {
   }, [validateEmail])
 
   const resetPassword = useCallback(async () => {
-    if (firebaseAuth && emailError === '') {
+    if (auth && emailError === '') {
       try {
         setLoading(true)
-        await sendPasswordResetEmail(firebaseAuth, email)
+        await sendPasswordResetEmail(auth, email)
         Toast.show({
           type: 'success',
           text1:
@@ -128,7 +128,7 @@ export default function ResetPasswordScreen() {
                     isLoading
                       ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                       : '',
-                    'w-full py-2 px-3'
+                    'w-full px-3 py-2'
                   )}
                 >
                   <Text
