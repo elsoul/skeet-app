@@ -19,28 +19,6 @@ export default function EditUserIconUrl() {
   const { t } = useTranslation()
   const [user, setUser] = useRecoilState(userState)
 
-  // const getUserIconUrl = useCallback(async () => {
-  //   if (db && user.uid !== '') {
-  //     const docRef = doc(db, 'User', user.uid)
-  //     const docSnap = await getDoc(docRef)
-  //     if (docSnap.exists()) {
-  //       setIconUrl(docSnap.data()?.iconUrl)
-  //     } else {
-  //       setUser({
-  //         uid: '',
-  //         email: '',
-  //         username: '',
-  //         iconUrl: '',
-  //         skeetToken: '',
-  //       })
-  //     }
-  //   }
-  // }, [user.uid, setUser])
-
-  // useEffect(() => {
-  //   getUserIconUrl()
-  // }, [getUserIconUrl])
-
   const pickImage = useCallback(async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({

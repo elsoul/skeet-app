@@ -53,11 +53,13 @@ export default function UserLayout({ children }: Props) {
                     style={({ pressed }) =>
                       tw`${clsx(
                         pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                        'w-5 h-5 lg:hidden'
+                        'w-5 h-5'
                       )}`
                     }
                   >
-                    <XMarkIcon style={tw`w-5 h-5 dark:text-gray-50`} />
+                    <XMarkIcon
+                      style={tw`w-5 h-5 text-gray-900 dark:text-white`}
+                    />
                   </Pressable>
                 </View>
                 <View style={tw`mt-5 flex flex-1 flex-col`}>
@@ -143,7 +145,7 @@ export default function UserLayout({ children }: Props) {
                 style={tw`flex-shrink- top-0 z-10 flex h-16 md:h-18 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
               >
                 <View
-                  style={tw`flex flex-row items-center justify-between p-4 lg:p-6 md:justify-start md:gap-10`}
+                  style={tw`flex flex-row items-center justify-between px-4 md:px-6 py-3 md:py-4 md:justify-start md:gap-10`}
                 >
                   <View
                     style={tw`flex flex-1 flex-row gap-6 md:gap-8 items-center`}
@@ -159,7 +161,9 @@ export default function UserLayout({ children }: Props) {
                         )}`
                       }
                     >
-                      <Bars3Icon style={tw`w-5 h-5 dark:text-gray-50`} />
+                      <Bars3Icon
+                        style={tw`w-5 h-5 text-gray-900 dark:text-white`}
+                      />
                     </Pressable>
                     <View style={tw`flex lg:hidden`}>
                       <LogoHorizontal />
