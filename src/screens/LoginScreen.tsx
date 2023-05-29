@@ -16,7 +16,7 @@ import {
   sendEmailVerification,
 } from 'firebase/auth'
 import { emailSchema, passwordSchema } from '@/utils/form'
-import { firebaseAuth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
 import { sleep } from '@/utils/time'
 
@@ -55,11 +55,11 @@ export default function LoginScreen() {
   }, [validateEmail, validatePassword])
 
   const login = useCallback(async () => {
-    if (firebaseAuth && emailError === '' && passwordError === '') {
+    if (auth && emailError === '' && passwordError === '') {
       try {
         setLoading(true)
         const userCredential = await signInWithEmailAndPassword(
-          firebaseAuth,
+          auth,
           email,
           password
         )

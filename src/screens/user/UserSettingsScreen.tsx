@@ -35,7 +35,9 @@ export default function UserSettingsScreen() {
           </View>
         </View>
         <View style={tw`flex flex-col items-center justify-center`}>
-          <View style={tw`flex flex-col sm:flex-row items-center max-w-md`}>
+          <View
+            style={tw`flex flex-col sm:flex-row items-center max-w-md gap-8`}
+          >
             <View style={tw`flex flex-col items-center`}>
               <EditUserIconUrl />
             </View>
