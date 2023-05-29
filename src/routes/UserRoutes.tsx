@@ -1,16 +1,16 @@
-import UserDashboardScreen from '@/screens/user/UserDashboardScreen'
+import UserOpenAiChatScreen from '@/screens/user/UserOpenAiChatScreen'
 import UserSettingsScreen from '@/screens/user/UserSettingsScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import {
+  ChatBubbleLeftRightIcon,
   Cog8ToothIcon,
-  RectangleGroupIcon,
 } from 'react-native-heroicons/outline'
 
 export const userRoutes = [
   {
-    name: 'Dashboard',
-    component: UserDashboardScreen,
-    icon: RectangleGroupIcon,
+    name: 'OpenAiChat',
+    component: UserOpenAiChatScreen,
+    icon: ChatBubbleLeftRightIcon,
   },
   {
     name: 'Settings',

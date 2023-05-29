@@ -5,7 +5,11 @@ export function toCamelCase(str: string): string {
 }
 
 export function toKebabCase(str: string): string {
-  return str.replace(/_/g, '-').toLowerCase()
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .replace(/_/g, '-')
+    .toLowerCase()
 }
 
 export function toPascalCase(str: string): string {

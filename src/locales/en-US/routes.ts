@@ -4,7 +4,7 @@ const routesEN = {
   ResetPassword: 'Reset Password',
   CheckEmail: 'Check the email from us',
   Action: 'Account Action',
-  Dashboard: 'Dashboard',
+  OpenAiChat: 'Open AI Chat',
   Settings: 'Settings',
 }
 

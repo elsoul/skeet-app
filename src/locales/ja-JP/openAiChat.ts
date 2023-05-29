@@ -1,7 +1,7 @@
-const dashboardJA = {
-  title: 'ダッシュボード',
+const openAiChatJA = {
+  title: 'オープンAIチャット',
   sub: 'そのアイデア、すぐに始めましょう🚀',
   goToDoc: 'Skeet ドキュメント',
 }
 
-export default dashboardJA
+export default openAiChatJA
