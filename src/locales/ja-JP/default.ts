@@ -4,6 +4,7 @@ const defaultJA = {
   or: 'もしくは',
   registerYourAccount: 'アカウントを作成',
   email: 'メールアドレス',
+  username: 'ユーザー名',
   password: 'パスワード',
   forgotYourPassword: 'パスワードをお忘れですか？',
   login: 'ログイン',
@@ -38,6 +39,7 @@ const defaultJA = {
   errorLoginTitle: 'ログイン失敗',
   errorLoginBody: '大変お手数おかけしますが、もう一度お試しください。',
   emailErrorText: 'メールアドレスを入力してください。',
+  usernameErrorText: '1~20文字のユーザー名を入力してください。',
   passwordErrorText: '8文字以上のパスワードを入力してください。',
   errorNotVerifiedTitle: 'まだ認証されていません',
   errorNotVerifiedBody:

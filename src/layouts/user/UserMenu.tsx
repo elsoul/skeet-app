@@ -1,7 +1,6 @@
 import tw from '@/lib/tailwind'
 import { Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { EllipsisVerticalIcon } from 'react-native-heroicons/outline'
 import {
   Menu,
   MenuOptions,
@@ -10,19 +9,27 @@ import {
 } from 'react-native-popup-menu'
 import { useNavigation } from '@react-navigation/native'
 import useLogout from '@/hooks/useLogout'
+import { useRecoilValue } from 'recoil'
+import { userState } from '@/store/user'
+import { Image } from 'expo-image'
+import { blurhash } from '@/utils/placeholder'
 
 export default function UserMenu() {
   const { t } = useTranslation()
   const navigation = useNavigation<any>()
-
   const logout = useLogout()
+
+  const { iconUrl } = useRecoilValue(userState)
 
   return (
     <>
       <Menu>
-        <MenuTrigger customStyles={tw`w-6 h-6`}>
-          <EllipsisVerticalIcon
-            style={tw`w-5 h-5 text-gray-700 dark:text-gray-200`}
+        <MenuTrigger customStyles={tw`w-8 h-8 md:w-10 md:h-10`}>
+          <Image
+            source={iconUrl === '' ? null : iconUrl}
+            placeholder={blurhash}
+            contentFit="cover"
+            style={tw`w-8 h-8 md:w-10 md:h-10 rounded-full`}
           />
         </MenuTrigger>
         <MenuOptions>
