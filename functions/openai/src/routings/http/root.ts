@@ -1,10 +1,10 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { defaultHttpOption } from '@/routings/options'
+import { publicHttpOption } from '@/routings/options'
 import { TypedRequestBody } from '@/index'
 import { RootParams } from '@/types/http/rootParams'
 
 export const root = onRequest(
-  defaultHttpOption,
+  publicHttpOption,
   async (req: TypedRequestBody<RootParams>, res) => {
     try {
       const body = req.body

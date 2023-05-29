@@ -9,7 +9,17 @@ const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${appName}-con`
 const cors = ['http://localhost:4000', 'https://app.skeet.dev']
 
-export const defaultHttpOption: HttpsOptions = {
+export const publicHttpOption: HttpsOptions = {
+  region,
+  cpu: 1,
+  memory: '1GiB',
+  maxInstances: 100,
+  minInstances: 0,
+  concurrency: 1,
+  timeoutSeconds: 540,
+}
+
+export const privateHttpOption: HttpsOptions = {
   region,
   cpu: 1,
   memory: '1GiB',

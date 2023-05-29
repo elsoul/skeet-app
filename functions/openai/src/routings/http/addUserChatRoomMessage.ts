@@ -13,11 +13,11 @@ import {
 import { chat } from '@/lib/openai/openAi'
 import { TypedRequestBody } from '@/index'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
-import { defaultHttpOption } from '@/routings/options'
+import { publicHttpOption } from '@/routings/options'
 import { getUserAuth } from '@/lib/getUserAuth'
 
 export const addUserChatRoomMessage = onRequest(
-  defaultHttpOption,
+  publicHttpOption,
   async (req: TypedRequestBody<AddUserChatRoomMessageParams>, res) => {
     try {
       const body = {

@@ -6,12 +6,12 @@ import {
   getCollectionItem,
 } from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
-import { defaultHttpOption } from '@/routings/options'
+import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib/getUserAuth'
 
 export const createUserChatRoom = onRequest(
-  defaultHttpOption,
+  publicHttpOption,
   async (req: TypedRequestBody<CreateUserChatRoomParams>, res) => {
     try {
       const body = {
