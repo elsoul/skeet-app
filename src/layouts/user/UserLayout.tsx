@@ -84,8 +84,10 @@ export default function UserLayout({ children }: Props) {
                             'mr-3 h-6 w-6 flex-shrink-0'
                           )}`}
                         />
-                        <Text style={tw`py-2 font-loaded-medium`}>
-                          {t(item.name)}
+                        <Text
+                          style={tw`py-2 font-loaded-medium text-gray-900 dark:text-gray-50`}
+                        >
+                          {t(`routes.${item.name}`)}
                         </Text>
                       </Pressable>
                     ))}
@@ -131,7 +133,7 @@ export default function UserLayout({ children }: Props) {
                         <Text
                           style={tw`py-1 font-loaded-medium text-lg text-gray-900 dark:text-gray-50`}
                         >
-                          {t(item.name)}
+                          {t(`routes.${item.name}`)}
                         </Text>
                       </Pressable>
                     ))}

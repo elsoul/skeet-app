@@ -4,7 +4,7 @@ const routesJA = {
   ResetPassword: 'パスワードリセット',
   CheckEmail: 'メールを確認してください',
   Action: 'アカウントアクション',
-  Dashboard: 'ダッシュボード',
+  OpenAiChat: 'OpenAIチャット',
   Settings: '設定',
 }
 

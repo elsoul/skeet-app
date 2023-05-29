@@ -7,7 +7,7 @@ import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { openUrl } from '@/utils/link'
 import useAnalytics from '@/hooks/useAnalytics'
 
-export default function UserDashboardScreen() {
+export default function UserOpenAiChatScreen() {
   useColorModeRefresh()
   useAnalytics()
   const { t } = useTranslation()
@@ -24,12 +24,12 @@ export default function UserDashboardScreen() {
             <Text
               style={tw`font-loaded-bold mt-6 text-center text-3xl tracking-tight text-gray-900 dark:text-white`}
             >
-              {t('dashboard.title')}
+              {t('openAiChat.title')}
             </Text>
             <Text
               style={tw`px-2 mt-2 text-center text-sm text-gray-600 dark:text-gray-300`}
             >
-              {t('dashboard.sub')}
+              {t('openAiChat.sub')}
             </Text>
             <Pressable
               onPress={() => {
@@ -39,7 +39,7 @@ export default function UserDashboardScreen() {
               <Text
                 style={tw`mt-2 py-2 text-center font-loaded-medium text-indigo-500 dark:text-indigo-200`}
               >
-                {t('dashboard.goToDoc')}
+                {t('openAiChat.goToDoc')}
               </Text>
             </Pressable>
           </View>
