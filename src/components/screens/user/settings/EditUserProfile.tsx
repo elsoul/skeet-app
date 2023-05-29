@@ -3,13 +3,12 @@ import clsx from 'clsx'
 import { View, Pressable, Text, Modal } from 'react-native'
 import { PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useRecoilState } from 'recoil'
 import { userState } from '@/store/user'
 import Button from '@/components/common/atoms/Button'
 import { usernameSchema } from '@/utils/form'
-import { sleep } from '@/utils/time'
 import { TextInput } from 'react-native-gesture-handler'
 import { db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
@@ -30,6 +29,10 @@ export default function EditUserProfile() {
       setUsernameError('usernameErrorText')
     }
   }, [username, setUsernameError])
+
+  useEffect(() => {
+    if (username.length > 0) validateUsername()
+  }, [username, validateUsername])
 
   const submit = useCallback(async () => {
     if (db && usernameError == '') {
@@ -65,6 +68,11 @@ export default function EditUserProfile() {
       }
     }
   }, [t, username, usernameError, user, setUser])
+
+  const isDisabled = useMemo(
+    () => !(username.length > 0) || isLoading || usernameError != '',
+    [username, isLoading, usernameError]
+  )
 
   return (
     <>
@@ -150,14 +158,12 @@ export default function EditUserProfile() {
 
                 <View>
                   <Button
-                    onPress={async () => {
-                      validateUsername()
-                      await sleep(100)
+                    onPress={() => {
                       submit()
                     }}
-                    disabled={username.length < 1 || isLoading}
+                    disabled={isDisabled}
                     className={clsx(
-                      username.length < 1 || isLoading
+                      isDisabled
                         ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                         : '',
                       'w-full px-3 py-2'

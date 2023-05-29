@@ -6,12 +6,11 @@ import useColorModeRefresh from '@/hooks/useColorModeRefresh'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useNavigation } from '@react-navigation/native'
 import { TextInput } from 'react-native-gesture-handler'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import Toast from 'react-native-toast-message'
 import useAnalytics from '@/hooks/useAnalytics'
 import Button from '@/components/common/atoms/Button'
 import { emailSchema } from '@/utils/form'
-import { sleep } from '@/utils/time'
 import clsx from 'clsx'
 import { auth } from '@/lib/firebase'
 import { sendPasswordResetEmail } from 'firebase/auth'
@@ -33,9 +32,9 @@ export default function ResetPasswordScreen() {
     }
   }, [email, setEmailError])
 
-  const validate = useCallback(() => {
-    validateEmail()
-  }, [validateEmail])
+  useEffect(() => {
+    if (email.length > 0) validateEmail()
+  }, [email, validateEmail])
 
   const resetPassword = useCallback(async () => {
     if (auth && emailError === '') {
@@ -62,6 +61,11 @@ export default function ResetPasswordScreen() {
       }
     }
   }, [navigation, t, emailError, email])
+
+  const isDisabled = useMemo(
+    () => isLoading || emailError !== '' || email == '',
+    [isLoading, email, emailError]
+  )
 
   return (
     <>
@@ -118,14 +122,12 @@ export default function ResetPasswordScreen() {
               </View>
               <View>
                 <Button
-                  onPress={async () => {
-                    validate()
-                    await sleep(100)
+                  onPress={() => {
                     resetPassword()
                   }}
-                  disabled={isLoading}
+                  disabled={isDisabled}
                   className={clsx(
-                    isLoading
+                    isDisabled
                       ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                       : '',
                     'w-full px-3 py-2'

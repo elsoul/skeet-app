@@ -7,7 +7,7 @@ import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useNavigation } from '@react-navigation/native'
 import { TextInput } from 'react-native-gesture-handler'
 import clsx from 'clsx'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState, useEffect } from 'react'
 import { openUrl } from '@/utils/link'
 import Checkbox from 'expo-checkbox'
 import useAnalytics from '@/hooks/useAnalytics'
@@ -19,7 +19,6 @@ import Toast from 'react-native-toast-message'
 import { emailSchema, passwordSchema } from '@/utils/form'
 import { auth } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
-import { sleep } from '@/utils/time'
 
 export default function RegisterScreen() {
   useColorModeRefresh()
@@ -50,10 +49,13 @@ export default function RegisterScreen() {
     }
   }, [password, setPasswordError])
 
-  const validate = useCallback(() => {
-    validateEmail()
-    validatePassword()
-  }, [validateEmail, validatePassword])
+  useEffect(() => {
+    if (email.length > 0) validateEmail()
+  }, [email, validateEmail])
+
+  useEffect(() => {
+    if (password.length > 0) validatePassword()
+  }, [password, validatePassword])
 
   const signUp = useCallback(async () => {
     if (auth && emailError === '' && passwordError === '') {
@@ -66,10 +68,7 @@ export default function RegisterScreen() {
           password
         )
 
-        await sendEmailVerification(
-          userCredential.user
-          // , actionCodeSettings
-        )
+        await sendEmailVerification(userCredential.user)
         Toast.show({
           type: 'success',
           text1: t('sentConfirmEmailTitle') ?? 'Sent confirmation email',
@@ -106,6 +105,17 @@ export default function RegisterScreen() {
       }
     }
   }, [emailError, passwordError, t, email, password, navigation, i18n.language])
+
+  const isDisabled = useMemo(
+    () =>
+      !isChecked ||
+      isLoading ||
+      emailError !== '' ||
+      passwordError !== '' ||
+      email === '' ||
+      password === '',
+    [isChecked, isLoading, emailError, passwordError, email, password]
+  )
 
   return (
     <>
@@ -212,14 +222,12 @@ export default function RegisterScreen() {
               </View>
               <View>
                 <Button
-                  onPress={async () => {
-                    validate()
-                    await sleep(100)
+                  onPress={() => {
                     signUp()
                   }}
-                  disabled={!isChecked || isLoading}
+                  disabled={isDisabled}
                   className={clsx(
-                    !isChecked || isLoading
+                    isDisabled
                       ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                       : '',
                     'w-full px-3 py-2'
