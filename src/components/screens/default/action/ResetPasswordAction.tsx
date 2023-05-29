@@ -1,7 +1,7 @@
 import ActionLoading from '@/components/loading/ActionLoading'
 import tw from '@/lib/tailwind'
 import { View, Text } from 'react-native'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import Toast from 'react-native-toast-message'
@@ -11,7 +11,6 @@ import Button from '@/components/common/atoms/Button'
 import { passwordSchema } from '@/utils/form'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { TextInput } from 'react-native-gesture-handler'
-import { sleep } from '@/utils/time'
 import clsx from 'clsx'
 
 type Props = {
@@ -36,9 +35,10 @@ export default function ResetPasswordAction({ oobCode }: Props) {
     }
   }, [password, setPasswordError])
 
-  const validate = useCallback(() => {
-    validatePassword()
-  }, [validatePassword])
+  useEffect(() => {
+    if (password.length > 0) validatePassword()
+  }, [password, validatePassword])
+
   const verifyEmail = useCallback(async () => {
     try {
       if (!auth) throw new Error('auth not initialized')
@@ -89,6 +89,16 @@ export default function ResetPasswordAction({ oobCode }: Props) {
     }
   }, [oobCode, password, t, navigation])
 
+  const isDisabled = useMemo(
+    () =>
+      isLoading ||
+      passwordError != '' ||
+      email == '' ||
+      password == '' ||
+      isRegisterLoading,
+    [isLoading, passwordError, email, password, isRegisterLoading]
+  )
+
   if (isLoading) {
     return (
       <>
@@ -138,14 +148,12 @@ export default function ResetPasswordAction({ oobCode }: Props) {
             </View>
             <View>
               <Button
-                onPress={async () => {
-                  validate()
-                  await sleep(100)
+                onPress={() => {
                   resetPassword()
                 }}
-                disabled={isLoading}
+                disabled={isDisabled}
                 className={clsx(
-                  isRegisterLoading
+                  isDisabled
                     ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                     : '',
                   'w-full px-3 py-2'

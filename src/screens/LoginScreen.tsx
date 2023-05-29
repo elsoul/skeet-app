@@ -6,7 +6,7 @@ import useColorModeRefresh from '@/hooks/useColorModeRefresh'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useNavigation } from '@react-navigation/native'
 import { TextInput } from 'react-native-gesture-handler'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import { useRecoilState } from 'recoil'
 import { userState } from '@/store/user'
 import Toast from 'react-native-toast-message'
@@ -18,8 +18,8 @@ import {
 import { emailSchema, passwordSchema } from '@/utils/form'
 import { auth, db } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
-import { sleep } from '@/utils/time'
 import { doc, getDoc } from 'firebase/firestore'
+import clsx from 'clsx'
 
 export default function LoginScreen() {
   useColorModeRefresh()
@@ -50,10 +50,13 @@ export default function LoginScreen() {
     }
   }, [password, setPasswordError])
 
-  const validate = useCallback(() => {
-    validateEmail()
-    validatePassword()
-  }, [validateEmail, validatePassword])
+  useEffect(() => {
+    if (email.length > 0) validateEmail()
+  }, [email, validateEmail])
+
+  useEffect(() => {
+    if (password.length > 0) validatePassword()
+  }, [password, validatePassword])
 
   const login = useCallback(async () => {
     if (auth && emailError === '' && passwordError === '' && db) {
@@ -117,6 +120,16 @@ export default function LoginScreen() {
       }
     }
   }, [user, setUser, t, email, password, emailError, passwordError])
+
+  const isDisabled = useMemo(
+    () =>
+      isLoading ||
+      emailError != '' ||
+      passwordError != '' ||
+      email == '' ||
+      password == '',
+    [isLoading, emailError, passwordError, email, password]
+  )
 
   return (
     <>
@@ -213,13 +226,16 @@ export default function LoginScreen() {
               </View>
               <View>
                 <Button
-                  onPress={async () => {
-                    validate()
-                    await sleep(100)
+                  onPress={() => {
                     login()
                   }}
-                  disabled={isLoading}
-                  className="w-full px-3 py-2"
+                  disabled={isDisabled}
+                  className={clsx(
+                    isDisabled
+                      ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
+                      : '',
+                    'w-full px-3 py-2'
+                  )}
                 >
                   <Text
                     style={tw`text-center font-loaded-bold text-lg text-white`}
