@@ -8,6 +8,7 @@
   "scripts": {
     "format": "prettier --write --ignore-unknown .",
     "lint": "eslint --ext .ts,.tsx --fix .",
+    "test": "jest --coverage=false --detectOpenHandles --maxWorkers=1",
     "typecheck": "tsc --noEmit",
     "skeet": "run-p skeet:*",
     "skeet:openai": "yarn --cwd functions/openai dev",

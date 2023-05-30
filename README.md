@@ -40,7 +40,21 @@ $ cd <project-name>
 $ skeet s
 ```
 
-(Open http://localhost:4000)[http://localhost:4000]
+Open a new terminal and run:
+
+```bash
+$ skeet login
+$ export ACCESS_TOKEN=<your-token>
+```
+
+Test your app:
+
+```bash
+$ skeet test
+```
+
+Open http://localhost:4000
+
 
 ## EAS Build
 
