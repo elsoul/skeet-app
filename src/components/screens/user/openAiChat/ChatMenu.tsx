@@ -31,17 +31,16 @@ import {
   MenuOption,
   MenuProvider,
 } from 'react-native-popup-menu'
-import { TextInput } from 'react-native-gesture-handler'
+import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 
-type ChatRoom = {
+export type ChatRoom = {
   id: string
   createdAt: string
   updatedAt: string
   model: GPTModel
-  systemContent: string
   maxTokens: number
   temperature: number
 }
@@ -237,7 +236,7 @@ export default function ChatMenu({
   return (
     <>
       <View
-        style={tw`w-full h-full sm:w-54 flex flex-col items-center justify-center`}
+        style={tw`w-full sm:w-64 sm:h-screen-bar flex flex-col items-center justify-start`}
       >
         <View style={tw`w-full p-4 sm:hidden`}>
           <View style={tw`flex flex-row justify-center items-center`}>
@@ -272,289 +271,35 @@ export default function ChatMenu({
             </Pressable>
           </View>
         </View>
-        <View style={tw`hidden w-full p-2 sm:flex flex-col gap-6`}>
-          <Pressable
-            onPress={() => {
-              setNewChatModalOpen(true)
-            }}
-            style={tw`${clsx(
-              'flex flex-row items-center justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600'
-            )}`}
-          >
-            <PlusCircleIcon
-              style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0 text-white')}`}
-            />
-            <Text style={tw`text-center font-loaded-bold text-lg text-white`}>
-              {t('openAiChat.newChat')}
-            </Text>
-          </Pressable>
-          <View style={tw`flex flex-col gap-3`}>
-            {chatList.map((chat) => (
+        <View
+          style={tw`hidden w-full p-2 sm:flex h-screen-bar-xs sm:h-screen-bar`}
+        >
+          <ScrollView>
+            <View style={tw`flex flex-col gap-6`}>
               <Pressable
                 onPress={() => {
-                  setCurrentChatRoomId(chat.id)
+                  setNewChatModalOpen(true)
                 }}
-                key={`ChatMenu Desktop ${chat.id}`}
                 style={tw`${clsx(
-                  currentChatRoomId === chat.id &&
-                    'border-2 border-gray-900 dark:border-gray-50',
-                  'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-start justify-start gap-2'
+                  'flex flex-row items-center justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600'
                 )}`}
               >
-                <ChatBubbleLeftIcon
-                  style={tw`${clsx(
-                    'h-5 w-5 flex-shrink-0 text-gray-900 dark:text-white'
-                  )}`}
+                <PlusCircleIcon
+                  style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0 text-white')}`}
                 />
-                <View style={tw`flex flex-col gap-2`}>
-                  <Text
-                    style={tw`font-loaded-medium text-gray-900 dark:text-white`}
-                  >
-                    {format(new Date(chat.createdAt), 'yyyy/MM/dd HH:mm:ss')}
-                  </Text>
-                  <Text
-                    style={tw`font-loaded-normal text-gray-900 dark:text-white`}
-                  >
-                    {chat.model} ({chat.maxTokens}, {chat.temperature})
-                  </Text>
-                </View>
+                <Text
+                  style={tw`text-center font-loaded-bold text-lg text-white`}
+                >
+                  {t('openAiChat.newChat')}
+                </Text>
               </Pressable>
-            ))}
-          </View>
-        </View>
-      </View>
-      <Modal
-        animationType="fade"
-        visible={isNewChatModalOpen}
-        onRequestClose={() => {
-          setNewChatModalOpen(false)
-        }}
-        style={tw`z-10 relative`}
-      >
-        <MenuProvider>
-          <View
-            style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900`}
-          >
-            <View style={tw`flex flex-row items-center justify-center p-4`}>
-              <LogoHorizontal />
-              <View style={tw`flex-grow`} />
-              <Pressable
-                onPress={() => {
-                  setNewChatModalOpen(false)
-                }}
-                style={({ pressed }) =>
-                  tw`${clsx(
-                    pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                    'w-5 h-5'
-                  )}`
-                }
-              >
-                <XMarkIcon
-                  style={tw`w-5 h-5 text-gray-900 dark:text-gray-50`}
-                />
-              </Pressable>
-            </View>
-            <View style={tw`flex flex-grow flex-col gap-8`}>
-              <Text style={tw`text-center font-loaded-bold text-lg`}>
-                {t('openAiChat.newChat')}
-              </Text>
-              <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
-                <View style={tw`px-4 sm:px-10 gap-6`}>
-                  <View>
-                    <Text
-                      style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
-                    >
-                      {t('openAiChat.model')}
-                      {modelError !== '' && (
-                        <Text
-                          style={tw`text-red-500 dark:text-red-300 text-xs`}
-                        >
-                          {' : '}
-                          {t(`openAiChat.${modelError}`)}
-                        </Text>
-                      )}
-                    </Text>
-                    <View style={tw`mt-2`}>
-                      <Menu>
-                        <MenuTrigger>
-                          <View
-                            style={tw`flex flex-row justify-center w-full p-3 border-2 border-gray-900 dark:border-white`}
-                          >
-                            <Text
-                              style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
-                            >
-                              {model}
-                            </Text>
-                            <View style={tw`flex-grow`} />
-                            <ChevronDownIcon
-                              style={tw`${clsx(
-                                'h-5 w-5 text-gray-900 dark:text-gray-50'
-                              )}`}
-                            />
-                          </View>
-                        </MenuTrigger>
-                        <MenuOptions>
-                          <View style={tw`shadow-lg dark:bg-gray-900`}>
-                            {allowedGPTModel.map((allowedModel) => (
-                              <MenuOption
-                                onSelect={() => {
-                                  setModel(allowedModel)
-                                }}
-                                key={`Menu Option ${allowedModel}`}
-                                style={tw`p-3 border-t-gray-50 dark:border-t-gray-800 border-t`}
-                              >
-                                <Text
-                                  style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
-                                >
-                                  {allowedModel}
-                                </Text>
-                              </MenuOption>
-                            ))}
-                          </View>
-                        </MenuOptions>
-                      </Menu>
-                    </View>
-                  </View>
-                  <View>
-                    <Text
-                      style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
-                    >
-                      {t('openAiChat.maxTokens')}
-                      {maxTokensError !== '' && (
-                        <Text
-                          style={tw`text-red-500 dark:text-red-300 text-xs`}
-                        >
-                          {' : '}
-                          {t(`openAiChat.${maxTokensError}`)}
-                        </Text>
-                      )}
-                    </Text>
-                    <View style={tw`mt-2`}>
-                      <TextInput
-                        style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6`}
-                        inputMode="numeric"
-                        value={maxTokens}
-                        onChangeText={setMaxTokens}
-                      />
-                    </View>
-                  </View>
-                  <View>
-                    <Text
-                      style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
-                    >
-                      {t('openAiChat.temperature')}
-                      {temperatureError !== '' && (
-                        <Text
-                          style={tw`text-red-500 dark:text-red-300 text-xs`}
-                        >
-                          {' : '}
-                          {t(`openAiChat.${temperatureError}`)}
-                        </Text>
-                      )}
-                    </Text>
-                    <View style={tw`mt-2`}>
-                      <TextInput
-                        style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6`}
-                        inputMode="numeric"
-                        value={temperature}
-                        onChangeText={setTemperature}
-                      />
-                    </View>
-                  </View>
-                  <View>
-                    <Text
-                      style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
-                    >
-                      {t('openAiChat.systemContent')}
-                      {systemContentError !== '' && (
-                        <Text
-                          style={tw`text-red-500 dark:text-red-300 text-xs`}
-                        >
-                          {' : '}
-                          {t(`openAiChat.${systemContentError}`)}
-                        </Text>
-                      )}
-                    </Text>
-                    <View style={tw`mt-2`}>
-                      <TextInput
-                        multiline
-                        style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6 h-48`}
-                        inputMode="text"
-                        value={systemContent}
-                        onChangeText={setSystemContent}
-                      />
-                    </View>
-                  </View>
-
-                  <View>
-                    <Pressable
-                      onPress={() => {
-                        newChatSubmit()
-                      }}
-                      disabled={isNewChatDisabled}
-                      style={tw`${clsx(
-                        'flex flex-row items-center justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600',
-                        isNewChatDisabled
-                          ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
-                          : ''
-                      )}`}
-                    >
-                      <PlusCircleIcon
-                        style={tw`${clsx(
-                          'mr-3 h-6 w-6 flex-shrink-0 text-white'
-                        )}`}
-                      />
-                      <Text
-                        style={tw`text-center font-loaded-bold text-lg text-white`}
-                      >
-                        {t('openAiChat.createChatRoom')}
-                      </Text>
-                    </Pressable>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-        </MenuProvider>
-      </Modal>
-      <Modal
-        animationType="fade"
-        visible={isChatListModalOpen}
-        onRequestClose={() => {
-          setChatListModalOpen(false)
-        }}
-      >
-        <View style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900`}>
-          <View style={tw`flex flex-row items-center justify-center p-4`}>
-            <LogoHorizontal />
-            <View style={tw`flex-grow`} />
-            <Pressable
-              onPress={() => {
-                setChatListModalOpen(false)
-              }}
-              style={({ pressed }) =>
-                tw`${clsx(
-                  pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                  'w-5 h-5'
-                )}`
-              }
-            >
-              <XMarkIcon style={tw`w-5 h-5 text-gray-900 dark:text-gray-50`} />
-            </Pressable>
-          </View>
-          <View style={tw`flex flex-grow flex-col gap-8`}>
-            <Text style={tw`text-center font-loaded-bold text-lg`}>
-              {t('openAiChat.chatList')}
-            </Text>
-            <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
-              <View style={tw`px-4 sm:px-10 gap-6`}>
+              <View style={tw`flex flex-col gap-3`}>
                 {chatList.map((chat) => (
                   <Pressable
                     onPress={() => {
                       setCurrentChatRoomId(chat.id)
-                      setChatListModalOpen(false)
                     }}
-                    key={`ChatMenu Mobile ${chat.id}`}
+                    key={`ChatMenu Desktop ${chat.id}`}
                     style={tw`${clsx(
                       currentChatRoomId === chat.id &&
                         'border-2 border-gray-900 dark:border-gray-50',
@@ -585,8 +330,281 @@ export default function ChatMenu({
                 ))}
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
+      </View>
+      <Modal
+        animationType="fade"
+        visible={isNewChatModalOpen}
+        onRequestClose={() => {
+          setNewChatModalOpen(false)
+        }}
+        style={tw`z-10 relative`}
+      >
+        <MenuProvider>
+          <ScrollView>
+            <View
+              style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900 pb-8`}
+            >
+              <View style={tw`flex flex-row items-center justify-center p-4`}>
+                <LogoHorizontal />
+                <View style={tw`flex-grow`} />
+                <Pressable
+                  onPress={() => {
+                    setNewChatModalOpen(false)
+                  }}
+                  style={({ pressed }) =>
+                    tw`${clsx(
+                      pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                      'w-5 h-5'
+                    )}`
+                  }
+                >
+                  <XMarkIcon
+                    style={tw`w-5 h-5 text-gray-900 dark:text-gray-50`}
+                  />
+                </Pressable>
+              </View>
+              <View style={tw`flex flex-grow flex-col gap-8`}>
+                <Text style={tw`text-center font-loaded-bold text-lg`}>
+                  {t('openAiChat.newChat')}
+                </Text>
+                <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
+                  <View style={tw`px-4 sm:px-10 gap-6`}>
+                    <View>
+                      <Text
+                        style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
+                      >
+                        {t('openAiChat.model')}
+                        {modelError !== '' && (
+                          <Text
+                            style={tw`text-red-500 dark:text-red-300 text-xs`}
+                          >
+                            {' : '}
+                            {t(`openAiChat.${modelError}`)}
+                          </Text>
+                        )}
+                      </Text>
+                      <View style={tw`mt-2`}>
+                        <Menu>
+                          <MenuTrigger>
+                            <View
+                              style={tw`flex flex-row justify-center w-full p-3 border-2 border-gray-900 dark:border-white`}
+                            >
+                              <Text
+                                style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
+                              >
+                                {model}
+                              </Text>
+                              <View style={tw`flex-grow`} />
+                              <ChevronDownIcon
+                                style={tw`${clsx(
+                                  'h-5 w-5 text-gray-900 dark:text-gray-50'
+                                )}`}
+                              />
+                            </View>
+                          </MenuTrigger>
+                          <MenuOptions>
+                            <View style={tw`shadow-lg dark:bg-gray-900`}>
+                              {allowedGPTModel.map((allowedModel) => (
+                                <MenuOption
+                                  onSelect={() => {
+                                    setModel(allowedModel)
+                                  }}
+                                  key={`Menu Option ${allowedModel}`}
+                                  style={tw`p-3 border-t-gray-50 dark:border-t-gray-800 border-t`}
+                                >
+                                  <Text
+                                    style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
+                                  >
+                                    {allowedModel}
+                                  </Text>
+                                </MenuOption>
+                              ))}
+                            </View>
+                          </MenuOptions>
+                        </Menu>
+                      </View>
+                    </View>
+                    <View>
+                      <Text
+                        style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
+                      >
+                        {t('openAiChat.maxTokens')}
+                        {maxTokensError !== '' && (
+                          <Text
+                            style={tw`text-red-500 dark:text-red-300 text-xs`}
+                          >
+                            {' : '}
+                            {t(`openAiChat.${maxTokensError}`)}
+                          </Text>
+                        )}
+                      </Text>
+                      <View style={tw`mt-2`}>
+                        <TextInput
+                          style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6`}
+                          inputMode="numeric"
+                          value={maxTokens}
+                          onChangeText={setMaxTokens}
+                        />
+                      </View>
+                    </View>
+                    <View>
+                      <Text
+                        style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
+                      >
+                        {t('openAiChat.temperature')}
+                        {temperatureError !== '' && (
+                          <Text
+                            style={tw`text-red-500 dark:text-red-300 text-xs`}
+                          >
+                            {' : '}
+                            {t(`openAiChat.${temperatureError}`)}
+                          </Text>
+                        )}
+                      </Text>
+                      <View style={tw`mt-2`}>
+                        <TextInput
+                          style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6`}
+                          inputMode="numeric"
+                          value={temperature}
+                          onChangeText={setTemperature}
+                        />
+                      </View>
+                    </View>
+                    <View>
+                      <Text
+                        style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
+                      >
+                        {t('openAiChat.systemContent')}
+                        {systemContentError !== '' && (
+                          <Text
+                            style={tw`text-red-500 dark:text-red-300 text-xs`}
+                          >
+                            {' : '}
+                            {t(`openAiChat.${systemContentError}`)}
+                          </Text>
+                        )}
+                      </Text>
+                      <View style={tw`mt-2`}>
+                        <TextInput
+                          multiline
+                          style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6 h-48`}
+                          inputMode="text"
+                          value={systemContent}
+                          onChangeText={setSystemContent}
+                        />
+                      </View>
+                    </View>
+
+                    <View>
+                      <Pressable
+                        onPress={() => {
+                          newChatSubmit()
+                        }}
+                        disabled={isNewChatDisabled}
+                        style={tw`${clsx(
+                          'flex flex-row items-center justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600',
+                          isNewChatDisabled
+                            ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
+                            : ''
+                        )}`}
+                      >
+                        <PlusCircleIcon
+                          style={tw`${clsx(
+                            'mr-3 h-6 w-6 flex-shrink-0 text-white'
+                          )}`}
+                        />
+                        <Text
+                          style={tw`text-center font-loaded-bold text-lg text-white`}
+                        >
+                          {t('openAiChat.createChatRoom')}
+                        </Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </MenuProvider>
+      </Modal>
+      <Modal
+        animationType="fade"
+        visible={isChatListModalOpen}
+        onRequestClose={() => {
+          setChatListModalOpen(false)
+        }}
+      >
+        <ScrollView>
+          <View
+            style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900 pb-12`}
+          >
+            <View style={tw`flex flex-row items-center justify-center p-4`}>
+              <LogoHorizontal />
+              <View style={tw`flex-grow`} />
+              <Pressable
+                onPress={() => {
+                  setChatListModalOpen(false)
+                }}
+                style={({ pressed }) =>
+                  tw`${clsx(
+                    pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                    'w-5 h-5'
+                  )}`
+                }
+              >
+                <XMarkIcon
+                  style={tw`w-5 h-5 text-gray-900 dark:text-gray-50`}
+                />
+              </Pressable>
+            </View>
+            <View style={tw`flex flex-grow flex-col gap-8`}>
+              <Text style={tw`text-center font-loaded-bold text-lg`}>
+                {t('openAiChat.chatList')}
+              </Text>
+              <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
+                <View style={tw`px-4 sm:px-10 gap-6`}>
+                  {chatList.map((chat) => (
+                    <Pressable
+                      onPress={() => {
+                        setCurrentChatRoomId(chat.id)
+                        setChatListModalOpen(false)
+                      }}
+                      key={`ChatMenu Mobile ${chat.id}`}
+                      style={tw`${clsx(
+                        currentChatRoomId === chat.id &&
+                          'border-2 border-gray-900 dark:border-gray-50',
+                        'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-start justify-start gap-2'
+                      )}`}
+                    >
+                      <ChatBubbleLeftIcon
+                        style={tw`${clsx(
+                          'h-5 w-5 flex-shrink-0 text-gray-900 dark:text-white'
+                        )}`}
+                      />
+                      <View style={tw`flex flex-col gap-2`}>
+                        <Text
+                          style={tw`font-loaded-medium text-gray-900 dark:text-white`}
+                        >
+                          {format(
+                            new Date(chat.createdAt),
+                            'yyyy/MM/dd HH:mm:ss'
+                          )}
+                        </Text>
+                        <Text
+                          style={tw`font-loaded-normal text-gray-900 dark:text-white`}
+                        >
+                          {chat.model} ({chat.maxTokens}, {chat.temperature})
+                        </Text>
+                      </View>
+                    </Pressable>
+                  ))}
+                </View>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
       </Modal>
     </>
   )

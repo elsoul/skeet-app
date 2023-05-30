@@ -14,6 +14,10 @@ module.exports = {
         'loaded-medium': ['Outfit_500Medium', ...defaultTheme.fontFamily.sans],
         'loaded-bold': ['Outfit_700Bold', ...defaultTheme.fontFamily.sans],
       },
+      height: {
+        'screen-bar-xs': '72vh',
+        'screen-bar': '86vh',
+      },
     },
   },
   plugins: [],

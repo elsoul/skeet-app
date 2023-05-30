@@ -15,6 +15,8 @@ const openAiChatJA = {
     'これはAIアシスタントとの会話です。アシスタントは親切で、創造的で、賢くて、とてもフレンドリーです。',
   systemContent: 'AIのキャラ設定',
   systemContentErrorText: 'AIのキャラ設定を入力してください。(1000文字まで)',
+  chatGPTCustom: 'カスタム Chat GPT with API',
+  chatMessageSubmit: '送信',
 }
 
 export default openAiChatJA
