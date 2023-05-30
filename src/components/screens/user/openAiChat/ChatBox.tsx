@@ -175,7 +175,7 @@ export default function ChatBox({
               style={tw`flex flex-col items-center justify-center gap-8 p-4`}
             >
               <Text
-                style={tw`text-2xl font-bold text-gray-700 dark:text-gray-200`}
+                style={tw`text-2xl font-loaded-bold text-gray-700 dark:text-gray-200`}
               >
                 {t('openAiChat.chatGPTCustom')}
               </Text>
@@ -212,7 +212,7 @@ export default function ChatBox({
                       chatMessage.role === 'system' &&
                         'bg-gray-100 dark:bg-gray-700',
                       chatMessage.role === 'assistant' &&
-                        'bg-blue-50 dark:blue-800',
+                        'bg-blue-50 dark:bg-gray-800',
                       'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
                     )}`}
                   >
