@@ -19,7 +19,7 @@ export default function UserOpenAiChatScreen() {
   return (
     <>
       <UserLayout>
-        <View style={tw`flex flex-col items-top justify-start sm:flex-row`}>
+        <View style={tw`flex flex-col items-start justify-start sm:flex-row`}>
           <ChatMenu
             isNewChatModalOpen={isNewChatModalOpen}
             setNewChatModalOpen={setNewChatModalOpen}

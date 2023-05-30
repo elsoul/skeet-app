@@ -249,7 +249,7 @@ export default function ChatMenu({
             >
               <QueueListIcon
                 style={tw`${clsx(
-                  'h-6 w-6 flex-shrink-0 text-gray-900 dark:text-gray-white'
+                  'h-6 w-6 flex-shrink-0 text-gray-900 dark:text-white'
                 )}`}
               />
             </Pressable>
@@ -266,7 +266,7 @@ export default function ChatMenu({
             >
               <PlusCircleIcon
                 style={tw`${clsx(
-                  'h-6 w-6 flex-shrink-0 text-gray-900 dark:text-gray-white'
+                  'h-6 w-6 flex-shrink-0 text-gray-900 dark:text-white'
                 )}`}
               />
             </Pressable>
@@ -294,23 +294,27 @@ export default function ChatMenu({
                 onPress={() => {
                   setCurrentChatRoomId(chat.id)
                 }}
-                key={chat.id}
+                key={`ChatMenu Desktop ${chat.id}`}
                 style={tw`${clsx(
                   currentChatRoomId === chat.id &&
                     'border-2 border-gray-900 dark:border-gray-50',
-                  'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-top justify-start gap-2'
+                  'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-start justify-start gap-2'
                 )}`}
               >
                 <ChatBubbleLeftIcon
                   style={tw`${clsx(
-                    'h-5 w-5 flex-shrink-0 text-gray-900 dark:text-gray-white'
+                    'h-5 w-5 flex-shrink-0 text-gray-900 dark:text-white'
                   )}`}
                 />
                 <View style={tw`flex flex-col gap-2`}>
-                  <Text style={tw`font-loaded-medium`}>
+                  <Text
+                    style={tw`font-loaded-medium text-gray-900 dark:text-white`}
+                  >
                     {format(new Date(chat.createdAt), 'yyyy/MM/dd HH:mm:ss')}
                   </Text>
-                  <Text style={tw`font-loaded-normal`}>
+                  <Text
+                    style={tw`font-loaded-normal text-gray-900 dark:text-white`}
+                  >
                     {chat.model} ({chat.maxTokens}, {chat.temperature})
                   </Text>
                 </View>
@@ -390,14 +394,13 @@ export default function ChatMenu({
                           </View>
                         </MenuTrigger>
                         <MenuOptions>
-                          <View
-                            style={tw`shadow-lg dark:bg-gray-900 fixed z-50`}
-                          >
+                          <View style={tw`shadow-lg dark:bg-gray-900`}>
                             {allowedGPTModel.map((allowedModel) => (
                               <MenuOption
                                 onSelect={() => {
                                   setModel(allowedModel)
                                 }}
+                                key={`Menu Option ${allowedModel}`}
                                 style={tw`p-3 border-t-gray-50 dark:border-t-gray-800 border-t`}
                               >
                                 <Text
@@ -544,7 +547,43 @@ export default function ChatMenu({
               {t('openAiChat.chatList')}
             </Text>
             <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
-              <View style={tw`px-4 sm:px-10 gap-6`}></View>
+              <View style={tw`px-4 sm:px-10 gap-6`}>
+                {chatList.map((chat) => (
+                  <Pressable
+                    onPress={() => {
+                      setCurrentChatRoomId(chat.id)
+                      setChatListModalOpen(false)
+                    }}
+                    key={`ChatMenu Mobile ${chat.id}`}
+                    style={tw`${clsx(
+                      currentChatRoomId === chat.id &&
+                        'border-2 border-gray-900 dark:border-gray-50',
+                      'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-start justify-start gap-2'
+                    )}`}
+                  >
+                    <ChatBubbleLeftIcon
+                      style={tw`${clsx(
+                        'h-5 w-5 flex-shrink-0 text-gray-900 dark:text-white'
+                      )}`}
+                    />
+                    <View style={tw`flex flex-col gap-2`}>
+                      <Text
+                        style={tw`font-loaded-medium text-gray-900 dark:text-white`}
+                      >
+                        {format(
+                          new Date(chat.createdAt),
+                          'yyyy/MM/dd HH:mm:ss'
+                        )}
+                      </Text>
+                      <Text
+                        style={tw`font-loaded-normal text-gray-900 dark:text-white`}
+                      >
+                        {chat.model} ({chat.maxTokens}, {chat.temperature})
+                      </Text>
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
             </View>
           </View>
         </View>
