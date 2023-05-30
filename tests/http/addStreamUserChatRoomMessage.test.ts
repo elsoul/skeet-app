@@ -1,5 +1,5 @@
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/openai/addStreamUserChatRoomMessageParams'
-import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
+import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
 import { postFetch } from '../jest.setup'
 
 let userChatRoomId = ''

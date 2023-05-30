@@ -1,4 +1,4 @@
-import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
+import { AddUserChatRoomMessageParams } from '@/types/http/openai/addUserChatRoomMessageParams'
 import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
 import { postFetch } from '../jest.setup'
 
