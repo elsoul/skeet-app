@@ -41,9 +41,7 @@ export default function UserMenu() {
               style={tw`p-3`}
             >
               <Text
-                style={{
-                  ...tw`font-loaded-medium text-gray-900 dark:text-gray-50`,
-                }}
+                style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
               >
                 {t('settings.title')}
               </Text>
@@ -55,9 +53,7 @@ export default function UserMenu() {
               style={tw`p-3 border-t-gray-50 dark:border-t-gray-800 border-t`}
             >
               <Text
-                style={{
-                  ...tw`font-loaded-medium text-gray-900 dark:text-gray-50`,
-                }}
+                style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
               >
                 {t('logout')}
               </Text>

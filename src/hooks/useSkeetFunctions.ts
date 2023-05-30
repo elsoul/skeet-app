@@ -5,7 +5,11 @@ import { toKebabCase } from '@/utils/character'
 
 export default function useSkeetFunctions() {
   const { skeetToken } = useRecoilValue(userState)
-  const fetcher = async (functionName: string, methodName: string) => {
+  const fetcher = async <T>(
+    functionName: string,
+    methodName: string,
+    params: T
+  ) => {
     try {
       const url =
         process.env.NODE_ENV === 'production'
@@ -19,11 +23,14 @@ export default function useSkeetFunctions() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${skeetToken}`,
         },
+        body: JSON.stringify(params),
       })
       return await res.json()
-    } catch (e) {
-      console.error(e)
-      throw new Error('Failed to fetch Skeet Functions')
+    } catch (err) {
+      console.error(err)
+      if (err instanceof Error) {
+        throw new Error(err.message)
+      }
     }
   }
 

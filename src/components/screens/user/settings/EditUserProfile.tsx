@@ -51,7 +51,6 @@ export default function EditUserProfile() {
             t('settings.updateProfileSuccessMessage') ??
             'Successfully updated your profile.',
         })
-        setIsModalOpen(false)
       } catch (err) {
         console.error(err)
         if (err instanceof Error) {
@@ -64,6 +63,7 @@ export default function EditUserProfile() {
           })
         }
       } finally {
+        setIsModalOpen(false)
         setLoading(false)
       }
     }
