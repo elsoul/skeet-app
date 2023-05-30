@@ -20,7 +20,12 @@ export const createUserChatRoom = onRequest(
           req.body.systemContent ||
           'This is a great chatbot. This Assistant is very kind and helpful.',
         maxTokens: req.body.maxTokens || 256,
-        temperature: req.body.temperature || 1,
+        temperature:
+          req.body.temperature == 0
+            ? 0
+            : !req.body.temperature
+            ? 1
+            : req.body.temperature,
         stream: req.body.stream || false,
       }
       const user = await getUserAuth(req)
