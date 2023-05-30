@@ -15,4 +15,5 @@ export {
   createUserChatRoom,
   getUserChatRoomMessages,
   addUserChatRoomMessage,
+  addStreamUserChatRoomMessage,
 } from '@/routings'

@@ -63,6 +63,9 @@ export const streamChat = async (
               userChatRoomId,
               userChatRoomMessageId
             )
+            if (!userChatRoomMessage)
+              throw new Error('userChatRoomMessage not found')
+
             const currentContent = userChatRoomMessage.data.content
             const newContent = currentContent + message
             await updateGrandChildCollectionItem<
