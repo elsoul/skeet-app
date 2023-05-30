@@ -3,6 +3,7 @@ import { Pressable, Text, View, Modal } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import {
+  ChatBubbleLeftIcon,
   ChevronDownIcon,
   PlusCircleIcon,
   QueueListIcon,
@@ -31,6 +32,19 @@ import {
   MenuProvider,
 } from 'react-native-popup-menu'
 import { TextInput } from 'react-native-gesture-handler'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { format } from 'date-fns'
+
+type ChatRoom = {
+  id: string
+  createdAt: string
+  updatedAt: string
+  model: GPTModel
+  systemContent: string
+  maxTokens: number
+  temperature: number
+}
 
 type Props = {
   isNewChatModalOpen: boolean
@@ -42,6 +56,8 @@ type Props = {
 export default function ChatMenu({
   isNewChatModalOpen,
   setNewChatModalOpen,
+  currentChatRoomId,
+  setCurrentChatRoomId,
 }: Props) {
   const { t } = useTranslation()
   const [isCreateLoading, setCreateLoading] = useState(false)
@@ -49,7 +65,25 @@ export default function ChatMenu({
   const fetcher = useSkeetFunctions()
   const [user, setUser] = useRecoilState(userState)
 
-  const [chatList, setChatList] = useState([])
+  const [chatList, setChatList] = useState<ChatRoom[]>([])
+
+  useEffect(() => {
+    if (db) {
+      const q = query(
+        collection(db, `User/${user.uid}/UserChatRoom`),
+        orderBy('createdAt', 'desc')
+      )
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const list: ChatRoom[] = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data()
+          list.push({ id: doc.id, ...data } as ChatRoom)
+        })
+        setChatList(list)
+      })
+      return () => unsubscribe()
+    }
+  }, [user.uid])
 
   const [model, setModel] = useState<GPTModel>(allowedGPTModel[0])
   const [modelError, setModelError] = useState('')
@@ -147,7 +181,6 @@ export default function ChatMenu({
             stream: false,
           }
         )
-        setNewChatModalOpen(false)
         if (res.status == 'error') {
           throw new Error(res.message)
         }
@@ -159,6 +192,7 @@ export default function ChatMenu({
             t('openAiChat.chatRoomCreatedSuccessBody') ??
             'Chat room has been created successfully.',
         })
+        setCurrentChatRoomId(res.userChatRoomRef.id)
       } else {
         throw new Error('validateError')
       }
@@ -197,6 +231,7 @@ export default function ChatMenu({
     setUser,
     setCreateLoading,
     isNewChatDisabled,
+    setCurrentChatRoomId,
   ])
 
   return (
@@ -237,7 +272,7 @@ export default function ChatMenu({
             </Pressable>
           </View>
         </View>
-        <View style={tw`hidden w-full p-2 sm:flex`}>
+        <View style={tw`hidden w-full p-2 sm:flex flex-col gap-6`}>
           <Pressable
             onPress={() => {
               setNewChatModalOpen(true)
@@ -253,6 +288,35 @@ export default function ChatMenu({
               {t('openAiChat.newChat')}
             </Text>
           </Pressable>
+          <View style={tw`flex flex-col gap-3`}>
+            {chatList.map((chat) => (
+              <Pressable
+                onPress={() => {
+                  setCurrentChatRoomId(chat.id)
+                }}
+                key={chat.id}
+                style={tw`${clsx(
+                  currentChatRoomId === chat.id &&
+                    'border-2 border-gray-900 dark:border-gray-50',
+                  'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-top justify-start gap-2'
+                )}`}
+              >
+                <ChatBubbleLeftIcon
+                  style={tw`${clsx(
+                    'h-5 w-5 flex-shrink-0 text-gray-900 dark:text-gray-white'
+                  )}`}
+                />
+                <View style={tw`flex flex-col gap-2`}>
+                  <Text style={tw`font-loaded-medium`}>
+                    {format(new Date(chat.createdAt), 'yyyy/MM/dd HH:mm:ss')}
+                  </Text>
+                  <Text style={tw`font-loaded-normal`}>
+                    {chat.model} ({chat.maxTokens}, {chat.temperature})
+                  </Text>
+                </View>
+              </Pressable>
+            ))}
+          </View>
         </View>
       </View>
       <Modal
