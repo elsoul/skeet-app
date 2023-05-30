@@ -53,7 +53,8 @@ Test your app:
 $ skeet test
 ```
 
-(Open http://localhost:4000)[http://localhost:4000]
+Open http://localhost:4000
+
 
 ## EAS Build
 

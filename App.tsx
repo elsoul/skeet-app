@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler'
 import '@/lib/i18n'
-import '@/lib/firebase'
 import { useDeviceContext } from 'twrnc'
 import tw from '@/lib/tailwind'
 import { useFonts } from 'expo-font'
@@ -58,10 +57,8 @@ function SkeetApp() {
   return (
     <>
       <MenuProvider>
-        <View style={tw`bg-white dark:bg-gray-900`}>
-          <Routes />
-          <Toast config={toastConfig} />
-        </View>
+        <Routes />
+        <Toast config={toastConfig} />
       </MenuProvider>
     </>
   )

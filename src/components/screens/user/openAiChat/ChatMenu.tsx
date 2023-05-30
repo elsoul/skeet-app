@@ -68,21 +68,42 @@ export default function ChatMenu({
 
   useEffect(() => {
     if (db) {
-      const q = query(
-        collection(db, `User/${user.uid}/UserChatRoom`),
-        orderBy('createdAt', 'desc')
-      )
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const list: ChatRoom[] = []
-        querySnapshot.forEach((doc) => {
-          const data = doc.data()
-          list.push({ id: doc.id, ...data } as ChatRoom)
+      try {
+        const q = query(
+          collection(db, `User/${user.uid}/UserChatRoom`),
+          orderBy('createdAt', 'desc')
+        )
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const list: ChatRoom[] = []
+          querySnapshot.forEach((doc) => {
+            const data = doc.data()
+            list.push({ id: doc.id, ...data } as ChatRoom)
+          })
+          setChatList(list)
         })
-        setChatList(list)
-      })
-      return () => unsubscribe()
+
+        return () => unsubscribe()
+      } catch (err) {
+        console.log(err)
+        if (err instanceof Error && err.message.includes('permission-denied')) {
+          Toast.show({
+            type: 'error',
+            text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
+            text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
+          })
+          setUser(defaultUser)
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: t('errorTitle') ?? 'Error',
+            text2:
+              t('errorBody') ?? 'Something went wrong... Please try it again.',
+          })
+        }
+      }
     }
-  }, [user.uid])
+  }, [user.uid, setUser, t])
 
   const [model, setModel] = useState<GPTModel>(allowedGPTModel[0])
   const [modelError, setModelError] = useState('')
@@ -199,7 +220,8 @@ export default function ChatMenu({
       console.error(err)
       if (
         err instanceof Error &&
-        err.message.includes('Firebase ID token has expired.')
+        (err.message.includes('Firebase ID token has expired.') ||
+          err.message.includes('Error: getUserAuth'))
       ) {
         Toast.show({
           type: 'error',

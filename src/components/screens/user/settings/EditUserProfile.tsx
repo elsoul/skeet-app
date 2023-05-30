@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useRecoilState } from 'recoil'
-import { userState } from '@/store/user'
+import { defaultUser, userState } from '@/store/user'
 import Button from '@/components/common/atoms/Button'
 import { usernameSchema } from '@/utils/form'
 import { TextInput } from 'react-native-gesture-handler'
@@ -53,7 +53,18 @@ export default function EditUserProfile() {
         })
       } catch (err) {
         console.error(err)
-        if (err instanceof Error) {
+        if (
+          err instanceof Error &&
+          (err.message.includes('Firebase ID token has expired.') ||
+            err.message.includes('Error: getUserAuth'))
+        ) {
+          Toast.show({
+            type: 'error',
+            text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
+            text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
+          })
+          setUser(defaultUser)
+        } else {
           Toast.show({
             type: 'error',
             text1: t('settings.updateProfileError') ?? 'Update Error',
