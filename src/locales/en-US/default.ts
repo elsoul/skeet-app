@@ -59,6 +59,10 @@ const defaultEN = {
   alreadyExistTitle: 'Already exist',
   alreadyExistBody:
     'This email address is already exist. Please try to sign in.',
+  errorTokenExpiredTitle: 'Login expired',
+  errorTokenExpiredBody: 'Please sign in again.',
+  errorTitle: 'Error',
+  errorBody: 'Something went wrong... Please try it again later.',
 }
 
 export default defaultEN

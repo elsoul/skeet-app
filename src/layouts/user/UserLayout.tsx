@@ -113,7 +113,7 @@ export default function UserLayout({ children }: Props) {
                         key={`DocLayout Menu ${item.name}`}
                         style={tw`${clsx(
                           route.name === item.name
-                            ? 'bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white'
+                            ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white'
                             : 'text-gray-700 hover:bg-gray-50 dark:text-gray-50 dark:hover:bg-gray-800',
                           'flex flex-row items-center px-2 py-2 text-sm font-medium'
                         )}`}
@@ -178,7 +178,7 @@ export default function UserLayout({ children }: Props) {
                   </View>
                 </View>
               </View>
-              <ScrollView style={tw`py-6`}>
+              <ScrollView>
                 <View style={tw`w-full`}>{children}</View>
               </ScrollView>
             </View>

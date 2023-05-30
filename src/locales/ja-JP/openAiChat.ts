@@ -1,7 +1,8 @@
 const openAiChatJA = {
   title: 'オープンAIチャット',
-  sub: 'そのアイデア、すぐに始めましょう🚀',
-  goToDoc: 'Skeet ドキュメント',
+  newChat: 'チャットルーム作成',
+  chatList: 'チャットルーム一覧',
+  createChatRoom: '新しいチャットを開始',
 }
 
 export default openAiChatJA

@@ -60,6 +60,10 @@ const defaultJA = {
   alreadyExistTitle: 'すでに登録されています。',
   alreadyExistBody:
     'こちらのメールアドレスはすでに登録されています。ログインをお試しください。',
+  errorTokenExpiredTitle: 'ログイン期限切れ',
+  errorTokenExpiredBody: 'もう一度ログインしてください。',
+  errorTitle: 'エラーです',
+  errorBody: '大変お手数おかけしますが、もう一度お試しください。',
 }
 
 export default defaultJA

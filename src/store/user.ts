@@ -9,14 +9,16 @@ export type UserState = {
   skeetToken: string
 }
 
+export const defaultUser = {
+  uid: '',
+  email: '',
+  username: '',
+  iconUrl: '',
+  skeetToken: '',
+}
+
 export const userState = atom<UserState>({
   key: 'userState',
-  default: {
-    uid: '',
-    email: '',
-    username: '',
-    iconUrl: '',
-    skeetToken: '',
-  },
+  default: defaultUser,
   effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 })
