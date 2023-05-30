@@ -16,6 +16,8 @@ const openAiChatEN = {
   systemContent: 'AI Character Setting',
   systemContentErrorText:
     'Please enter AI character setting in 1000 characters.',
+  chatGPTCustom: 'Chat GPT Custom with API',
+  chatMessageSubmit: 'Submit',
 }
 
 export default openAiChatEN

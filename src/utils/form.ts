@@ -14,3 +14,4 @@ export const gptModelSchema = z.union([
 export const maxTokensSchema = z.number().int().min(100).max(4096)
 export const temperatureSchema = z.number().min(0).max(2)
 export const systemContentSchema = z.string().min(1).max(1000)
+export const chatContentSchema = z.string().min(1).max(100000)
