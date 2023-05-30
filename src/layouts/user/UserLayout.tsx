@@ -1,5 +1,5 @@
 import tw from '@/lib/tailwind'
-import type { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { useState } from 'react'
 import { Text, Modal, Pressable, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'

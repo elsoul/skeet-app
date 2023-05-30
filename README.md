@@ -42,7 +42,6 @@ $ skeet s
 
 (Open http://localhost:4000)[http://localhost:4000]
 
-
 ## EAS Build
 
 [EAS Build](https://docs.expo.dev/build/introduction/)

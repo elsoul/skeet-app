@@ -66,7 +66,6 @@ export default function ChatBox({
   useEffect(() => {
     getChatRoom()
   }, [getChatRoom])
-  console.log(chatRoom)
 
   const [isAnswering, setIsAnswering] = useState(false)
   const fetcher = useSkeetFunctions()
@@ -137,7 +136,8 @@ export default function ChatBox({
       console.error(err)
       if (
         err instanceof Error &&
-        err.message.includes('Firebase ID token has expired.')
+        (err.message.includes('Firebase ID token has expired.') ||
+          err.message.includes('Error: getUserAuth'))
       ) {
         Toast.show({
           type: 'error',
@@ -184,15 +184,11 @@ export default function ChatBox({
                   setNewChatModalOpen(true)
                 }}
                 style={tw`${clsx(
-                  'flex flex-row items-center justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600'
+                  'flex flex-row items-center gap-4 justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600'
                 )}`}
               >
-                <PlusCircleIcon
-                  style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0 text-white')}`}
-                />
-                <Text
-                  style={tw`text-center font-loaded-bold text-lg text-white`}
-                >
+                <PlusCircleIcon style={tw`${clsx('h-6 w-6 text-white')}`} />
+                <Text style={tw`font-loaded-bold text-lg text-white`}>
                   {t('openAiChat.newChat')}
                 </Text>
               </Pressable>

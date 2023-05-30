@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 import { TextInput } from 'react-native-gesture-handler'
 import { useCallback, useState, useEffect, useMemo } from 'react'
 import { useRecoilState } from 'recoil'
-import { userState } from '@/store/user'
+import { defaultUser, userState } from '@/store/user'
 import Toast from 'react-native-toast-message'
 import useAnalytics from '@/hooks/useAnalytics'
 import {
@@ -26,7 +26,7 @@ export default function LoginScreen() {
   useAnalytics()
   const { t } = useTranslation()
   const navigation = useNavigation<any>()
-  const [user, setUser] = useRecoilState(userState)
+  const [_user, setUser] = useRecoilState(userState)
   const [isLoading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -81,12 +81,11 @@ export default function LoginScreen() {
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
           setUser({
-            ...user,
+            uid: userCredential.user.uid,
             email: userCredential.user.email ?? '',
             username: docSnap.data()?.username ?? '',
             iconUrl: docSnap.data()?.iconUrl ?? '',
             skeetToken: fbToken,
-            uid: userCredential.user.uid,
           })
           Toast.show({
             type: 'success',
@@ -106,6 +105,7 @@ export default function LoginScreen() {
               t('errorNotVerifiedBody') ??
               'Sent email to verify. Please check your email box.',
           })
+          setUser(defaultUser)
         } else {
           Toast.show({
             type: 'error',
@@ -119,7 +119,7 @@ export default function LoginScreen() {
         setLoading(false)
       }
     }
-  }, [user, setUser, t, email, password, emailError, passwordError])
+  }, [setUser, t, email, password, emailError, passwordError])
 
   const isDisabled = useMemo(
     () =>

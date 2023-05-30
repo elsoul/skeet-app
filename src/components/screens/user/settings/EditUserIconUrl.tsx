@@ -8,7 +8,7 @@ import { useCallback } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { doc, updateDoc } from 'firebase/firestore'
 import { useRecoilState } from 'recoil'
-import { userState } from '@/store/user'
+import { defaultUser, userState } from '@/store/user'
 import { db, storage } from '@/lib/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { blurhash } from '@/utils/placeholder'
@@ -62,13 +62,26 @@ export default function EditUserIconUrl() {
       }
     } catch (err) {
       console.error(err)
-      Toast.show({
-        type: 'error',
-        text1: t('settings.avatarUpdatedError') ?? 'Avatar Update Error.',
-        text2:
-          t('settings.avatarUpdatedErrorMessage') ??
-          'Something went wrong... Please try it again later.',
-      })
+      if (
+        err instanceof Error &&
+        (err.message.includes('Firebase ID token has expired.') ||
+          err.message.includes('Error: getUserAuth'))
+      ) {
+        Toast.show({
+          type: 'error',
+          text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
+          text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
+        })
+        setUser(defaultUser)
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: t('settings.avatarUpdatedError') ?? 'Avatar Update Error.',
+          text2:
+            t('settings.avatarUpdatedErrorMessage') ??
+            'Something went wrong... Please try it again later.',
+        })
+      }
     }
   }, [user, setUser, t])
 
