@@ -1,7 +1,7 @@
 import tw from '@/lib/tailwind'
 import { ReactNode } from 'react'
 import { useState } from 'react'
-import { Text, Modal, Pressable, View } from 'react-native'
+import { Text, Modal, Pressable, View, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useColorModeRefresh from '@/hooks/useColorModeRefresh'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -35,64 +35,67 @@ export default function UserLayout({ children }: Props) {
               setIsMenuOpen(false)
             }}
           >
-            <SafeAreaView>
-              <View style={tw`w-full h-full`}>
+            <SafeAreaView
+              style={tw`${clsx(
+                Platform.OS === 'ios' && 'pt-10',
+                'w-full h-full'
+              )}`}
+            >
+              <View
+                style={tw`flex flex-grow flex-col bg-white pt-5 dark:bg-gray-900`}
+              >
                 <View
-                  style={tw`flex flex-grow flex-col bg-white pt-5 dark:bg-gray-900`}
+                  style={tw`flex flex-row items-center justify-center px-4`}
                 >
-                  <View
-                    style={tw`flex flex-row items-center justify-center px-4`}
+                  <LogoHorizontal className="w-24" />
+                  <View style={tw`flex-grow`} />
+                  <Pressable
+                    onPress={() => {
+                      setIsMenuOpen(false)
+                    }}
+                    style={({ pressed }) =>
+                      tw`${clsx(
+                        pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                        'w-5 h-5'
+                      )}`
+                    }
                   >
-                    <LogoHorizontal className="w-24" />
-                    <View style={tw`flex-grow`} />
-                    <Pressable
-                      onPress={() => {
-                        setIsMenuOpen(false)
-                      }}
-                      style={({ pressed }) =>
-                        tw`${clsx(
-                          pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                          'w-5 h-5'
-                        )}`
-                      }
-                    >
-                      <XMarkIcon
-                        style={tw`w-5 h-5 text-gray-900 dark:text-white`}
-                      />
-                    </Pressable>
-                  </View>
-                  <View style={tw`mt-5 flex flex-1 flex-col`}>
-                    <View style={tw`flex-1 px-2 pb-4`}>
-                      {userRoutes.map((item) => (
-                        <Pressable
-                          key={`DocLayout Menu ${item.name}`}
+                    <XMarkIcon
+                      style={tw`w-5 h-5 text-gray-900 dark:text-white`}
+                    />
+                  </Pressable>
+                </View>
+                <View style={tw`mt-5 flex flex-1 flex-col`}>
+                  <View style={tw`flex-1 px-2 pb-4`}>
+                    {userRoutes.map((item) => (
+                      <Pressable
+                        key={`DocLayout Menu ${item.name}`}
+                        style={tw`${clsx(
+                          route.name === item.name
+                            ? 'bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white'
+                            : 'text-gray-700 hover:bg-gray-50 dark:text-gray-50 dark:hover:bg-gray-800',
+                          'flex flex-row items-center px-2 py-2 text-sm font-medium'
+                        )}`}
+                        onPress={() => {
+                          navigation.navigate(item.name)
+                          setIsMenuOpen(false)
+                        }}
+                      >
+                        <item.icon
                           style={tw`${clsx(
                             route.name === item.name
-                              ? 'bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-white'
-                              : 'text-gray-700 hover:bg-gray-50 dark:text-gray-50 dark:hover:bg-gray-800',
-                            'flex flex-row items-center px-2 py-2 text-sm font-medium'
+                              ? 'text-gray-900  dark:text-white'
+                              : 'text-gray-700 dark:text-gray-50',
+                            'mr-3 h-6 w-6 flex-shrink-0'
                           )}`}
-                          onPress={() => {
-                            navigation.navigate(item.name)
-                            setIsMenuOpen(false)
-                          }}
+                        />
+                        <Text
+                          style={tw`py-2 font-loaded-medium text-gray-900 dark:text-gray-50`}
                         >
-                          <item.icon
-                            style={tw`${clsx(
-                              route.name === item.name
-                                ? 'text-gray-900  dark:text-white'
-                                : 'text-gray-700 dark:text-gray-50',
-                              'mr-3 h-6 w-6 flex-shrink-0'
-                            )}`}
-                          />
-                          <Text
-                            style={tw`py-2 font-loaded-medium text-gray-900 dark:text-gray-50`}
-                          >
-                            {t(`routes.${item.name}`)}
-                          </Text>
-                        </Pressable>
-                      ))}
-                    </View>
+                          {t(`routes.${item.name}`)}
+                        </Text>
+                      </Pressable>
+                    ))}
                   </View>
                 </View>
               </View>
