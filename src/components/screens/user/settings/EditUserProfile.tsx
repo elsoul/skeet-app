@@ -13,6 +13,7 @@ import { TextInput } from 'react-native-gesture-handler'
 import { db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
 import { doc, updateDoc } from 'firebase/firestore'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function EditUserProfile() {
   const { t } = useTranslation()
@@ -121,76 +122,84 @@ export default function EditUserProfile() {
           setIsModalOpen(false)
         }}
       >
-        <View style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900`}>
-          <View style={tw`flex flex-row items-center justify-center p-4`}>
-            <LogoHorizontal />
-            <View style={tw`flex-grow`} />
-            <Pressable
-              onPress={() => {
-                setIsModalOpen(false)
-              }}
-              style={({ pressed }) =>
-                tw`${clsx(
-                  pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                  'w-5 h-5'
-                )}`
-              }
-            >
-              <XMarkIcon style={tw`w-5 h-5 text-gray-900 dark:text-gray-50`} />
-            </Pressable>
-          </View>
-          <View style={tw`flex flex-grow flex-col pt-10 gap-8`}>
-            <Text style={tw`text-center font-loaded-bold text-lg`}>
-              {t('settings.editProfile')}
-            </Text>
-            <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
-              <View style={tw`px-4 sm:px-10 gap-6`}>
-                <View>
-                  <Text
-                    style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
-                  >
-                    {t('username')}
-                    {usernameError !== '' && (
-                      <Text style={tw`text-red-500 dark:text-red-300 text-xs`}>
-                        {' : '}
-                        {t(usernameError)}
-                      </Text>
-                    )}
-                  </Text>
-                  <View style={tw`mt-2`}>
-                    <TextInput
-                      style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6`}
-                      inputMode="text"
-                      value={username}
-                      onChangeText={setUsername}
-                    />
-                  </View>
-                </View>
-
-                <View>
-                  <Button
-                    onPress={() => {
-                      submit()
-                    }}
-                    disabled={isDisabled}
-                    className={clsx(
-                      isDisabled
-                        ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
-                        : '',
-                      'w-full px-3 py-2'
-                    )}
-                  >
+        <SafeAreaView>
+          <View
+            style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900`}
+          >
+            <View style={tw`flex flex-row items-center justify-center p-4`}>
+              <LogoHorizontal className="w-24" />
+              <View style={tw`flex-grow`} />
+              <Pressable
+                onPress={() => {
+                  setIsModalOpen(false)
+                }}
+                style={({ pressed }) =>
+                  tw`${clsx(
+                    pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                    'w-5 h-5'
+                  )}`
+                }
+              >
+                <XMarkIcon
+                  style={tw`w-5 h-5 text-gray-900 dark:text-gray-50`}
+                />
+              </Pressable>
+            </View>
+            <View style={tw`flex flex-grow flex-col pt-10 gap-8`}>
+              <Text style={tw`text-center font-loaded-bold text-lg`}>
+                {t('settings.editProfile')}
+              </Text>
+              <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
+                <View style={tw`px-4 sm:px-10 gap-6`}>
+                  <View>
                     <Text
-                      style={tw`text-center font-loaded-bold text-lg text-white dark:text-gray-900`}
+                      style={tw`text-sm font-loaded-medium leading-6 text-gray-900 dark:text-gray-50`}
                     >
-                      {t('register')}
+                      {t('username')}
+                      {usernameError !== '' && (
+                        <Text
+                          style={tw`text-red-500 dark:text-red-300 text-xs`}
+                        >
+                          {' : '}
+                          {t(usernameError)}
+                        </Text>
+                      )}
                     </Text>
-                  </Button>
+                    <View style={tw`mt-2`}>
+                      <TextInput
+                        style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-bold text-gray-900 dark:text-white sm:leading-6`}
+                        inputMode="text"
+                        value={username}
+                        onChangeText={setUsername}
+                      />
+                    </View>
+                  </View>
+
+                  <View>
+                    <Button
+                      onPress={() => {
+                        submit()
+                      }}
+                      disabled={isDisabled}
+                      className={clsx(
+                        isDisabled
+                          ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
+                          : '',
+                        'w-full px-3 py-2'
+                      )}
+                    >
+                      <Text
+                        style={tw`text-center font-loaded-bold text-lg text-white dark:text-gray-900`}
+                      >
+                        {t('register')}
+                      </Text>
+                    </Button>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
     </>
   )

@@ -55,7 +55,6 @@ $ skeet test
 
 Open http://localhost:4000
 
-
 ## EAS Build
 
 [EAS Build](https://docs.expo.dev/build/introduction/)
@@ -66,3 +65,8 @@ You need to run this command to setup EAS Build project.
 ```
 yarn build:configure
 ```
+
+## Firebase Emulator for iOS and Android
+
+We can't use Firebase Emulator for iOS and Android.
+So now we can only test the UI of iOS and Android on local using production Firebase environment.

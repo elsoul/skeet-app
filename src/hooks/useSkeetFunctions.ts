@@ -2,6 +2,7 @@ import { userState } from '@/store/user'
 import { useRecoilValue } from 'recoil'
 import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import { toKebabCase } from '@/utils/character'
+import { Platform } from 'react-native'
 
 export default function useSkeetFunctions() {
   const { skeetToken } = useRecoilValue(userState)
@@ -12,7 +13,7 @@ export default function useSkeetFunctions() {
   ) => {
     try {
       const url =
-        process.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === 'production' || Platform.OS !== 'web'
           ? `https://${
               skeetCloudConfig.app.functionsDomain
             }/${functionName}/${toKebabCase(methodName)}`

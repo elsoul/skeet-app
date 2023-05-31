@@ -139,7 +139,7 @@ export default function LoginScreen() {
         >
           <View style={tw`sm:mx-auto sm:w-full sm:max-w-md`}>
             <View style={tw`mx-auto`}>
-              <LogoHorizontal />
+              <LogoHorizontal className="w-24" />
             </View>
             <Text
               style={tw`font-loaded-bold mt-6 text-center text-3xl tracking-tight text-gray-900 dark:text-white`}
