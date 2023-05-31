@@ -30,7 +30,6 @@ export const postFetch = async <T>(path: string, params: T, isAuth = true) => {
       headers,
       body,
     })
-    console.log(`response: ${JSON.stringify(response)}`)
     return response
   } catch (error) {
     throw new Error(`postFetch: ${error}`)
