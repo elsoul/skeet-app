@@ -1,5 +1,5 @@
 import tw from '@/lib/tailwind'
-import { Pressable, Text, View, Modal } from 'react-native'
+import { Pressable, Text, View, Modal, Platform } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import {
@@ -364,7 +364,9 @@ export default function ChatMenu({
         }}
         style={tw`z-10 relative`}
       >
-        <SafeAreaView>
+        <SafeAreaView
+          style={tw`${clsx(Platform.OS === 'ios' && 'pt-10', 'w-full h-full')}`}
+        >
           <MenuProvider>
             <ScrollView>
               <View
@@ -561,7 +563,9 @@ export default function ChatMenu({
           setChatListModalOpen(false)
         }}
       >
-        <SafeAreaView>
+        <SafeAreaView
+          style={tw`${clsx(Platform.OS === 'ios' && 'pt-10', 'w-full h-full')}`}
+        >
           <ScrollView>
             <View
               style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900 pb-12`}

@@ -1,6 +1,6 @@
 import tw from '@/lib/tailwind'
 import clsx from 'clsx'
-import { View, Pressable, Text, Modal } from 'react-native'
+import { View, Pressable, Text, Modal, Platform } from 'react-native'
 import { PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useState, useCallback, useEffect, useMemo } from 'react'
@@ -122,7 +122,9 @@ export default function EditUserProfile() {
           setIsModalOpen(false)
         }}
       >
-        <SafeAreaView>
+        <SafeAreaView
+          style={tw`${clsx(Platform.OS === 'ios' && 'pt-10', 'w-full h-full')}`}
+        >
           <View
             style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900`}
           >
