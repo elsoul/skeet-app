@@ -1,5 +1,13 @@
 import tw from '@/lib/tailwind'
-import { Pressable, Text, View, Modal, Platform } from 'react-native'
+import {
+  Pressable,
+  Text,
+  View,
+  Modal,
+  Platform,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import {
@@ -10,7 +18,7 @@ import {
 } from 'react-native-heroicons/outline'
 import { XMarkIcon } from 'react-native-heroicons/outline'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import useSkeetFunctions from '@/hooks/useSkeetFunctions'
 import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
 import Toast from 'react-native-toast-message'
@@ -32,7 +40,17 @@ import {
   MenuProvider,
 } from 'react-native-popup-menu'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  collection,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter,
+  startAt,
+} from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -66,13 +84,85 @@ export default function ChatMenu({
   const [user, setUser] = useRecoilState(userState)
 
   const [chatList, setChatList] = useState<ChatRoom[]>([])
+  const [lastChat, setLastChat] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null)
+  const [reachLast, setReachLast] = useState(false)
+
+  const queryMore = useCallback(async () => {
+    if (db && lastChat) {
+      try {
+        const q = query(
+          collection(db, `User/${user.uid}/UserChatRoom`),
+          orderBy('createdAt', 'desc'),
+          limit(20),
+          startAfter(lastChat)
+        )
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const list: ChatRoom[] = []
+          querySnapshot.forEach((doc) => {
+            const data = doc.data()
+            list.push({ id: doc.id, ...data } as ChatRoom)
+          })
+
+          if (querySnapshot.docs[querySnapshot.docs.length - 1] === lastChat) {
+            setReachLast(true)
+          } else {
+            setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
+            setChatList([...chatList, ...list])
+          }
+
+          console.log(lastChat)
+          console.log(reachLast)
+        })
+
+        return () => unsubscribe()
+      } catch (err) {
+        console.log(err)
+        if (err instanceof Error && err.message.includes('permission-denied')) {
+          Toast.show({
+            type: 'error',
+            text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
+            text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
+          })
+          setUser(defaultUser)
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: t('errorTitle') ?? 'Error',
+            text2:
+              t('errorBody') ?? 'Something went wrong... Please try it again.',
+          })
+        }
+      }
+    }
+  }, [chatList, lastChat, setUser, t, user.uid, reachLast])
+
+  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollViewRefModal = useRef<ScrollView>(null)
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { layoutMeasurement, contentOffset, contentSize } =
+        event.nativeEvent
+
+      const isScrolledToBottom =
+        layoutMeasurement.height + contentOffset.y >= contentSize.height
+
+      if (isScrolledToBottom && !reachLast) {
+        queryMore()
+      }
+    },
+    [queryMore, reachLast]
+  )
 
   useEffect(() => {
     if (db) {
       try {
         const q = query(
           collection(db, `User/${user.uid}/UserChatRoom`),
-          orderBy('createdAt', 'desc')
+          orderBy('createdAt', 'desc'),
+          limit(20)
         )
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -82,6 +172,7 @@ export default function ChatMenu({
             list.push({ id: doc.id, ...data } as ChatRoom)
           })
           setChatList(list)
+          setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
         })
 
         return () => unsubscribe()
@@ -297,7 +388,11 @@ export default function ChatMenu({
         <View
           style={tw`hidden w-full p-2 sm:flex h-screen-bar-xs sm:h-screen-bar`}
         >
-          <ScrollView>
+          <ScrollView
+            ref={scrollViewRef}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
             <View style={tw`flex flex-col gap-6`}>
               <Pressable
                 onPress={() => {
@@ -316,7 +411,7 @@ export default function ChatMenu({
                   {t('openAiChat.newChat')}
                 </Text>
               </Pressable>
-              <View style={tw`flex flex-col gap-3`}>
+              <View style={tw`flex flex-col gap-3 pb-20`}>
                 {chatList.map((chat) => (
                   <Pressable
                     onPress={() => {
@@ -566,7 +661,11 @@ export default function ChatMenu({
         <SafeAreaView
           style={tw`${clsx(Platform.OS === 'ios' && 'pt-10', 'w-full h-full')}`}
         >
-          <ScrollView>
+          <ScrollView
+            ref={scrollViewRefModal}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
             <View
               style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900 pb-12`}
             >
@@ -594,7 +693,7 @@ export default function ChatMenu({
                   {t('openAiChat.chatList')}
                 </Text>
                 <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
-                  <View style={tw`px-4 sm:px-10 gap-6`}>
+                  <View style={tw`px-4 sm:px-10 gap-6 pb-20`}>
                     {chatList.map((chat) => (
                       <Pressable
                         onPress={() => {
