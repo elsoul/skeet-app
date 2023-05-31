@@ -6,7 +6,7 @@ import {
   PaperAirplaneIcon,
   PlusCircleIcon,
 } from 'react-native-heroicons/outline'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { defaultUser, userState } from '@/store/user'
 import { db } from '@/lib/firebase'
@@ -48,6 +48,13 @@ export default function ChatBox({
   const [user, setUser] = useRecoilState(userState)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
+  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollToEnd = useCallback(() => {
+    if (currentChatRoomId) {
+      scrollViewRef.current?.scrollToEnd({ animated: false })
+    }
+  }, [scrollViewRef, currentChatRoomId])
+
   const getChatRoom = useCallback(async () => {
     if (db && user.uid && currentChatRoomId) {
       const docRef = doc(
@@ -92,7 +99,13 @@ export default function ChatBox({
       })
       return () => unsubscribe()
     }
-  }, [user.uid, currentChatRoomId])
+  }, [user.uid, currentChatRoomId, scrollToEnd])
+
+  useEffect(() => {
+    if (chatMessages.length > 0) {
+      scrollToEnd()
+    }
+  }, [chatMessages, scrollToEnd])
 
   const [chatContent, setChatContent] = useState<string>('')
   const [chatContentError, setChatContentError] = useState('')
@@ -200,30 +213,72 @@ export default function ChatBox({
             style={tw`h-screen-bar-xs sm:h-screen-bar w-full flex flex-col justify-between gap-4`}
           >
             <View style={tw`flex flex-1`}>
-              <ScrollView>
-                {chatMessages.map((chatMessage) => (
-                  <View
-                    key={chatMessage.id}
-                    style={tw`${clsx(
-                      chatMessage.role === 'system' &&
-                        'bg-gray-100 dark:bg-gray-700',
-                      chatMessage.role === 'assistant' &&
-                        'bg-blue-50 dark:bg-gray-800',
-                      'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
-                    )}`}
-                  >
-                    {chatMessage.role === 'user' && (
-                      <View>
-                        <Image
-                          source={user.iconUrl === '' ? null : user.iconUrl}
-                          placeholder={blurhash}
-                          contentFit="cover"
-                          style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                        />
-                      </View>
-                    )}
-                    {chatMessage.role === 'assistant' &&
-                      chatRoom?.model === 'gpt-3.5-turbo' && (
+              <ScrollView ref={scrollViewRef}>
+                <View style={tw`pb-24`}>
+                  {' '}
+                  {chatMessages.map((chatMessage) => (
+                    <View
+                      key={chatMessage.id}
+                      style={tw`${clsx(
+                        chatMessage.role === 'system' &&
+                          'bg-gray-100 dark:bg-gray-700',
+                        chatMessage.role === 'assistant' &&
+                          'bg-blue-50 dark:bg-gray-800',
+                        'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
+                      )}`}
+                    >
+                      {chatMessage.role === 'user' && (
+                        <View>
+                          <Image
+                            source={user.iconUrl === '' ? null : user.iconUrl}
+                            placeholder={blurhash}
+                            contentFit="cover"
+                            style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                          />
+                        </View>
+                      )}
+                      {chatMessage.role === 'assistant' &&
+                        chatRoom?.model === 'gpt-3.5-turbo' && (
+                          <View>
+                            <Image
+                              source={
+                                'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
+                              }
+                              placeholder={blurhash}
+                              contentFit="cover"
+                              style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                            />
+                          </View>
+                        )}
+                      {chatMessage.role === 'assistant' &&
+                        chatRoom?.model === 'gpt-4' && (
+                          <View>
+                            <Image
+                              source={
+                                'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
+                              }
+                              placeholder={blurhash}
+                              contentFit="cover"
+                              style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                            />
+                          </View>
+                        )}
+
+                      <Text
+                        style={tw`font-loaded-normal text-gray-900 dark:text-white w-full`}
+                      >
+                        {chatMessage.content}
+                      </Text>
+                    </View>
+                  ))}
+                  {isAnswering && (
+                    <View
+                      style={tw`${clsx(
+                        'bg-blue-50 dark:blue-800',
+                        'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
+                      )}`}
+                    >
+                      {chatRoom?.model === 'gpt-3.5-turbo' && (
                         <View>
                           <Image
                             source={
@@ -235,8 +290,7 @@ export default function ChatBox({
                           />
                         </View>
                       )}
-                    {chatMessage.role === 'assistant' &&
-                      chatRoom?.model === 'gpt-4' && (
+                      {chatRoom?.model === 'gpt-4' && (
                         <View>
                           <Image
                             source={
@@ -249,52 +303,14 @@ export default function ChatBox({
                         </View>
                       )}
 
-                    <Text
-                      style={tw`font-loaded-normal text-gray-900 dark:text-white w-full`}
-                    >
-                      {chatMessage.content}
-                    </Text>
-                  </View>
-                ))}
-                {isAnswering && (
-                  <View
-                    style={tw`${clsx(
-                      'bg-blue-50 dark:blue-800',
-                      'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
-                    )}`}
-                  >
-                    {chatRoom?.model === 'gpt-3.5-turbo' && (
-                      <View>
-                        <Image
-                          source={
-                            'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
-                          }
-                          placeholder={blurhash}
-                          contentFit="cover"
-                          style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                        />
-                      </View>
-                    )}
-                    {chatRoom?.model === 'gpt-4' && (
-                      <View>
-                        <Image
-                          source={
-                            'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
-                          }
-                          placeholder={blurhash}
-                          contentFit="cover"
-                          style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                        />
-                      </View>
-                    )}
-
-                    <Text
-                      style={tw`font-loaded-normal text-gray-900 dark:text-white w-full`}
-                    >
-                      ...
-                    </Text>
-                  </View>
-                )}
+                      <Text
+                        style={tw`font-loaded-normal text-gray-900 dark:text-white w-full`}
+                      >
+                        ...
+                      </Text>
+                    </View>
+                  )}
+                </View>
               </ScrollView>
             </View>
 
