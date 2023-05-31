@@ -3,8 +3,11 @@ import clsx from 'clsx'
 import { View, Text, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import {
+  CodeBracketSquareIcon,
   PaperAirplaneIcon,
+  PencilSquareIcon,
   PlusCircleIcon,
+  XMarkIcon,
 } from 'react-native-heroicons/outline'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
@@ -26,6 +29,9 @@ import { Image } from 'expo-image'
 import { blurhash } from '@/utils/placeholder'
 import { ChatRoom } from './ChatMenu'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/openai/addStreamUserChatRoomMessageParams'
+import CodeEditor, {
+  CodeEditorSyntaxStyles,
+} from '@rivascva/react-native-code-editor'
 
 type ChatMessage = {
   id: string
@@ -33,6 +39,7 @@ type ChatMessage = {
   createdAt: string
   updatedAt: string
   content: string
+  viewWithCodeEditor: boolean
 }
 
 type Props = {
@@ -90,7 +97,11 @@ export default function ChatBox({
         const messages: ChatMessage[] = []
         querySnapshot.forEach((doc) => {
           const data = doc.data()
-          messages.push({ id: doc.id, ...data } as ChatMessage)
+          messages.push({
+            id: doc.id,
+            viewWithCodeEditor: false,
+            ...data,
+          } as ChatMessage)
         })
         setChatMessages(messages)
       })
@@ -175,6 +186,20 @@ export default function ChatBox({
     user.uid,
   ])
 
+  const viewWithCodeEditor = useCallback(
+    (itemId: string, itemBoolean: boolean) => {
+      const updatedChatMessages = [...chatMessages]
+      const updatedItemIndex = updatedChatMessages.findIndex(
+        (message) => message.id === itemId
+      )
+      if (updatedItemIndex !== -1) {
+        updatedChatMessages[updatedItemIndex].viewWithCodeEditor = itemBoolean
+      }
+      setChatMessages(updatedChatMessages)
+    },
+    [chatMessages]
+  )
+
   return (
     <>
       <View style={tw`w-full sm:flex-1 p-4`}>
@@ -225,7 +250,7 @@ export default function ChatBox({
                       )}`}
                     >
                       {chatMessage.role === 'user' && (
-                        <View>
+                        <View style={tw`flex`}>
                           <Image
                             source={user.iconUrl === '' ? null : user.iconUrl}
                             placeholder={blurhash}
@@ -236,7 +261,7 @@ export default function ChatBox({
                       )}
                       {chatMessage.role === 'assistant' &&
                         chatRoom?.model === 'gpt-3.5-turbo' && (
-                          <View>
+                          <View style={tw`flex`}>
                             <Image
                               source={
                                 'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
@@ -249,7 +274,7 @@ export default function ChatBox({
                         )}
                       {chatMessage.role === 'assistant' &&
                         chatRoom?.model === 'gpt-4' && (
-                          <View>
+                          <View style={tw`flex`}>
                             <Image
                               source={
                                 'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
@@ -260,12 +285,69 @@ export default function ChatBox({
                             />
                           </View>
                         )}
-
-                      <Text
-                        style={tw`font-loaded-normal text-gray-900 dark:text-white w-full`}
-                      >
-                        {chatMessage.content}
-                      </Text>
+                      {chatMessage.viewWithCodeEditor ? (
+                        <>
+                          <View style={tw`flex-auto dark:hidden`}>
+                            <CodeEditor
+                              language="javascript"
+                              syntaxStyle={CodeEditorSyntaxStyles.github}
+                              initialValue={chatMessage.content}
+                            />
+                          </View>
+                          <View style={tw`hidden dark:flex-auto`}>
+                            <CodeEditor
+                              language="javascript"
+                              syntaxStyle={
+                                CodeEditorSyntaxStyles.monokaiSublime
+                              }
+                              initialValue={chatMessage.content}
+                            />
+                          </View>
+                        </>
+                      ) : (
+                        <>
+                          <View style={tw`flex-auto`}>
+                            <Text style={tw`font-loaded-normal`}>
+                              {chatMessage.content}
+                            </Text>
+                          </View>
+                        </>
+                      )}
+                      <View>
+                        {chatMessage.viewWithCodeEditor ? (
+                          <Pressable
+                            onPress={() => {
+                              viewWithCodeEditor(chatMessage.id, false)
+                            }}
+                            style={({ pressed }) =>
+                              tw`${clsx(
+                                pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                'w-5 h-5'
+                              )}`
+                            }
+                          >
+                            <XMarkIcon
+                              style={tw`w-5 h-5 text-gray-500 dark:text-gray-400`}
+                            />
+                          </Pressable>
+                        ) : (
+                          <Pressable
+                            onPress={() => {
+                              viewWithCodeEditor(chatMessage.id, true)
+                            }}
+                            style={({ pressed }) =>
+                              tw`${clsx(
+                                pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                'w-5 h-5'
+                              )}`
+                            }
+                          >
+                            <PencilSquareIcon
+                              style={tw`w-5 h-5 text-gray-500 dark:text-gray-400`}
+                            />
+                          </Pressable>
+                        )}
+                      </View>
                     </View>
                   ))}
                 </View>
