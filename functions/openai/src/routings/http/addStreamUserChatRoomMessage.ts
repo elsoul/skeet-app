@@ -15,7 +15,6 @@ import {
 import { getUserAuth } from '@/lib/getUserAuth'
 import { publicHttpOption } from '@/routings'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
-import { sleep } from '@/utils/time'
 
 export const addStreamUserChatRoomMessage = onRequest(
   publicHttpOption,
