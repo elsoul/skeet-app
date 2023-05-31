@@ -54,6 +54,7 @@ import {
 import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import ChatMenuLoading from '@/components/loading/ChatMenuLoading'
 
 export type ChatRoom = {
   id: string
@@ -87,6 +88,7 @@ export default function ChatMenu({
   const [lastChat, setLastChat] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [reachLast, setReachLast] = useState(false)
+  const [isDataLoading, setDataLoading] = useState(false)
 
   const queryMore = useCallback(async () => {
     if (db && lastChat) {
@@ -99,6 +101,7 @@ export default function ChatMenu({
         )
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          setDataLoading(true)
           const list: ChatRoom[] = []
           querySnapshot.forEach((doc) => {
             const data = doc.data()
@@ -111,9 +114,7 @@ export default function ChatMenu({
             setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
             setChatList([...chatList, ...list])
           }
-
-          console.log(lastChat)
-          console.log(reachLast)
+          setDataLoading(false)
         })
 
         return () => unsubscribe()
@@ -136,7 +137,7 @@ export default function ChatMenu({
         }
       }
     }
-  }, [chatList, lastChat, setUser, t, user.uid, reachLast])
+  }, [chatList, lastChat, setUser, t, user.uid, setDataLoading])
 
   const scrollViewRef = useRef<ScrollView>(null)
   const scrollViewRefModal = useRef<ScrollView>(null)
@@ -166,6 +167,7 @@ export default function ChatMenu({
         )
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          setDataLoading(true)
           const list: ChatRoom[] = []
           querySnapshot.forEach((doc) => {
             const data = doc.data()
@@ -173,6 +175,7 @@ export default function ChatMenu({
           })
           setChatList(list)
           setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
+          setDataLoading(false)
         })
 
         return () => unsubscribe()
@@ -447,6 +450,7 @@ export default function ChatMenu({
                   </Pressable>
                 ))}
               </View>
+              {isDataLoading && <ChatMenuLoading />}
             </View>
           </ScrollView>
         </View>
@@ -732,6 +736,7 @@ export default function ChatMenu({
                   </View>
                 </View>
               </View>
+              {isDataLoading && <ChatMenuLoading />}
             </View>
           </ScrollView>
         </SafeAreaView>
