@@ -47,6 +47,15 @@ $ skeet login
 $ export ACCESS_TOKEN=<your-token>
 ```
 
+**※ You need OpenAI API key to get success for default test.**
+
+_./functions/openai/.env_
+
+```bash
+CHAT_GPT_KEY=your-key
+CHAT_GPT_ORG=your-org
+```
+
 Test your app:
 
 ```bash
