@@ -100,7 +100,6 @@ export default function ChatBox({
 
   useEffect(() => {
     if (chatMessages.length > 0) {
-      console.log(chatMessages)
       scrollToEnd()
     }
   }, [chatMessages, scrollToEnd])
