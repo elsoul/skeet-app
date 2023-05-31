@@ -22,10 +22,10 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import { chatContentSchema } from '@/utils/form'
 import Toast from 'react-native-toast-message'
 import useSkeetFunctions from '@/hooks/useSkeetFunctions'
-import { AddUserChatRoomMessageParams } from '@/types/http/openai/addUserChatRoomMessageParams'
 import { Image } from 'expo-image'
 import { blurhash } from '@/utils/placeholder'
 import { ChatRoom } from './ChatMenu'
+import { AddStreamUserChatRoomMessageParams } from '@/types/http/openai/addStreamUserChatRoomMessageParams'
 
 type ChatMessage = {
   id: string
@@ -74,7 +74,7 @@ export default function ChatBox({
     getChatRoom()
   }, [getChatRoom])
 
-  const [isAnswering, setIsAnswering] = useState(false)
+  const [isSending, setSending] = useState(false)
   const fetcher = useSkeetFunctions()
 
   useEffect(() => {
@@ -92,9 +92,6 @@ export default function ChatBox({
           const data = doc.data()
           messages.push({ id: doc.id, ...data } as ChatMessage)
         })
-        if (messages[messages.length - 1]?.role === 'assistant') {
-          setIsAnswering(false)
-        }
         setChatMessages(messages)
       })
       return () => unsubscribe()
@@ -103,6 +100,7 @@ export default function ChatBox({
 
   useEffect(() => {
     if (chatMessages.length > 0) {
+      console.log(chatMessages)
       scrollToEnd()
     }
   }, [chatMessages, scrollToEnd])
@@ -123,16 +121,16 @@ export default function ChatBox({
   }, [chatContent, validateChatContent])
 
   const isChatMessageDisabled = useMemo(() => {
-    return isAnswering || chatContent == '' || chatContentError != ''
-  }, [isAnswering, chatContent, chatContentError])
+    return isSending || chatContent == '' || chatContentError != ''
+  }, [isSending, chatContent, chatContentError])
 
   const chatMessageSubmit = useCallback(async () => {
     try {
       if (!isChatMessageDisabled && user.uid && currentChatRoomId) {
-        setIsAnswering(true)
-        const res = await fetcher<AddUserChatRoomMessageParams>(
+        setSending(true)
+        const res = await fetcher<AddStreamUserChatRoomMessageParams>(
           'openai',
-          'addUserChatRoomMessage',
+          'addStreamUserChatRoomMessage',
           {
             userChatRoomId: currentChatRoomId,
             content: chatContent,
@@ -142,6 +140,7 @@ export default function ChatBox({
           throw new Error(res.message)
         }
         setChatContent('')
+        setSending(false)
       } else {
         throw new Error('validateError')
       }
@@ -215,7 +214,6 @@ export default function ChatBox({
             <View style={tw`flex flex-1`}>
               <ScrollView ref={scrollViewRef}>
                 <View style={tw`pb-24`}>
-                  {' '}
                   {chatMessages.map((chatMessage) => (
                     <View
                       key={chatMessage.id}
@@ -271,45 +269,6 @@ export default function ChatBox({
                       </Text>
                     </View>
                   ))}
-                  {isAnswering && (
-                    <View
-                      style={tw`${clsx(
-                        'bg-blue-50 dark:blue-800',
-                        'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
-                      )}`}
-                    >
-                      {chatRoom?.model === 'gpt-3.5-turbo' && (
-                        <View>
-                          <Image
-                            source={
-                              'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
-                            }
-                            placeholder={blurhash}
-                            contentFit="cover"
-                            style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                          />
-                        </View>
-                      )}
-                      {chatRoom?.model === 'gpt-4' && (
-                        <View>
-                          <Image
-                            source={
-                              'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
-                            }
-                            placeholder={blurhash}
-                            contentFit="cover"
-                            style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                          />
-                        </View>
-                      )}
-
-                      <Text
-                        style={tw`font-loaded-normal text-gray-900 dark:text-white w-full`}
-                      >
-                        ...
-                      </Text>
-                    </View>
-                  )}
                 </View>
               </ScrollView>
             </View>

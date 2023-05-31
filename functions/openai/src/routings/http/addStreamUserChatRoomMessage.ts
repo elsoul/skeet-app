@@ -15,6 +15,7 @@ import {
 import { getUserAuth } from '@/lib/getUserAuth'
 import { publicHttpOption } from '@/routings'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
+import { sleep } from '@/utils/time'
 
 export const addStreamUserChatRoomMessage = onRequest(
   publicHttpOption,
@@ -59,8 +60,9 @@ export const addStreamUserChatRoomMessage = onRequest(
       const systemMessage: UserChatRoomMessage = {
         userChatRoomRef: userChatRoom.ref,
         role: 'assistant',
-        content: body.content,
+        content: '',
       }
+
       const userChatRoomMessageRef = await addGrandChildCollectionItem<
         UserChatRoomMessage,
         UserChatRoom,
@@ -102,6 +104,7 @@ export const addStreamUserChatRoomMessage = onRequest(
         stream: userChatRoom.data.stream,
         messages,
       }
+
       await streamChat(
         user.uid,
         body.userChatRoomId,

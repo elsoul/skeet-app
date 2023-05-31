@@ -293,7 +293,7 @@ export default function ChatMenu({
             systemContent,
             maxTokens: Number(maxTokens),
             temperature: Number(temperature),
-            stream: false,
+            stream: true,
           }
         )
         if (res.status == 'error') {
