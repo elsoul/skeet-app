@@ -1,5 +1,7 @@
-import { Ref } from 'typesaurus'
+import { Ref } from '@skeet-framework/firestore'
 
+// CollectionId: User
+// DocumentId: uid
 export type User = {
   uid: string
   username: string
@@ -9,6 +11,8 @@ export type User = {
   updatedAt?: string
 }
 
+// CollectionId: UserChatRoom
+// DocumentId: auto
 export type UserChatRoom = {
   userRef: Ref<User>
   model: string
@@ -19,6 +23,8 @@ export type UserChatRoom = {
   updatedAt?: string
 }
 
+// CollectionId: UserChatRoomMessage
+// DocumentId: auto
 export type UserChatRoomMessage = {
   userChatRoomRef: Ref<UserChatRoom>
   role: string

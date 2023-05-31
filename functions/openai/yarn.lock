@@ -820,6 +820,16 @@
     google-gax "^3.5.7"
     protobufjs "^7.0.0"
 
+"@google-cloud/firestore@^6.6.0":
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-6.6.0.tgz#f7fd0d9cf318417b14851ddce941810b1214ab0c"
+  integrity sha512-XDWsmCtQQFs0RoXZaq3fCYe4jRtAAFmW38ezGLKWSjLQ5FNv7jxpBGtdITBM2PDI0tFNCyeogjqsDbI6CIVeuQ==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    functional-red-black-tree "^1.0.1"
+    google-gax "^3.5.7"
+    protobufjs "^7.0.0"
+
 "@google-cloud/paginator@^3.0.7":
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/@google-cloud/paginator/-/paginator-3.0.7.tgz#fb6f8e24ec841f99defaebf62c75c2e744dd419b"
@@ -1258,15 +1268,15 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@skeet-framework/firestore@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.4.tgz#14dd4ea7ae8bc7d7de35478d48812317df42b12c"
-  integrity sha512-OAChb/S3dFsWkVih2M4wMmqZzEzAoXAm4AWg4AEUG0aPYMLhoumXy+WVC50RHZJCEFoGw381oxK8cNfnfgElOQ==
+"@skeet-framework/firestore@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.7.tgz#d94c2a989090bed4bd860384e40ac90b09d1b471"
+  integrity sha512-yuIAKtvYBDb5E//wxLrWslr59JAxeOW/fYAgK1rvvzYIgHYkzyoAYLvlVGiMwa/Ut/rHSANIgPcgH2Rk4sqsMg==
   dependencies:
     date-fns "2.30.0"
     date-fns-tz "2.0.0"
     dotenv "16.0.3"
-    firebase-admin "11.8.0"
+    firebase-admin "11.9.0"
     jest "29.4.3"
     node-fetch "2.6.7"
     typesaurus "7"
@@ -2783,6 +2793,23 @@ firebase-admin@11.8.0:
     uuid "^9.0.0"
   optionalDependencies:
     "@google-cloud/firestore" "^6.5.0"
+    "@google-cloud/storage" "^6.9.5"
+
+firebase-admin@11.9.0:
+  version "11.9.0"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-11.9.0.tgz#43b6d7b23c303347d4dab7337e5abeb0a8499dc0"
+  integrity sha512-My7qrInVZFmImX8aTulrp9kgY6d88Wn+ie8UIXKzZ3SJqQQhDwFT7Q3pgQXK9RfdsUtcxJJ3rCK7MWBm4GGtuw==
+  dependencies:
+    "@fastify/busboy" "^1.2.1"
+    "@firebase/database-compat" "^0.3.4"
+    "@firebase/database-types" "^0.10.4"
+    "@types/node" ">=12.12.47"
+    jsonwebtoken "^9.0.0"
+    jwks-rsa "^3.0.1"
+    node-forge "^1.3.1"
+    uuid "^9.0.0"
+  optionalDependencies:
+    "@google-cloud/firestore" "^6.6.0"
     "@google-cloud/storage" "^6.9.5"
 
 firebase-functions-test@3.0.0:

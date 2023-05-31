@@ -1,4 +1,4 @@
-import { Ref } from 'typesaurus'
+import { Ref } from '@skeet-framework/firestore'
 
 // CollectionId: User
 // DocumentId: uid

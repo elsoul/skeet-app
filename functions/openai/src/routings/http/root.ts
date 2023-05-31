@@ -8,6 +8,7 @@ export const root = onRequest(
   async (req: TypedRequestBody<RootParams>, res) => {
     try {
       const body = req.body
+
       res.json({
         status: 'success',
         message: 'Skeet Backend is running!',
