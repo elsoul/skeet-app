@@ -56,6 +56,7 @@ import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ChatMenuLoading from '@/components/loading/ChatMenuLoading'
+import { auth } from '@/lib/firebase'
 
 export type ChatRoom = {
   id: string
@@ -80,10 +81,10 @@ export default function ChatMenu({
   setCurrentChatRoomId,
 }: Props) {
   const { t } = useTranslation()
+  const user = auth.currentUser
   const [isCreateLoading, setCreateLoading] = useState(false)
   const [isChatListModalOpen, setChatListModalOpen] = useState(false)
   const fetcher = useSkeetFunctions()
-  const [user, setUser] = useRecoilState(userState)
 
   const [chatList, setChatList] = useState<ChatRoom[]>([])
   const [lastChat, setLastChat] =
@@ -127,7 +128,6 @@ export default function ChatMenu({
             text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
-          setUser(defaultUser)
         } else {
           Toast.show({
             type: 'error',
@@ -138,7 +138,7 @@ export default function ChatMenu({
         }
       }
     }
-  }, [chatList, lastChat, setUser, t, user.uid, setDataLoading])
+  }, [chatList, lastChat, t, user.uid, setDataLoading])
 
   const scrollViewRef = useRef<ScrollView>(null)
   const scrollViewRefModal = useRef<ScrollView>(null)
@@ -199,7 +199,7 @@ export default function ChatMenu({
         }
       }
     }
-  }, [user.uid, setUser, t])
+  }, [user.uid, t])
 
   const [model, setModel] = useState<GPTModel>(allowedGPTModel[0])
   const [modelError, setModelError] = useState('')
@@ -324,7 +324,6 @@ export default function ChatMenu({
           text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
-        setUser(defaultUser)
       } else {
         Toast.show({
           type: 'error',
@@ -345,7 +344,6 @@ export default function ChatMenu({
     maxTokens,
     temperature,
     t,
-    setUser,
     setCreateLoading,
     isNewChatDisabled,
     setCurrentChatRoomId,
