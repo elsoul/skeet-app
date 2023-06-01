@@ -31,7 +31,7 @@
     "build:preview:android": "eas build --platform android --profile preview",
     "build:production:ios": "eas build --platform ios --profile production",
     "build:production:android": "eas build --platform android --profile production",
-    "build:production:webapp": "expo export:webapp",
+    "build:production:webapp": "expo export:web",
     "deploy:webapp": "yarn build:production:web && npx firebase deploy",
     "check:webapp": "npx serve web-build",
     "start": "EXPO_USE_PATH_ALIASES=1 expo start -c"
