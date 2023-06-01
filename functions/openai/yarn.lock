@@ -1268,10 +1268,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@skeet-framework/firestore@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.8.tgz#60819c4a32798f6d72a536eefe6f759ba37fe502"
-  integrity sha512-+vRH9X//0+G57HyHMg0bJ6UgdjC2tbcrEk0TExjdsrlb6fmJebKPn4G0PN+UbcMNIhk89PO2wvkq+f7kWkO3cw==
+"@skeet-framework/firestore@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.9.tgz#997e3364be12638a59bd86b3e212d226b04c846b"
+  integrity sha512-OW/foqyrbyFuZsDNeL7VZ5RJbMJrU/tUt308Xzy0NTL6+sTLplhYAw8zzFsfp6EKkWsNTGBr23HHEM5naQHTkQ==
   dependencies:
     date-fns "2.30.0"
     date-fns-tz "2.0.0"

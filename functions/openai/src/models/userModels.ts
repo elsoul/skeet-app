@@ -1,5 +1,4 @@
-import { Ref } from '@skeet-framework/firestore'
-import { Timestamp } from '@google-cloud/firestore'
+import { Ref, Timestamp } from '@skeet-framework/firestore'
 
 // CollectionId: User
 // DocumentId: uid
