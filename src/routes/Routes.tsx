@@ -57,12 +57,6 @@ export default function Routes() {
     }
   }, [defaultScreens, userScreens])
 
-  console.log("test")
-  if(auth.currentUser) {
-    console.log(auth.currentUser.emailVerified)
-  }
-  console.log("tests")
-
   return (
     <>
       <NavigationContainer
