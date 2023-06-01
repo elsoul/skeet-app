@@ -4,9 +4,6 @@ import RegisterScreen from '@/screens/RegisterScreen'
 import ResetPasswordScreen from '@/screens/ResetPasswordScreen'
 import CheckEmailScreen from '@/screens/CheckEmailScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import React, { createContext, useState } from 'react';
-
-export const AuthContext = createContext({});
 
 export const defaultRoutes = [
   {
