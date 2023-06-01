@@ -1268,10 +1268,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@skeet-framework/firestore@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.7.tgz#d94c2a989090bed4bd860384e40ac90b09d1b471"
-  integrity sha512-yuIAKtvYBDb5E//wxLrWslr59JAxeOW/fYAgK1rvvzYIgHYkzyoAYLvlVGiMwa/Ut/rHSANIgPcgH2Rk4sqsMg==
+"@skeet-framework/firestore@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.8.tgz#60819c4a32798f6d72a536eefe6f759ba37fe502"
+  integrity sha512-+vRH9X//0+G57HyHMg0bJ6UgdjC2tbcrEk0TExjdsrlb6fmJebKPn4G0PN+UbcMNIhk89PO2wvkq+f7kWkO3cw==
   dependencies:
     date-fns "2.30.0"
     date-fns-tz "2.0.0"
@@ -1425,11 +1425,6 @@
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.2.tgz#fd2cd2edbaa7eaac7e7f3c1748b52a19143846c9"
   integrity sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==
-
-"@types/lodash@^4.14.104":
-  version "4.14.194"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.194.tgz#b71eb6f7a0ff11bff59fc987134a093029258a76"
-  integrity sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==
 
 "@types/long@^4.0.0", "@types/long@^4.0.1":
   version "4.0.2"
@@ -2812,15 +2807,6 @@ firebase-admin@11.9.0:
     "@google-cloud/firestore" "^6.6.0"
     "@google-cloud/storage" "^6.9.5"
 
-firebase-functions-test@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/firebase-functions-test/-/firebase-functions-test-3.0.0.tgz#4b31bf52a8259417337c1419c47ea17d57f57ea8"
-  integrity sha512-Uva16mptDR2/YB3DKPUKLPymqVarc3W2cHEzNujfL4QhBk6rthThAaK1Eab5Zgk4p6MgUsw9Jl6KEWU27TxGYw==
-  dependencies:
-    "@types/lodash" "^4.14.104"
-    lodash "^4.17.5"
-    ts-deepmerge "^2.0.1"
-
 firebase-functions@4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-4.4.0.tgz#ba228a64050fdb30393da1de236d9bdc6da89586"
@@ -2833,7 +2819,7 @@ firebase-functions@4.4.0:
     node-fetch "^2.6.7"
     protobufjs "^7.2.2"
 
-firebase@^9.21.0:
+firebase@9.21.0:
   version "9.21.0"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-9.21.0.tgz#232f6a89f1bd21d28df1ab72a05c010d204be908"
   integrity sha512-kQpT+YjusVhqj8feSmb+9Fpmyfy7ayGSd6GVk2k0qJjt+AwYgHZ9tuHuIgFdEHGsvqxYRZJpu067ck9ZQwbqQw==
@@ -4081,7 +4067,7 @@ lodash.merge@^4.6.2:
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.5:
+lodash@^4.17.15, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5146,11 +5132,6 @@ tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
-
-ts-deepmerge@^2.0.1:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/ts-deepmerge/-/ts-deepmerge-2.0.7.tgz#36786a9a10b5f3a6f5154007cf17bfba7251e0a7"
-  integrity sha512-3phiGcxPSSR47RBubQxPoZ+pqXsEsozLo4G4AlSrsMKTFg9TA3l+3he5BqpUi9wiuDbaHWXH/amlzQ49uEdXtg==
 
 tsconfig-paths@^3.12.0:
   version "3.14.2"

@@ -1,4 +1,5 @@
 import { Ref } from '@skeet-framework/firestore'
+import { Timestamp } from '@google-cloud/firestore'
 
 // CollectionId: User
 // DocumentId: uid
@@ -7,8 +8,8 @@ export type User = {
   username: string
   email: string
   iconUrl: string
-  createdAt?: string
-  updatedAt?: string
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
 }
 
 // CollectionId: UserChatRoom
@@ -19,8 +20,8 @@ export type UserChatRoom = {
   maxTokens: number
   temperature: number
   stream: boolean
-  createdAt?: string
-  updatedAt?: string
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
 }
 
 // CollectionId: UserChatRoomMessage
@@ -29,6 +30,6 @@ export type UserChatRoomMessage = {
   userChatRoomRef: Ref<UserChatRoom>
   role: string
   content: string
-  createdAt?: string
-  updatedAt?: string
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
 }

@@ -43,6 +43,7 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import {
   DocumentData,
   QueryDocumentSnapshot,
+  Timestamp,
   collection,
   limit,
   onSnapshot,
@@ -58,8 +59,8 @@ import ChatMenuLoading from '@/components/loading/ChatMenuLoading'
 
 export type ChatRoom = {
   id: string
-  createdAt: string
-  updatedAt: string
+  createdAt: Timestamp
+  updatedAt: Timestamp
   model: GPTModel
   maxTokens: number
   temperature: number
@@ -436,10 +437,7 @@ export default function ChatMenu({
                       <Text
                         style={tw`font-loaded-medium text-gray-900 dark:text-white`}
                       >
-                        {format(
-                          new Date(chat.createdAt),
-                          'yyyy/MM/dd HH:mm:ss'
-                        )}
+                        {format(chat.createdAt.toDate(), 'yyyy-MM-dd HH:mm')}
                       </Text>
                       <Text
                         style={tw`font-loaded-normal text-gray-900 dark:text-white`}
@@ -721,8 +719,8 @@ export default function ChatMenu({
                             style={tw`font-loaded-medium text-gray-900 dark:text-white`}
                           >
                             {format(
-                              new Date(chat.createdAt),
-                              'yyyy/MM/dd HH:mm:ss'
+                              chat.createdAt.toDate(),
+                              'yyyy-MM-dd HH:mm'
                             )}
                           </Text>
                           <Text
