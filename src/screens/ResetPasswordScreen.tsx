@@ -74,7 +74,9 @@ export default function ResetPasswordScreen() {
           style={tw`flex h-full flex-col items-center justify-start py-12 sm:px-6 lg:px-8`}
         >
           <View style={tw`sm:mx-auto sm:w-full sm:max-w-md`}>
-            <LogoHorizontal className="w-24" />
+            <View style={tw`mx-auto`}>
+              <LogoHorizontal className="w-24" />
+            </View>
             <Text
               style={tw`font-loaded-bold mt-6 text-center text-3xl tracking-tight text-gray-900 dark:text-white`}
             >
