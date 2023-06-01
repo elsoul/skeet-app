@@ -3510,7 +3510,7 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@skeet-framework/firestore@^1.0.9":
+"@skeet-framework/firestore@1.0.9":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.9.tgz#997e3364be12638a59bd86b3e212d226b04c846b"
   integrity sha512-OW/foqyrbyFuZsDNeL7VZ5RJbMJrU/tUt308Xzy0NTL6+sTLplhYAw8zzFsfp6EKkWsNTGBr23HHEM5naQHTkQ==
