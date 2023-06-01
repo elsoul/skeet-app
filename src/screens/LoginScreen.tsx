@@ -67,6 +67,7 @@ export default function LoginScreen() {
           email,
           password
         )
+
         if (!userCredential.user.emailVerified) {
           await sendEmailVerification(userCredential.user)
           throw new Error('Not verified')
@@ -77,24 +78,11 @@ export default function LoginScreen() {
           console.log({ fbToken })
         }
 
-        const docRef = doc(db, 'User', userCredential.user.uid)
-        const docSnap = await getDoc(docRef)
-        if (docSnap.exists()) {
-          setUser({
-            uid: userCredential.user.uid,
-            email: userCredential.user.email ?? '',
-            username: docSnap.data()?.username ?? '',
-            iconUrl: docSnap.data()?.iconUrl ?? '',
-            skeetToken: fbToken,
-          })
-          Toast.show({
-            type: 'success',
-            text1: t('succeedLogin') ?? 'Succeed to sign in🎉',
-            text2: t('howdy') ?? 'Howdy?',
-          })
-        } else {
-          throw new Error('Not verified')
-        }
+        Toast.show({
+          type: 'success',
+          text1: t('succeedLogin') ?? 'Succeed to sign in🎉',
+          text2: t('howdy') ?? 'Howdy?',
+        })
       } catch (err) {
         console.error(err)
         if (err instanceof Error && err.message === 'Not verified') {

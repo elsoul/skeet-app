@@ -1,6 +1,6 @@
 import { userState } from '@/store/user'
 import { useRecoilValue } from 'recoil'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import UserRoutes from './UserRoutes'
 import DefaultRoutes from './DefaultRoutes'
@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import * as Linking from 'expo-linking'
 import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import useScreens from '@/hooks/useScreens'
+import { auth, UserImpl } from '@/lib/firebase'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')
@@ -23,11 +24,19 @@ export type RootStackParamList = {
 
 export default function Routes() {
   const { t } = useTranslation()
-  const user = useRecoilValue(userState)
-  const isLoggedIn = useMemo(() => {
-    return user.uid !== ''
-  }, [user])
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState()
 
+  function onAuthStateChanged(user: UserImpl) {
+    setUser(user)
+    if (initializing) setInitializing(false)
+  }
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(onAuthStateChanged)
+    return subscriber
+  }, []);
+  
   const { defaultScreens, userScreens } = useScreens()
 
   const linking = useMemo(() => {
@@ -48,6 +57,12 @@ export default function Routes() {
     }
   }, [defaultScreens, userScreens])
 
+  console.log("test")
+  if(auth.currentUser) {
+    console.log(auth.currentUser.emailVerified)
+  }
+  console.log("tests")
+
   return (
     <>
       <NavigationContainer
@@ -60,9 +75,9 @@ export default function Routes() {
       >
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName={isLoggedIn ? 'User' : 'Default'}
+          initialRouteName={user ? 'User' : 'Default'}
         >
-          {isLoggedIn ? (
+          {user && auth.currentUser.emailVerified ? (
             <Stack.Screen name="User" component={UserRoutes} />
           ) : (
             <Stack.Screen name="Default" component={DefaultRoutes} />

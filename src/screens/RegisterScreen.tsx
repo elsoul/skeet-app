@@ -14,6 +14,7 @@ import useAnalytics from '@/hooks/useAnalytics'
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
 } from 'firebase/auth'
 import Toast from 'react-native-toast-message'
 import { emailSchema, passwordSchema } from '@/utils/form'
@@ -68,7 +69,9 @@ export default function RegisterScreen() {
           password
         )
 
-        await sendEmailVerification(userCredential.user)
+        await sendEmailVerification(userCredential.user).then((userCredential) => {
+          signOut
+        })
         Toast.show({
           type: 'success',
           text1: t('sentConfirmEmailTitle') ?? 'Sent confirmation email',
