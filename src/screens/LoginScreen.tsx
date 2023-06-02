@@ -7,18 +7,16 @@ import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useNavigation } from '@react-navigation/native'
 import { TextInput } from 'react-native-gesture-handler'
 import { useCallback, useState, useEffect, useMemo } from 'react'
-import { useRecoilState } from 'recoil'
-import { defaultUser, userState } from '@/store/user'
 import Toast from 'react-native-toast-message'
 import useAnalytics from '@/hooks/useAnalytics'
 import {
   signInWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
 } from 'firebase/auth'
 import { emailSchema, passwordSchema } from '@/utils/form'
 import { auth, db } from '@/lib/firebase'
 import Button from '@/components/common/atoms/Button'
-import { doc, getDoc } from 'firebase/firestore'
 import clsx from 'clsx'
 
 export default function LoginScreen() {
@@ -26,7 +24,6 @@ export default function LoginScreen() {
   useAnalytics()
   const { t } = useTranslation()
   const navigation = useNavigation<any>()
-  const [_user, setUser] = useRecoilState(userState)
   const [isLoading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -70,12 +67,8 @@ export default function LoginScreen() {
 
         if (!userCredential.user.emailVerified) {
           await sendEmailVerification(userCredential.user)
+          await signOut(auth)
           throw new Error('Not verified')
-        }
-
-        const fbToken = await userCredential.user.getIdToken()
-        if (process.env.NODE_ENV !== 'production') {
-          console.log({ fbToken })
         }
 
         Toast.show({
@@ -93,7 +86,6 @@ export default function LoginScreen() {
               t('errorNotVerifiedBody') ??
               'Sent email to verify. Please check your email box.',
           })
-          setUser(defaultUser)
         } else {
           Toast.show({
             type: 'error',
@@ -103,11 +95,14 @@ export default function LoginScreen() {
               'Something went wrong... Please try it again.',
           })
         }
+        if (auth?.currentUser) {
+          signOut(auth)
+        }
       } finally {
         setLoading(false)
       }
     }
-  }, [setUser, t, email, password, emailError, passwordError])
+  }, [t, email, password, emailError, passwordError])
 
   const isDisabled = useMemo(
     () =>

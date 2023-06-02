@@ -8,12 +8,13 @@ import { useCallback } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { doc, updateDoc } from 'firebase/firestore'
 import { useRecoilState } from 'recoil'
-import { defaultUser, userState } from '@/store/user'
-import { db, storage } from '@/lib/firebase'
+import { userState } from '@/store/user'
+import { auth, db, storage } from '@/lib/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { blurhash } from '@/utils/placeholder'
 import { getImageBlob } from '@/utils/storage'
 import Toast from 'react-native-toast-message'
+import { signOut } from 'firebase/auth'
 
 export default function EditUserIconUrl() {
   const { t } = useTranslation()
@@ -72,7 +73,9 @@ export default function EditUserIconUrl() {
           text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
-        setUser(defaultUser)
+        if (auth) {
+          signOut(auth)
+        }
       } else {
         Toast.show({
           type: 'error',

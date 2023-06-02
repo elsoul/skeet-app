@@ -1,12 +1,11 @@
 import { atom } from 'recoil'
-import ReactNativeRecoilPersist from 'react-native-recoil-persist'
 
 export type UserState = {
   uid: string
   email: string
   username: string
   iconUrl: string
-  skeetToken: string
+  emailVerified: boolean
 }
 
 export const defaultUser = {
@@ -14,11 +13,10 @@ export const defaultUser = {
   email: '',
   username: '',
   iconUrl: '',
-  skeetToken: '',
+  emailVerified: false,
 }
 
 export const userState = atom<UserState>({
   key: 'userState',
   default: defaultUser,
-  effects_UNSTABLE: [ReactNativeRecoilPersist.persistAtom],
 })

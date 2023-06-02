@@ -47,8 +47,8 @@ export default function UserMenu() {
               </Text>
             </MenuOption>
             <MenuOption
-              onSelect={() => {
-                logout()
+              onSelect={async () => {
+                await logout()
               }}
               style={tw`p-3 border-t-gray-50 dark:border-t-gray-800 border-t`}
             >

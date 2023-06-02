@@ -19,11 +19,11 @@ import {
 import { XMarkIcon } from 'react-native-heroicons/outline'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import useSkeetFunctions from '@/hooks/useSkeetFunctions'
+import { fetchSkeetFunctions } from '@/lib/skeet'
 import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
 import Toast from 'react-native-toast-message'
-import { useRecoilState } from 'recoil'
-import { userState, defaultUser } from '@/store/user'
+import { useRecoilValue } from 'recoil'
+import { userState } from '@/store/user'
 import {
   GPTModel,
   allowedGPTModel,
@@ -50,13 +50,13 @@ import {
   orderBy,
   query,
   startAfter,
-  startAt,
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ChatMenuLoading from '@/components/loading/ChatMenuLoading'
 import { auth } from '@/lib/firebase'
+import { signOut } from 'firebase/auth'
 
 export type ChatRoom = {
   id: string
@@ -81,10 +81,9 @@ export default function ChatMenu({
   setCurrentChatRoomId,
 }: Props) {
   const { t } = useTranslation()
-  const user = auth.currentUser
+  const user = useRecoilValue(userState)
   const [isCreateLoading, setCreateLoading] = useState(false)
   const [isChatListModalOpen, setChatListModalOpen] = useState(false)
-  const fetcher = useSkeetFunctions()
 
   const [chatList, setChatList] = useState<ChatRoom[]>([])
   const [lastChat, setLastChat] =
@@ -128,6 +127,9 @@ export default function ChatMenu({
             text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
+          if (auth) {
+            signOut(auth)
+          }
         } else {
           Toast.show({
             type: 'error',
@@ -188,7 +190,9 @@ export default function ChatMenu({
             text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
-          setUser(defaultUser)
+          if (auth) {
+            signOut(auth)
+          }
         } else {
           Toast.show({
             type: 'error',
@@ -286,7 +290,7 @@ export default function ChatMenu({
     try {
       setCreateLoading(true)
       if (!isNewChatDisabled) {
-        const res = await fetcher<CreateUserChatRoomParams>(
+        const res = await fetchSkeetFunctions<CreateUserChatRoomParams>(
           'openai',
           'createUserChatRoom',
           {
@@ -324,6 +328,9 @@ export default function ChatMenu({
           text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
+        if (auth) {
+          signOut(auth)
+        }
       } else {
         Toast.show({
           type: 'error',
@@ -338,7 +345,6 @@ export default function ChatMenu({
     }
   }, [
     setNewChatModalOpen,
-    fetcher,
     model,
     systemContent,
     maxTokens,
