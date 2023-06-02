@@ -113,7 +113,6 @@ export const addStreamUserChatRoomMessage = onRequest(
         userChatRoomMessageRef.id,
         openAiBody
       )
-      console.log(messages.length)
       if (messages.length === 3) {
         const title = await generateChatRoomTitle(body.content)
         await updateChildCollectionItem<UserChatRoom, User>(
