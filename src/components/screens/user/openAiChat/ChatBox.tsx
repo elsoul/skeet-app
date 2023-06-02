@@ -3,16 +3,15 @@ import clsx from 'clsx'
 import { View, Text, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import {
-  CodeBracketSquareIcon,
   PaperAirplaneIcon,
   PencilSquareIcon,
   PlusCircleIcon,
   XMarkIcon,
 } from 'react-native-heroicons/outline'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useRecoilState } from 'recoil'
-import { defaultUser, userState } from '@/store/user'
-import { db } from '@/lib/firebase'
+import { useRecoilValue } from 'recoil'
+import { userState } from '@/store/user'
+import { auth, db } from '@/lib/firebase'
 import {
   collection,
   doc,
@@ -24,7 +23,7 @@ import {
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import { chatContentSchema } from '@/utils/form'
 import Toast from 'react-native-toast-message'
-import useSkeetFunctions from '@/hooks/useSkeetFunctions'
+import { fetchSkeetFunctions } from '@/lib/skeet'
 import { Image } from 'expo-image'
 import { blurhash } from '@/utils/placeholder'
 import { ChatRoom } from './ChatMenu'
@@ -32,6 +31,7 @@ import { AddStreamUserChatRoomMessageParams } from '@/types/http/openai/addStrea
 import CodeEditor, {
   CodeEditorSyntaxStyles,
 } from '@rivascva/react-native-code-editor'
+import { signOut } from 'firebase/auth'
 
 type ChatMessage = {
   id: string
@@ -52,7 +52,7 @@ export default function ChatBox({
   currentChatRoomId,
 }: Props) {
   const { t } = useTranslation()
-  const [user, setUser] = useRecoilState(userState)
+  const user = useRecoilValue(userState)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
   const scrollViewRef = useRef<ScrollView>(null)
@@ -82,7 +82,6 @@ export default function ChatBox({
   }, [getChatRoom])
 
   const [isSending, setSending] = useState(false)
-  const fetcher = useSkeetFunctions()
 
   useEffect(() => {
     if (db && user.uid && currentChatRoomId) {
@@ -138,14 +137,15 @@ export default function ChatBox({
     try {
       if (!isChatMessageDisabled && user.uid && currentChatRoomId) {
         setSending(true)
-        const res = await fetcher<AddStreamUserChatRoomMessageParams>(
-          'openai',
-          'addStreamUserChatRoomMessage',
-          {
-            userChatRoomId: currentChatRoomId,
-            content: chatContent,
-          }
-        )
+        const res =
+          await fetchSkeetFunctions<AddStreamUserChatRoomMessageParams>(
+            'openai',
+            'addStreamUserChatRoomMessage',
+            {
+              userChatRoomId: currentChatRoomId,
+              content: chatContent,
+            }
+          )
         if (res.status == 'error') {
           throw new Error(res.message)
         }
@@ -166,7 +166,9 @@ export default function ChatBox({
           text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
-        setUser(defaultUser)
+        if (auth) {
+          signOut(auth)
+        }
       } else {
         Toast.show({
           type: 'error',
@@ -176,15 +178,7 @@ export default function ChatBox({
         })
       }
     }
-  }, [
-    isChatMessageDisabled,
-    fetcher,
-    t,
-    setUser,
-    chatContent,
-    currentChatRoomId,
-    user.uid,
-  ])
+  }, [isChatMessageDisabled, t, chatContent, currentChatRoomId, user.uid])
 
   const viewWithCodeEditor = useCallback(
     (itemId: string, itemBoolean: boolean) => {

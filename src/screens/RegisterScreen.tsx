@@ -68,10 +68,9 @@ export default function RegisterScreen() {
           email,
           password
         )
+        await sendEmailVerification(userCredential.user)
+        await signOut(auth)
 
-        await sendEmailVerification(userCredential.user).then((userCredential) => {
-          signOut
-        })
         Toast.show({
           type: 'success',
           text1: t('sentConfirmEmailTitle') ?? 'Sent confirmation email',

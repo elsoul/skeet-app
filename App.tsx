@@ -13,14 +13,10 @@ import {
 import AppLoading from '@/components/loading/AppLoading'
 import { Suspense } from 'react'
 import { RecoilRoot } from 'recoil'
-import ReactNativeRecoilPersist, {
-  ReactNativeRecoilPersistGate,
-} from 'react-native-recoil-persist'
 import { MenuProvider } from 'react-native-popup-menu'
 import Toast from 'react-native-toast-message'
 import { toastConfig } from '@/lib/toast'
 import Routes from '@/routes/Routes'
-import { View } from 'react-native'
 
 export default function App() {
   useDeviceContext(tw)
@@ -44,9 +40,7 @@ export default function App() {
     <>
       <Suspense fallback={<AppLoading />}>
         <RecoilRoot>
-          <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-            <SkeetApp />
-          </ReactNativeRecoilPersistGate>
+          <SkeetApp />
         </RecoilRoot>
       </Suspense>
     </>

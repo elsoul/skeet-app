@@ -1,6 +1,6 @@
-import { userState } from '@/store/user'
-import { useRecoilValue } from 'recoil'
-import { useMemo, useEffect, useState } from 'react'
+import { defaultUser, userState } from '@/store/user'
+import { useRecoilState } from 'recoil'
+import { useMemo, useEffect, useState, useCallback } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import UserRoutes from './UserRoutes'
 import DefaultRoutes from './DefaultRoutes'
@@ -10,7 +10,10 @@ import { useTranslation } from 'react-i18next'
 import * as Linking from 'expo-linking'
 import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import useScreens from '@/hooks/useScreens'
-import { auth, UserImpl } from '@/lib/firebase'
+import { auth, db } from '@/lib/firebase'
+import { signOut, User } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import Toast from 'react-native-toast-message'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')
@@ -25,18 +28,58 @@ export type RootStackParamList = {
 export default function Routes() {
   const { t } = useTranslation()
   const [initializing, setInitializing] = useState(true)
-  const [user, setUser] = useState()
+  const [user, setUser] = useRecoilState(userState)
 
-  function onAuthStateChanged(user: UserImpl) {
-    setUser(user)
-    if (initializing) setInitializing(false)
-  }
+  const onAuthStateChanged = useCallback(
+    async (user: User | null) => {
+      if (initializing) setInitializing(false)
+      if (auth && db && user) {
+        if (!user?.emailVerified) {
+          Toast.show({
+            type: 'error',
+            text1: t('errorNotVerifiedTitle') ?? 'Not verified.',
+            text2:
+              t('errorNotVerifiedBody') ??
+              'Sent email to verify. Please check your email box.',
+          })
+          await signOut(auth)
+          setUser(defaultUser)
+        }
+        const docRef = doc(db, 'User', user.uid)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          setUser({
+            uid: user.uid,
+            email: user.email ?? '',
+            username: docSnap.data().username,
+            iconUrl: docSnap.data().iconUrl,
+            emailVerified: user.emailVerified,
+          })
+        } else {
+          await signOut(auth)
+          setUser(defaultUser)
+          Toast.show({
+            type: 'error',
+            text1: t('errorNotVerifiedTitle') ?? 'Not verified.',
+            text2:
+              t('errorNotVerifiedBody') ??
+              'Sent email to verify. Please check your email box.',
+          })
+        }
+      } else {
+        setUser(defaultUser)
+      }
+    },
+    [setUser, initializing, setInitializing, t]
+  )
 
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged(onAuthStateChanged)
-    return subscriber
-  }, []);
-  
+    if (auth) {
+      const subscriber = auth.onAuthStateChanged(onAuthStateChanged)
+      return subscriber
+    }
+  }, [onAuthStateChanged])
+
   const { defaultScreens, userScreens } = useScreens()
 
   const linking = useMemo(() => {
@@ -69,9 +112,13 @@ export default function Routes() {
       >
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName={user ? 'User' : 'Default'}
+          initialRouteName={
+            auth?.currentUser?.emailVerified && user.emailVerified
+              ? 'User'
+              : 'Default'
+          }
         >
-          {user && auth.currentUser.emailVerified ? (
+          {auth?.currentUser?.emailVerified && user.emailVerified ? (
             <Stack.Screen name="User" component={UserRoutes} />
           ) : (
             <Stack.Screen name="Default" component={DefaultRoutes} />

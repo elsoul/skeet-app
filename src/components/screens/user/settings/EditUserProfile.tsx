@@ -6,20 +6,22 @@ import { useTranslation } from 'react-i18next'
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
 import { useRecoilState } from 'recoil'
-import { defaultUser, userState } from '@/store/user'
+import { userState } from '@/store/user'
 import Button from '@/components/common/atoms/Button'
 import { usernameSchema } from '@/utils/form'
 import { TextInput } from 'react-native-gesture-handler'
-import { db } from '@/lib/firebase'
+import { auth, db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
 import { doc, updateDoc } from 'firebase/firestore'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { signOut } from 'firebase/auth'
 
 export default function EditUserProfile() {
   const { t } = useTranslation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setLoading] = useState(false)
   const [user, setUser] = useRecoilState(userState)
+
   const [username, setUsername] = useState('')
   const [usernameError, setUsernameError] = useState('')
   const validateUsername = useCallback(() => {
@@ -64,7 +66,9 @@ export default function EditUserProfile() {
             text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
-          setUser(defaultUser)
+          if (auth) {
+            signOut(auth)
+          }
         } else {
           Toast.show({
             type: 'error',
