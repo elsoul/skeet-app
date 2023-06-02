@@ -15,6 +15,7 @@ export type User = {
 // DocumentId: auto
 export type UserChatRoom = {
   userRef: Ref<User>
+  title: string
   model: string
   maxTokens: number
   temperature: number

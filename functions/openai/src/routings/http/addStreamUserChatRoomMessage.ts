@@ -11,10 +11,12 @@ import {
   addGrandChildCollectionItem,
   getChildCollectionItem,
   queryGrandChildCollectionItem,
+  updateChildCollectionItem,
 } from '@skeet-framework/firestore'
 import { getUserAuth } from '@/lib/getUserAuth'
 import { publicHttpOption } from '@/routings'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
+import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 
 export const addStreamUserChatRoomMessage = onRequest(
   publicHttpOption,
@@ -103,6 +105,7 @@ export const addStreamUserChatRoomMessage = onRequest(
         stream: userChatRoom.data.stream,
         messages,
       }
+      console.log(messages.length)
 
       await streamChat(
         user.uid,
@@ -110,6 +113,17 @@ export const addStreamUserChatRoomMessage = onRequest(
         userChatRoomMessageRef.id,
         openAiBody
       )
+      console.log(messages.length)
+      if (messages.length === 3) {
+        const title = await generateChatRoomTitle(body.content)
+        await updateChildCollectionItem<UserChatRoom, User>(
+          userCollectionName,
+          userChatRoomCollectionName,
+          user.uid,
+          body.userChatRoomId,
+          { title }
+        )
+      }
       res.json({
         status: 'streaming',
         userChatRoomMessageId: userChatRoomMessageRef.id,

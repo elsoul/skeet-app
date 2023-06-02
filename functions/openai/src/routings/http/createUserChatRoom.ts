@@ -43,6 +43,7 @@ export const createUserChatRoom = onRequest(
       const parentId = user.uid || ''
       const params: UserChatRoom = {
         userRef: userDoc.ref,
+        title: '',
         model: body.model,
         maxTokens: body.maxTokens,
         temperature: body.temperature,

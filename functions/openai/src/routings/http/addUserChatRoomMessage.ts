@@ -4,6 +4,7 @@ import {
   addGrandChildCollectionItem,
   getChildCollectionItem,
   queryGrandChildCollectionItem,
+  updateChildCollectionItem,
 } from '@skeet-framework/firestore'
 import { order } from 'typesaurus'
 import {
@@ -15,14 +16,16 @@ import { TypedRequestBody } from '@/index'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
 import { publicHttpOption } from '@/routings/options'
 import { getUserAuth } from '@/lib/getUserAuth'
+import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 
 export const addUserChatRoomMessage = onRequest(
   publicHttpOption,
   async (req: TypedRequestBody<AddUserChatRoomMessageParams>, res) => {
     try {
       const body = {
-        userChatRoomId: req.body.userChatRoomId || '',
+        userChatRoomId: req.body.userChatRoomId ?? '',
         content: req.body.content,
+        isFirstMessage: req.body.isFirstMessage ?? false,
       }
       if (body.userChatRoomId === '') throw new Error('userChatRoomId is empty')
       const user = await getUserAuth(req)
@@ -75,7 +78,7 @@ export const addUserChatRoomMessage = onRequest(
           content: message.data.content,
         } as ChatCompletionRequestMessage)
       }
-      const openAiBody: CreateChatCompletionRequest = {
+      let openAiBody: CreateChatCompletionRequest = {
         model: userChatRoom.data.model,
         max_tokens: userChatRoom.data.maxTokens,
         temperature: userChatRoom.data.temperature,
@@ -104,6 +107,16 @@ export const addUserChatRoomMessage = onRequest(
         body.userChatRoomId,
         openAiResponseMessage
       )
+      if (messages.length === 3) {
+        const title = await generateChatRoomTitle(body.content)
+        await updateChildCollectionItem<UserChatRoom, User>(
+          userCollectionName,
+          userChatRoomCollectionName,
+          user.uid,
+          body.userChatRoomId,
+          { title }
+        )
+      }
       res.json({ status: 'success', openAiResponse })
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
