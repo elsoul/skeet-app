@@ -449,7 +449,7 @@ export default function ChatMenu({
                         <Text
                           style={tw`font-loaded-light italic text-gray-600 dark:text-gray-300`}
                         >
-                          (no title)
+                          {t('noTitle')}
                         </Text>
                       )}
 

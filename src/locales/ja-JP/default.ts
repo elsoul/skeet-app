@@ -64,6 +64,8 @@ const defaultJA = {
   errorTokenExpiredBody: 'もう一度ログインしてください。',
   errorTitle: 'エラーです',
   errorBody: '大変お手数おかけしますが、もう一度お試しください。',
+  noTitle: '無題',
+  tokens: 'トークン',
 }
 
 export default defaultJA

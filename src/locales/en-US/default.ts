@@ -63,6 +63,8 @@ const defaultEN = {
   errorTokenExpiredBody: 'Please sign in again.',
   errorTitle: 'Error',
   errorBody: 'Something went wrong... Please try it again later.',
+  noTitle: 'No title',
+  tokens: 'tokens',
 }
 
 export default defaultEN
