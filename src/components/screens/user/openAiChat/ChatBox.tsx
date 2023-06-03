@@ -61,6 +61,7 @@ export default function ChatBox({
       scrollViewRef.current?.scrollToEnd({ animated: false })
     }
   }, [scrollViewRef, currentChatRoomId])
+  const [isFirstMessage, setFirstMessage] = useState(true)
 
   const getChatRoom = useCallback(async () => {
     if (db && user.uid && currentChatRoomId) {
@@ -71,6 +72,9 @@ export default function ChatBox({
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
         const data = docSnap.data()
+        if (data.title !== '') {
+          setFirstMessage(false)
+        }
         setChatRoom({ id: docSnap.id, ...data } as ChatRoom)
       } else {
         console.log('No such document!')
@@ -102,11 +106,12 @@ export default function ChatBox({
             ...data,
           } as ChatMessage)
         })
+
         setChatMessages(messages)
       })
       return () => unsubscribe()
     }
-  }, [user.uid, currentChatRoomId, scrollToEnd])
+  }, [user.uid, currentChatRoomId, scrollToEnd, chatRoom, getChatRoom])
 
   useEffect(() => {
     if (chatMessages.length > 0) {
@@ -144,13 +149,18 @@ export default function ChatBox({
             {
               userChatRoomId: currentChatRoomId,
               content: chatContent,
+              isFirstMessage,
             }
           )
         if (res.status == 'error') {
           throw new Error(res.message)
         }
+        if (chatRoom && chatRoom.title == '') {
+          getChatRoom()
+        }
         setChatContent('')
         setSending(false)
+        setFirstMessage(false)
       } else {
         throw new Error('validateError')
       }
@@ -178,7 +188,17 @@ export default function ChatBox({
         })
       }
     }
-  }, [isChatMessageDisabled, t, chatContent, currentChatRoomId, user.uid])
+  }, [
+    isChatMessageDisabled,
+    t,
+    chatContent,
+    currentChatRoomId,
+    user.uid,
+    setFirstMessage,
+    isFirstMessage,
+    chatRoom,
+    getChatRoom,
+  ])
 
   const viewWithCodeEditor = useCallback(
     (itemId: string, itemBoolean: boolean) => {
@@ -253,7 +273,8 @@ export default function ChatBox({
                           />
                         </View>
                       )}
-                      {chatMessage.role === 'assistant' &&
+                      {(chatMessage.role === 'assistant' ||
+                        chatMessage.role === 'system') &&
                         chatRoom?.model === 'gpt-3.5-turbo' && (
                           <View style={tw`flex`}>
                             <Image
@@ -266,7 +287,8 @@ export default function ChatBox({
                             />
                           </View>
                         )}
-                      {chatMessage.role === 'assistant' &&
+                      {(chatMessage.role === 'assistant' ||
+                        chatMessage.role === 'system') &&
                         chatRoom?.model === 'gpt-4' && (
                           <View style={tw`flex`}>
                             <Image
@@ -301,7 +323,26 @@ export default function ChatBox({
                       ) : (
                         <>
                           <View style={tw`flex-auto`}>
-                            <Text style={tw`font-loaded-normal`}>
+                            {chatMessage.role === 'system' && (
+                              <View style={tw`pb-2`}>
+                                <Text
+                                  style={tw`font-loaded-bold text-gray-900 dark:text-white text-base`}
+                                >
+                                  {chatRoom?.title
+                                    ? chatRoom?.title
+                                    : t('noTitle')}
+                                </Text>
+                                <Text
+                                  style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
+                                >
+                                  {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
+                                  {t('tokens')}
+                                </Text>
+                              </View>
+                            )}
+                            <Text
+                              style={tw`font-loaded-normal text-gray-900 dark:text-white`}
+                            >
                               {chatMessage.content}
                             </Text>
                           </View>
