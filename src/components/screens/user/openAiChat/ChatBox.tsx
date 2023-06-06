@@ -303,16 +303,18 @@ export default function ChatBox({
                         )}
                       {chatMessage.viewWithCodeEditor ? (
                         <>
-                          <View style={tw`flex-auto dark:hidden`}>
+                          <View style={tw`flex-auto dark:hidden w-full`}>
                             <CodeEditor
                               language="javascript"
+                              style={tw`w-full`}
                               syntaxStyle={CodeEditorSyntaxStyles.github}
                               initialValue={chatMessage.content}
                             />
                           </View>
-                          <View style={tw`hidden dark:flex-auto`}>
+                          <View style={tw`hidden dark:flex-auto w-full`}>
                             <CodeEditor
                               language="javascript"
+                              style={tw`w-full`}
                               syntaxStyle={
                                 CodeEditorSyntaxStyles.monokaiSublime
                               }
