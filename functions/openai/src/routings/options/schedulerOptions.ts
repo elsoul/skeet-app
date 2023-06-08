@@ -21,4 +21,7 @@ export const schedulerDefaultOption: ScheduleOptions = {
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
   timeoutSeconds: 540,
+  labels: {
+    skeet: 'scheduler',
+  },
 }

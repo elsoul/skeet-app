@@ -21,4 +21,7 @@ export const pubsubDefaultOption = (topic: string): PubSubOptions => ({
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
   timeoutSeconds: 540,
+  labels: {
+    skeet: 'pubsub',
+  },
 })

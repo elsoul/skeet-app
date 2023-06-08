@@ -17,6 +17,9 @@ export const publicHttpOption: HttpsOptions = {
   minInstances: 0,
   concurrency: 1,
   timeoutSeconds: 540,
+  labels: {
+    skeet: 'http',
+  },
 }
 
 export const privateHttpOption: HttpsOptions = {
@@ -32,4 +35,7 @@ export const privateHttpOption: HttpsOptions = {
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
   cors,
   timeoutSeconds: 540,
+  labels: {
+    skeet: 'http',
+  },
 }

@@ -12,6 +12,9 @@ export const authPublicOption: RuntimeOptions = {
   maxInstances: 100,
   minInstances: 0,
   timeoutSeconds: 300,
+  labels: {
+    skeet: 'auth',
+  },
 }
 
 export const authPrivateOption: RuntimeOptions = {
@@ -23,4 +26,7 @@ export const authPrivateOption: RuntimeOptions = {
   ingressSettings: 'ALLOW_INTERNAL_ONLY',
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
+  labels: {
+    skeet: 'auth',
+  },
 }

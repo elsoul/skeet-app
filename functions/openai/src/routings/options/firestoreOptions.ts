@@ -21,4 +21,7 @@ export const firestoreDefaultOption = (document: string): DocumentOptions => ({
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
   timeoutSeconds: 540,
+  labels: {
+    skeet: 'firestore',
+  },
 })
