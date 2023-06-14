@@ -1,7 +1,7 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 import { firestoreDefaultOption } from '@/routings/options'
 
-export const onExample = onDocumentCreated(
+export const firestoreExample = onDocumentCreated(
   firestoreDefaultOption('User/{userId}'),
   (event) => {
     console.log('firestoreExample triggered')

@@ -8,7 +8,7 @@ const region = process.env.REGION || 'europe-west6'
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${appName}-con`
 
-export const schedulerDefaultOption: ScheduleOptions = {
+export const scheduleDefaultOption: ScheduleOptions = {
   region,
   schedule: 'every 1 hours',
   timeZone: 'UTC',
@@ -22,6 +22,6 @@ export const schedulerDefaultOption: ScheduleOptions = {
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',
   timeoutSeconds: 540,
   labels: {
-    skeet: 'scheduler',
+    skeet: 'schedule',
   },
 }

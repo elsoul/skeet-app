@@ -1,8 +1,8 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler'
-import { schedulerDefaultOption } from '@/routings/options'
+import { scheduleDefaultOption } from '@/routings/options'
 
 export const scheduleExample = onSchedule(
-  schedulerDefaultOption,
+  scheduleDefaultOption,
   async (event) => {
     try {
       console.log({ status: 'success' })
