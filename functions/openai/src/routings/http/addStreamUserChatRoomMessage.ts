@@ -27,10 +27,16 @@ export const addStreamUserChatRoomMessage = onRequest(
         content: req.body.content,
       }
       if (body.userChatRoomId === '') throw new Error('userChatRoomId is empty')
+
+      // Get User Info from Firebase Auth
       const user = await getUserAuth(req)
+
+      // Define Collection Name
       const userCollectionName = 'User'
       const userChatRoomCollectionName = 'UserChatRoom'
       const userChatRoomMessageCollectionName = 'UserChatRoomMessage'
+
+      // Get UserChatRoom
       const userChatRoom = await getChildCollectionItem<UserChatRoom, User>(
         userCollectionName,
         userChatRoomCollectionName,
@@ -41,6 +47,7 @@ export const addStreamUserChatRoomMessage = onRequest(
       if (userChatRoom.data.stream === false)
         throw new Error('stream must be true')
 
+      // Add UserChatRoomMessage
       const newMessage: UserChatRoomMessage = {
         userChatRoomRef: userChatRoom.ref,
         role: 'user',
@@ -58,24 +65,8 @@ export const addStreamUserChatRoomMessage = onRequest(
         body.userChatRoomId,
         newMessage
       )
-      const systemMessage: UserChatRoomMessage = {
-        userChatRoomRef: userChatRoom.ref,
-        role: 'assistant',
-        content: '',
-      }
 
-      const userChatRoomMessageRef = await addGrandChildCollectionItem<
-        UserChatRoomMessage,
-        UserChatRoom,
-        User
-      >(
-        userCollectionName,
-        userChatRoomCollectionName,
-        userChatRoomMessageCollectionName,
-        user.uid,
-        body.userChatRoomId,
-        systemMessage
-      )
+      // Get UserChatRoomMessages for OpenAI Request
       const userChatRoomMessages = await queryGrandChildCollectionItem<
         UserChatRoomMessage,
         UserChatRoom,
@@ -96,6 +87,26 @@ export const addStreamUserChatRoomMessage = onRequest(
         } as ChatCompletionRequestMessage)
       }
 
+      // Add Empty UserChatRoomMessage for Stream ID
+      const systemMessage: UserChatRoomMessage = {
+        userChatRoomRef: userChatRoom.ref,
+        role: 'assistant',
+        content: '',
+      }
+      const userChatRoomMessageRef = await addGrandChildCollectionItem<
+        UserChatRoomMessage,
+        UserChatRoom,
+        User
+      >(
+        userCollectionName,
+        userChatRoomCollectionName,
+        userChatRoomMessageCollectionName,
+        user.uid,
+        body.userChatRoomId,
+        systemMessage
+      )
+
+      // Send Request to OpenAI
       const openAiBody: CreateChatCompletionRequest = {
         model: userChatRoom.data.model,
         max_tokens: userChatRoom.data.maxTokens,
@@ -105,15 +116,16 @@ export const addStreamUserChatRoomMessage = onRequest(
         stream: userChatRoom.data.stream,
         messages,
       }
-      console.log(messages.length)
-
       await streamChat(
         user.uid,
         body.userChatRoomId,
         userChatRoomMessageRef.id,
         openAiBody
       )
-      if (messages.length === 3) {
+
+      console.log('messages.length', messages.length)
+      // Update UserChatRoom Title
+      if (messages.length === 2) {
         const title = await generateChatRoomTitle(body.content)
         await updateChildCollectionItem<UserChatRoom, User>(
           userCollectionName,
@@ -123,6 +135,8 @@ export const addStreamUserChatRoomMessage = onRequest(
           { title }
         )
       }
+
+      // Response
       res.json({
         status: 'streaming',
         userChatRoomMessageId: userChatRoomMessageRef.id,

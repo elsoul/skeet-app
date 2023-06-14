@@ -26,7 +26,7 @@ export const createUserChatRoom = onRequest(
             : !req.body.temperature
             ? 1
             : req.body.temperature,
-        stream: req.body.stream || false,
+        stream: req.body.stream || true,
       }
       const user = await getUserAuth(req)
       const parentCollectionName = 'User'
