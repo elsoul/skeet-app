@@ -4,11 +4,13 @@ import {
   addChildCollectionItem,
   addGrandChildCollectionItem,
   getCollectionItem,
+  queryChildCollectionItem,
 } from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib/getUserAuth'
+import { order } from 'typesaurus'
 
 export const createUserChatRoom = onRequest(
   publicHttpOption,
@@ -39,6 +41,15 @@ export const createUserChatRoom = onRequest(
       )
       if (!userDoc) throw new Error('userDoc is not found')
       console.log(`userDoc: ${userDoc}`)
+
+      const userChatRoom = await queryChildCollectionItem<UserChatRoom, User>(
+        parentCollectionName,
+        childCollectionName,
+        user.uid,
+        [order('createdAt', 'desc')]
+      )
+      if (userChatRoom.length > 0)
+        throw new Error('userChatRoom is already created')
 
       const parentId = user.uid || ''
       const params: UserChatRoom = {
