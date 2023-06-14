@@ -1,1 +1,1 @@
-export * from './schedulerExample'
+export * from './scheduleExample'

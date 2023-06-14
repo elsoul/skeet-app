@@ -1,1 +1,1 @@
-export * from './firestoreExample'
+export * from './onExample'

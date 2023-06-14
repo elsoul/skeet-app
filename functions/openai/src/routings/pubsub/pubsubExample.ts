@@ -1,13 +1,21 @@
 import { onMessagePublished } from 'firebase-functions/v2/pubsub'
 import { pubsubDefaultOption } from '@/routings/options'
+import { parsePubSubMessage } from '@/lib/pubsub'
+import { PubsubExampleParams } from '@/types/pubsub/pubsubExampleParams'
 
-export const TOPIC_NAME = 'pubsubExample'
+export const pubsubTopic = 'pubsubExample'
 
 export const pubsubExample = onMessagePublished(
-  pubsubDefaultOption(TOPIC_NAME),
+  pubsubDefaultOption(pubsubTopic),
   async (event) => {
     try {
-      console.log({ status: 'success', topic: TOPIC_NAME, event })
+      const pubsubObject = parsePubSubMessage<PubsubExampleParams>(event)
+      console.log({
+        status: 'success',
+        topic: pubsubTopic,
+        event,
+        pubsubObject,
+      })
     } catch (error) {
       console.error({ status: 'error', message: String(error) })
     }
