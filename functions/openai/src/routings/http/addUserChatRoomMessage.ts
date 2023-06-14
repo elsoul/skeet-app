@@ -19,9 +19,12 @@ import { getUserAuth } from '@/lib/getUserAuth'
 import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 
 export const addUserChatRoomMessage = onRequest(
-  publicHttpOption,
+  { ...publicHttpOption, secrets: ['CHAT_GPT_ORG', 'CHAT_GPT_KEY'] },
   async (req: TypedRequestBody<AddUserChatRoomMessageParams>, res) => {
+    const { CHAT_GPT_ORG: organization, CHAT_GPT_KEY: apiKey } = process.env
     try {
+      if (!organization || !apiKey)
+        throw new Error('ChatGPT organization or apiKey is empty')
       const body = {
         userChatRoomId: req.body.userChatRoomId ?? '',
         content: req.body.content,
@@ -87,7 +90,7 @@ export const addUserChatRoomMessage = onRequest(
         stream: userChatRoom.data.stream,
         messages,
       }
-      const openAiResponse = await chat(openAiBody)
+      const openAiResponse = await chat(openAiBody, organization, apiKey)
       if (!openAiResponse) throw new Error('openAiResponse not found')
       const content = String(openAiResponse.content) || ''
       const openAiResponseMessage: UserChatRoomMessage = {
@@ -108,7 +111,11 @@ export const addUserChatRoomMessage = onRequest(
         openAiResponseMessage
       )
       if (messages.length === 3) {
-        const title = await generateChatRoomTitle(body.content)
+        const title = await generateChatRoomTitle(
+          body.content,
+          organization,
+          apiKey
+        )
         await updateChildCollectionItem<UserChatRoom, User>(
           userCollectionName,
           userChatRoomCollectionName,

@@ -1,9 +1,9 @@
-import dotenv from 'dotenv'
 import { RuntimeOptions } from 'firebase-functions/v1'
-dotenv.config()
+import skeetOptions from '../../../skeetOptions.json'
 
-const appName = process.env.SKEET_APP_NAME || 'skeet-app'
-const project = process.env.PROJECT_ID || 'skeet-app'
+const appName = skeetOptions.name
+const project = skeetOptions.projectId
+
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${appName}-con`
 

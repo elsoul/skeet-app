@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: cd ./functions/openai && yarn install --frozen-lockfile
       - name: Build App
+        env:
+          PROJECT_ID: skeet-app
+          REGION: europe-west6
         run: cd ./functions/openai && yarn build
       - name: Deploy to Firebase
         run: firebase deploy --only functions:openai

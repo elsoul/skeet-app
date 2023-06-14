@@ -1,13 +1,13 @@
 import { HttpsOptions } from 'firebase-functions/v2/https'
-import dotenv from 'dotenv'
-dotenv.config()
+import skeetOptions from '../../../skeetOptions.json'
 
-const appName = process.env.SKEET_APP_NAME || 'skeet-app'
-const project = process.env.PROJECT_ID || 'skeet-app'
-const region = process.env.REGION || 'europe-west6'
+const appName = skeetOptions.name
+const project = skeetOptions.projectId
+const region = skeetOptions.region
+const appDomain = skeetOptions.appDomain
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${appName}-con`
-const cors = ['http://localhost:4000', 'https://app.skeet.dev']
+const cors = ['http://localhost:4000', `https://{${appDomain}}`]
 
 export const publicHttpOption: HttpsOptions = {
   region,

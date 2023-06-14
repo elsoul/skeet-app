@@ -19,9 +19,12 @@ import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserCh
 import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 
 export const addStreamUserChatRoomMessage = onRequest(
-  publicHttpOption,
+  { ...publicHttpOption, secrets: ['CHAT_GPT_KEY', 'CHAT_GPT_ORG'] },
   async (req: TypedRequestBody<AddStreamUserChatRoomMessageParams>, res) => {
+    const { CHAT_GPT_ORG: organization, CHAT_GPT_KEY: apiKey } = process.env
     try {
+      if (!organization || !apiKey)
+        throw new Error('ChatGPT organization or apiKey is empty')
       const body = {
         userChatRoomId: req.body.userChatRoomId || '',
         content: req.body.content,
@@ -126,7 +129,11 @@ export const addStreamUserChatRoomMessage = onRequest(
       console.log('messages.length', messages.length)
       // Update UserChatRoom Title
       if (messages.length === 2) {
-        const title = await generateChatRoomTitle(body.content)
+        const title = await generateChatRoomTitle(
+          body.content,
+          organization,
+          apiKey
+        )
         await updateChildCollectionItem<UserChatRoom, User>(
           userCollectionName,
           userChatRoomCollectionName,

@@ -9,11 +9,13 @@ import {
 dotenv.config()
 
 export const chat = async (
-  createChatCompletionRequest: CreateChatCompletionRequest
+  createChatCompletionRequest: CreateChatCompletionRequest,
+  organization: string,
+  apiKey: string
 ) => {
   const configuration = new Configuration({
-    organization: process.env.CHAT_GPT_ORG,
-    apiKey: process.env.CHAT_GPT_KEY,
+    organization,
+    apiKey,
   })
   const openai = new OpenAIApi(configuration)
   const completion = await openai.createChatCompletion(

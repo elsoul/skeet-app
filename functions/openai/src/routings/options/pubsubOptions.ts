@@ -1,10 +1,9 @@
 import { PubSubOptions } from 'firebase-functions/v2/pubsub'
-import dotenv from 'dotenv'
-dotenv.config()
+import skeetOptions from '../../../skeetOptions.json'
 
-const appName = process.env.SKEET_APP_NAME || 'skeet-app'
-const project = process.env.PROJECT_ID || 'skeet-app'
-const region = process.env.REGION || 'europe-west6'
+const appName = skeetOptions.name
+const project = skeetOptions.projectId
+const region = skeetOptions.region
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${appName}-con`
 

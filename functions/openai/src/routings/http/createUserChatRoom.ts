@@ -13,8 +13,12 @@ import { getUserAuth } from '@/lib/getUserAuth'
 import { order } from 'typesaurus'
 
 export const createUserChatRoom = onRequest(
-  publicHttpOption,
+  {
+    ...publicHttpOption,
+    secrets: ['SECRET_NAME'],
+  },
   async (req: TypedRequestBody<CreateUserChatRoomParams>, res) => {
+    process.env.SECRET_NAME
     try {
       const body = {
         model: req.body.model || 'gpt-3.5-turbo',
