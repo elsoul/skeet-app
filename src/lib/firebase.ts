@@ -1,12 +1,7 @@
 import firebaseConfig from '@lib/firebaseConfig'
 import { getAnalytics } from 'firebase/analytics'
 import { initializeApp, getApp, getApps } from 'firebase/app'
-import {
-  browserLocalPersistence,
-  connectAuthEmulator,
-  getAuth,
-  setPersistence,
-} from 'firebase/auth'
+import { connectAuthEmulator, getAuth } from 'firebase/auth'
 import { getStorage, connectStorageEmulator } from 'firebase/storage'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 import { Platform } from 'react-native'
