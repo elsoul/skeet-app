@@ -17,11 +17,15 @@ import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessag
 import { publicHttpOption } from '@/routings/options'
 import { getUserAuth } from '@/lib/getUserAuth'
 import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
+import { defineSecret } from 'firebase-functions/params'
+const chatGptOrg = defineSecret('CHAT_GPT_ORG')
+const chatGptKey = defineSecret('CHAT_GPT_KEY')
 
 export const addUserChatRoomMessage = onRequest(
-  { ...publicHttpOption, secrets: ['CHAT_GPT_ORG', 'CHAT_GPT_KEY'] },
+  { ...publicHttpOption, secrets: [chatGptOrg, chatGptKey] },
   async (req: TypedRequestBody<AddUserChatRoomMessageParams>, res) => {
-    const { CHAT_GPT_ORG: organization, CHAT_GPT_KEY: apiKey } = process.env
+    const organization = chatGptOrg.value()
+    const apiKey = chatGptKey.value()
     try {
       if (!organization || !apiKey)
         throw new Error('ChatGPT organization or apiKey is empty')

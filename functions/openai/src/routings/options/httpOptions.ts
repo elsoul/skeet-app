@@ -4,10 +4,9 @@ import skeetOptions from '../../../skeetOptions.json'
 const appName = skeetOptions.name
 const project = skeetOptions.projectId
 const region = skeetOptions.region
-const appDomain = skeetOptions.appDomain
 const serviceAccount = `${appName}@${project}.iam.gserviceaccount.com`
 const vpcConnector = `${appName}-con`
-const cors = ['http://localhost:4000', `https://{${appDomain}}`]
+const cors = true
 
 export const publicHttpOption: HttpsOptions = {
   region,
