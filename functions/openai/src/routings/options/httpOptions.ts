@@ -27,7 +27,7 @@ export const privateHttpOption: HttpsOptions = {
   memory: '1GiB',
   maxInstances: 100,
   minInstances: 0,
-  concurrency: 1,
+  concurrency: 80,
   serviceAccount,
   ingressSettings: 'ALLOW_INTERNAL_AND_GCLB',
   vpcConnector,
