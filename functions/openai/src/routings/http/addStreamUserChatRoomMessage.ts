@@ -26,7 +26,6 @@ export const addStreamUserChatRoomMessage = onRequest(
       if (!organization || !apiKey)
         throw new Error('ChatGPT organization or apiKey is empty')
 
-      console.log(organization, apiKey)
       const body = {
         userChatRoomId: req.body.userChatRoomId || '',
         content: req.body.content,
