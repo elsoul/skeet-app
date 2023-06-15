@@ -5,8 +5,8 @@ import {
   getChildCollectionItem,
   queryGrandChildCollectionItem,
   updateChildCollectionItem,
+  order,
 } from '@skeet-framework/firestore'
-import { order } from 'typesaurus'
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest,

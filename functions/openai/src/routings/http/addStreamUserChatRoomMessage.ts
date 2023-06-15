@@ -1,6 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
-import { order } from 'typesaurus'
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest,
@@ -10,6 +9,7 @@ import { TypedRequestBody } from '@/index'
 import {
   addGrandChildCollectionItem,
   getChildCollectionItem,
+  order,
   queryGrandChildCollectionItem,
   updateChildCollectionItem,
 } from '@skeet-framework/firestore'
@@ -19,12 +19,14 @@ import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserCh
 import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 
 export const addStreamUserChatRoomMessage = onRequest(
-  { ...publicHttpOption, secrets: ['CHAT_GPT_KEY', 'CHAT_GPT_ORG'] },
+  { ...publicHttpOption, secrets: ['CHAT_GPT_ORG', 'CHAT_GPT_KEY'] },
   async (req: TypedRequestBody<AddStreamUserChatRoomMessageParams>, res) => {
     const { CHAT_GPT_ORG: organization, CHAT_GPT_KEY: apiKey } = process.env
     try {
       if (!organization || !apiKey)
         throw new Error('ChatGPT organization or apiKey is empty')
+
+      console.log(organization, apiKey)
       const body = {
         userChatRoomId: req.body.userChatRoomId || '',
         content: req.body.content,

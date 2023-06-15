@@ -5,20 +5,16 @@ import {
   addGrandChildCollectionItem,
   getCollectionItem,
   queryChildCollectionItem,
+  order,
 } from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib/getUserAuth'
-import { order } from 'typesaurus'
 
 export const createUserChatRoom = onRequest(
-  {
-    ...publicHttpOption,
-    secrets: ['SECRET_NAME'],
-  },
+  publicHttpOption,
   async (req: TypedRequestBody<CreateUserChatRoomParams>, res) => {
-    process.env.SECRET_NAME
     try {
       const body = {
         model: req.body.model || 'gpt-3.5-turbo',
