@@ -302,8 +302,9 @@ export default function ChatMenu({
             stream: true,
           }
         )
-        if (res.status == 'error') {
-          throw new Error(res.message)
+        const data = await res?.json()
+        if (data.status == 'error') {
+          throw new Error(data.message)
         }
         Toast.show({
           type: 'success',
@@ -313,7 +314,7 @@ export default function ChatMenu({
             t('openAiChat.chatRoomCreatedSuccessBody') ??
             'Chat room has been created successfully.',
         })
-        setCurrentChatRoomId(res.userChatRoomRef.id)
+        setCurrentChatRoomId(data.userChatRoomRef.id)
       } else {
         throw new Error('validateError')
       }
