@@ -207,7 +207,6 @@ export default function ChatBox({
         }
         await getUserChatRoomMessage()
         setChatContent('')
-        setSending(false)
         setFirstMessage(false)
       } else {
         throw new Error('validateError')
@@ -235,6 +234,8 @@ export default function ChatBox({
             t('errorBody') ?? 'Something went wrong... Please try it again.',
         })
       }
+    } finally {
+      setSending(false)
     }
   }, [
     isChatMessageDisabled,
@@ -440,10 +441,10 @@ export default function ChatBox({
               </ScrollView>
             </View>
 
-            <View style={tw`flex flex-col gap-4`}>
+            <View style={tw`flex flex-row gap-4 items-end`}>
               <TextInput
                 multiline
-                style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-normal text-gray-900 dark:text-white h-24 sm:h-48`}
+                style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-normal text-gray-900 dark:text-white h-10 sm:h-32`}
                 inputMode="text"
                 value={chatContent}
                 onChangeText={setChatContent}
@@ -454,10 +455,10 @@ export default function ChatBox({
                 }}
                 disabled={isChatMessageDisabled}
                 style={tw`${clsx(
-                  'flex flex-row items-center justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600',
+                  'flex flex-row items-center justify-center px-3 py-2 bg-gray-900 h-10',
                   isChatMessageDisabled
                     ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
-                    : ''
+                    : 'dark:bg-gray-600'
                 )}`}
               >
                 <PaperAirplaneIcon
