@@ -444,7 +444,7 @@ export default function ChatBox({
             <View style={tw`flex flex-row gap-4 items-end`}>
               <TextInput
                 multiline
-                style={tw`w-full border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-normal text-gray-900 dark:text-white h-10 sm:h-32`}
+                style={tw`flex-1 border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-normal text-gray-900 dark:text-white h-10 sm:h-32`}
                 inputMode="text"
                 value={chatContent}
                 onChangeText={setChatContent}
@@ -455,20 +455,15 @@ export default function ChatBox({
                 }}
                 disabled={isChatMessageDisabled}
                 style={tw`${clsx(
-                  'flex flex-row items-center justify-center px-3 py-2 bg-gray-900 h-10',
+                  'flex flex-row items-center justify-center px-3 py-2 bg-gray-900 h-10 w-10',
                   isChatMessageDisabled
                     ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
                     : 'dark:bg-gray-600'
                 )}`}
               >
                 <PaperAirplaneIcon
-                  style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0 text-white')}`}
+                  style={tw`${clsx('mx-3 h-6 w-6 flex-shrink-0 text-white')}`}
                 />
-                <Text
-                  style={tw`text-center font-loaded-bold text-lg text-white`}
-                >
-                  {t('openAiChat.chatMessageSubmit')}
-                </Text>
               </Pressable>
             </View>
           </View>
