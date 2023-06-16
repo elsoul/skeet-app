@@ -152,8 +152,9 @@ export default function ChatBox({
               isFirstMessage,
             }
           )
-        if (res.status == 'error') {
-          throw new Error(res.message)
+        const data = await res?.json()
+        if (data.status == 'error') {
+          throw new Error(data.message)
         }
         if (chatRoom && chatRoom.title == '') {
           getChatRoom()

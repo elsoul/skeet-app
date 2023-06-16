@@ -19,13 +19,14 @@ export const fetchSkeetFunctions = async <T>(
     const skeetToken = await auth?.currentUser?.getIdToken()
     const res = await fetch(`${url}`, {
       method: 'POST',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${skeetToken}`,
       },
       body: JSON.stringify(params),
     })
-    return await res.json()
+    return res
   } catch (err) {
     console.error(err)
     if (
