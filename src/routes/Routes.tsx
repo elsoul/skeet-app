@@ -35,13 +35,6 @@ export default function Routes() {
       if (initializing) setInitializing(false)
       if (auth && db && user) {
         if (!user?.emailVerified) {
-          Toast.show({
-            type: 'error',
-            text1: t('errorNotVerifiedTitle') ?? 'Not verified.',
-            text2:
-              t('errorNotVerifiedBody') ??
-              'Sent email to verify. Please check your email box.',
-          })
           await signOut(auth)
           setUser(defaultUser)
         }
@@ -58,19 +51,12 @@ export default function Routes() {
         } else {
           await signOut(auth)
           setUser(defaultUser)
-          Toast.show({
-            type: 'error',
-            text1: t('errorNotVerifiedTitle') ?? 'Not verified.',
-            text2:
-              t('errorNotVerifiedBody') ??
-              'Sent email to verify. Please check your email box.',
-          })
         }
       } else {
         setUser(defaultUser)
       }
     },
-    [setUser, initializing, setInitializing, t]
+    [setUser, initializing, setInitializing]
   )
 
   useEffect(() => {
