@@ -1,9 +1,11 @@
 import { onRequest } from 'firebase-functions/v2/https'
+import { TypedRequestBody } from '@/index'
 import {
   User,
   UserChatRoom,
   userChatRoomCollectionName,
   userCollectionName,
+  createUserChatRoomMessage,
 } from '@/models'
 import {
   addChildCollectionItem,
@@ -11,11 +13,9 @@ import {
   queryChildCollectionItem,
   order,
 } from '@skeet-framework/firestore'
-import { TypedRequestBody } from '@/index'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
-import { getUserAuth } from '@/lib/getUserAuth'
-import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
+import { getUserAuth } from '@/lib'
 
 export const createUserChatRoom = onRequest(
   publicHttpOption,

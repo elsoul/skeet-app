@@ -1,22 +1,25 @@
 import { onRequest } from 'firebase-functions/v2/https'
+import { TypedRequestBody } from '@/index'
+import { updateChildCollectionItem } from '@skeet-framework/firestore'
+import {
+  chat,
+  getUserAuth,
+  generateChatRoomTitle,
+  CreateChatCompletionRequest,
+} from '@/lib'
+import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
+import { publicHttpOption } from '@/routings/options'
 import {
   User,
   UserChatRoom,
   userChatRoomCollectionName,
   userCollectionName,
+  createUserChatRoomMessage,
+  getMessages,
+  getUserChatRoom,
 } from '@/models'
-import { updateChildCollectionItem } from '@skeet-framework/firestore'
-import { CreateChatCompletionRequest } from 'openai'
-import { chat } from '@/lib/openai/openAi'
-import { TypedRequestBody } from '@/index'
-import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
-import { publicHttpOption } from '@/routings/options'
-import { getUserAuth } from '@/lib/getUserAuth'
-import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 import { defineSecret } from 'firebase-functions/params'
-import { getMessages } from '@/models/lib/getMessages'
-import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
-import { getUserChatRoom } from '@/models/lib/getUserChatRoom'
+
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
 

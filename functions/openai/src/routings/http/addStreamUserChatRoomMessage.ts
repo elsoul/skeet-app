@@ -1,23 +1,26 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { CreateChatCompletionRequest } from 'openai'
-import { streamChat } from '@/lib/openai/openAi'
 import { TypedRequestBody } from '@/index'
 import { updateChildCollectionItem } from '@skeet-framework/firestore'
-import { getUserAuth } from '@/lib/getUserAuth'
+import { sleep } from '@/utils/time'
+import {
+  getUserAuth,
+  generateChatRoomTitle,
+  streamChat,
+  CreateChatCompletionRequest,
+} from '@/lib'
 import { publicHttpOption } from '@/routings'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
-import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 import { defineSecret } from 'firebase-functions/params'
 import {
   User,
   UserChatRoom,
   userChatRoomCollectionName,
   userCollectionName,
+  createUserChatRoomMessage,
+  getMessages,
+  getUserChatRoom,
 } from '@/models'
-import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
-import { getMessages } from '@/models/lib/getMessages'
-import { getUserChatRoom } from '@/models/lib/getUserChatRoom'
-import { sleep } from '@/utils/time'
+
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
 
