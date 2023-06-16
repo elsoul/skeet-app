@@ -77,7 +77,14 @@ export const addStreamUserChatRoomMessage = onRequest(
         stream: userChatRoom.data.stream,
         messages,
       }
-      await streamChat(res, openAiBody, chatGptOrg.value(), chatGptKey.value())
+      await streamChat(
+        res,
+        openAiBody,
+        chatGptOrg.value(),
+        chatGptKey.value(),
+        user.uid,
+        userChatRoom.ref
+      )
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }

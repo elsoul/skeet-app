@@ -3,6 +3,9 @@ import { Configuration, CreateChatCompletionRequest, OpenAIApi } from 'openai'
 import { IncomingMessage } from 'http'
 import { Response } from 'firebase-functions/v1'
 import { sleep } from '@/utils/time'
+import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
+import { UserChatRoom } from '@/models'
+import { Ref } from '@skeet-framework/firestore'
 dotenv.config()
 
 export const chat = async (
@@ -25,7 +28,9 @@ export const streamChat = async (
   res: Response,
   createChatCompletionRequest: CreateChatCompletionRequest,
   organization: string,
-  apiKey: string
+  apiKey: string,
+  userId: string,
+  userChatRoomRef: Ref<UserChatRoom>
 ) => {
   let streamClosed = false
   const configuration = new Configuration({
@@ -69,8 +74,15 @@ export const streamChat = async (
       if (streamClosed) res.end('Stream disconnected')
     })
 
-    stream.on('end', () => {
-      console.log(`Stream end - ${messageResults.join('')}`)
+    stream.on('end', async () => {
+      const message = messageResults.join('')
+      const lastMessage = await createUserChatRoomMessage(
+        userChatRoomRef,
+        userId,
+        message,
+        'assistant'
+      )
+      console.log(`Stream end - messageId: ${lastMessage.id}`)
       res.end('Stream done')
     })
     stream.on('error', (e: Error) => console.error(e))
