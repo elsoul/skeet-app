@@ -15,8 +15,8 @@ module.exports = {
         'loaded-bold': ['Outfit_700Bold', ...defaultTheme.fontFamily.sans],
       },
       height: {
-        'screen-bar-xs': '72vh',
-        'screen-bar': '86vh',
+        'screen-bar-xs': '80vh',
+        'screen-bar': '90vh',
       },
     },
   },
