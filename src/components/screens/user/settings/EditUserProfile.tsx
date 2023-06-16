@@ -130,7 +130,7 @@ export default function EditUserProfile() {
           style={tw`${clsx(Platform.OS === 'ios' && 'pt-10', 'w-full h-full')}`}
         >
           <View
-            style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900`}
+            style={tw`w-full h-screen flex flex-col bg-white dark:bg-gray-900`}
           >
             <View style={tw`flex flex-row items-center justify-center p-4`}>
               <LogoHorizontal className="w-24" />

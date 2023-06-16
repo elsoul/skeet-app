@@ -16,7 +16,7 @@ import {
   collection,
   doc,
   getDoc,
-  onSnapshot,
+  getDocs,
   orderBy,
   query,
 } from 'firebase/firestore'
@@ -81,13 +81,14 @@ export default function ChatBox({
       }
     }
   }, [currentChatRoomId, user.uid])
+
   useEffect(() => {
     getChatRoom()
   }, [getChatRoom])
 
   const [isSending, setSending] = useState(false)
 
-  useEffect(() => {
+  const getUserChatRoomMessage = useCallback(async () => {
     if (db && user.uid && currentChatRoomId) {
       const q = query(
         collection(
@@ -96,22 +97,23 @@ export default function ChatBox({
         ),
         orderBy('createdAt', 'asc')
       )
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const messages: ChatMessage[] = []
-        querySnapshot.forEach((doc) => {
-          const data = doc.data()
-          messages.push({
-            id: doc.id,
-            viewWithCodeEditor: false,
-            ...data,
-          } as ChatMessage)
-        })
-
-        setChatMessages(messages)
+      const querySnapshot = await getDocs(q)
+      const messages: ChatMessage[] = []
+      querySnapshot.forEach((doc) => {
+        const data = doc.data()
+        messages.push({
+          id: doc.id,
+          viewWithCodeEditor: false,
+          ...data,
+        } as ChatMessage)
       })
-      return () => unsubscribe()
+      setChatMessages(messages)
     }
-  }, [user.uid, currentChatRoomId, scrollToEnd, chatRoom, getChatRoom])
+  }, [currentChatRoomId, user.uid])
+
+  useEffect(() => {
+    getUserChatRoomMessage()
+  }, [getUserChatRoomMessage])
 
   useEffect(() => {
     if (chatMessages.length > 0) {
@@ -142,6 +144,25 @@ export default function ChatBox({
     try {
       if (!isChatMessageDisabled && user.uid && currentChatRoomId) {
         setSending(true)
+        setChatMessages((prev) => {
+          prev.push({
+            id: `UserSendingMessage${new Date().toISOString()}`,
+            role: 'user',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            content: chatContent,
+            viewWithCodeEditor: false,
+          })
+          prev.push({
+            id: `AssistantAnsweringMessage${new Date().toISOString()}`,
+            role: 'assistant',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            content: '',
+            viewWithCodeEditor: false,
+          })
+          return [...prev]
+        })
         const res =
           await fetchSkeetFunctions<AddStreamUserChatRoomMessageParams>(
             'openai',
@@ -152,13 +173,37 @@ export default function ChatBox({
               isFirstMessage,
             }
           )
-        const data = await res?.json()
-        if (data.status == 'error') {
-          throw new Error(data.message)
+        const reader = await res?.body?.getReader()
+        const decoder = new TextDecoder('utf-8')
+
+        const readChunk = async () => {
+          return reader?.read().then(({ value, done }): any => {
+            try {
+              if (!done) {
+                const dataString = decoder.decode(value)
+                const data = JSON.parse(dataString)
+                setChatMessages((prev) => {
+                  prev[prev.length - 1].content =
+                    prev[prev.length - 1].content + data.text
+                  return [...prev]
+                })
+              } else {
+                console.log('done')
+              }
+            } catch (error) {
+              console.log(error)
+            }
+            if (!done) {
+              return readChunk()
+            }
+          })
         }
+        await readChunk()
+
         if (chatRoom && chatRoom.title == '') {
-          getChatRoom()
+          await getChatRoom()
         }
+        await getUserChatRoomMessage()
         setChatContent('')
         setSending(false)
         setFirstMessage(false)
@@ -199,6 +244,7 @@ export default function ChatBox({
     isFirstMessage,
     chatRoom,
     getChatRoom,
+    getUserChatRoomMessage,
   ])
 
   const viewWithCodeEditor = useCallback(

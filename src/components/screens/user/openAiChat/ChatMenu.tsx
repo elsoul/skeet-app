@@ -482,7 +482,7 @@ export default function ChatMenu({
           <MenuProvider>
             <ScrollView>
               <View
-                style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900 pb-8`}
+                style={tw`w-full h-screen flex flex-col bg-white dark:bg-gray-900 pb-8`}
               >
                 <View style={tw`flex flex-row items-center justify-center p-4`}>
                   <LogoHorizontal className="w-24" />
@@ -684,7 +684,7 @@ export default function ChatMenu({
             scrollEventThrottle={16}
           >
             <View
-              style={tw`w-full h-full flex flex-col bg-white dark:bg-gray-900 pb-12`}
+              style={tw`w-full h-screen flex flex-col bg-white dark:bg-gray-900 pb-12`}
             >
               <View style={tw`flex flex-row items-center justify-center p-4`}>
                 <LogoHorizontal className="w-24" />
