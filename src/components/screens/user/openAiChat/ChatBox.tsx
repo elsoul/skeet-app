@@ -444,7 +444,7 @@ export default function ChatBox({
             <View style={tw`flex flex-row gap-4 items-end`}>
               <TextInput
                 multiline
-                style={tw`flex-1 border-2 border-gray-900 dark:border-gray-50 p-3 text-lg font-loaded-normal text-gray-900 dark:text-white h-10 sm:h-32`}
+                style={tw`flex-1 border-2 border-gray-900 dark:border-gray-50 p-2 sm:p-3 text-sm sm:text-lg font-loaded-normal text-gray-900 dark:text-white h-10 sm:h-32`}
                 inputMode="text"
                 value={chatContent}
                 onChangeText={setChatContent}
