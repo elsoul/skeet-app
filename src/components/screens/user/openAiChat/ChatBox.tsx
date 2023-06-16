@@ -181,14 +181,16 @@ export default function ChatBox({
             try {
               if (!done) {
                 const dataString = decoder.decode(value)
-                const data = JSON.parse(dataString)
-                setChatMessages((prev) => {
-                  prev[prev.length - 1].content =
-                    prev[prev.length - 1].content + data.text
-                  return [...prev]
-                })
+                if (dataString != 'Stream done') {
+                  const data = JSON.parse(dataString)
+                  setChatMessages((prev) => {
+                    prev[prev.length - 1].content =
+                      prev[prev.length - 1].content + data.text
+                    return [...prev]
+                  })
+                }
               } else {
-                console.log('done')
+                // done
               }
             } catch (error) {
               console.log(error)
