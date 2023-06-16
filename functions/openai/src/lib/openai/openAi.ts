@@ -1,11 +1,8 @@
 import dotenv from 'dotenv'
 import { Configuration, CreateChatCompletionRequest, OpenAIApi } from 'openai'
 import { IncomingMessage } from 'http'
-import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
-import {
-  getGrandChildCollectionItem,
-  updateGrandChildCollectionItem,
-} from '@skeet-framework/firestore'
+import { Response } from 'firebase-functions/v1'
+import { sleep } from '@/utils/time'
 dotenv.config()
 
 export const chat = async (
@@ -25,21 +22,26 @@ export const chat = async (
 }
 
 export const streamChat = async (
-  userId: string,
-  userChatRoomId: string,
-  userChatRoomMessageId: string,
-  createChatCompletionRequest: CreateChatCompletionRequest
+  res: Response,
+  createChatCompletionRequest: CreateChatCompletionRequest,
+  organization: string,
+  apiKey: string
 ) => {
+  let streamClosed = false
   const configuration = new Configuration({
-    organization: process.env.CHAT_GPT_ORG,
-    apiKey: process.env.CHAT_GPT_KEY,
+    organization,
+    apiKey,
   })
   const openai = new OpenAIApi(configuration)
   try {
-    const res = await openai.createChatCompletion(createChatCompletionRequest, {
-      responseType: 'stream',
-    })
-    const stream = res.data as unknown as IncomingMessage
+    const result = await openai.createChatCompletion(
+      createChatCompletionRequest,
+      {
+        responseType: 'stream',
+      }
+    )
+    const messageResults: string[] = []
+    const stream = result.data as unknown as IncomingMessage
     stream.on('data', async (chunk: Buffer) => {
       const payloads = chunk.toString().split('\n\n')
       for await (const payload of payloads) {
@@ -50,63 +52,29 @@ export const streamChat = async (
             const delta = JSON.parse(data.trim())
             const message = delta.choices[0].delta?.content
             if (message == undefined) continue
-            const collectionName = 'User'
-            const childCollectionName = 'UserChatRoom'
-            const grandChildCollectionName = 'UserChatRoomMessage'
-            const userChatRoomMessage = await getGrandChildCollectionItem<
-              UserChatRoomMessage,
-              UserChatRoom,
-              User
-            >(
-              collectionName,
-              childCollectionName,
-              grandChildCollectionName,
-              userId,
-              userChatRoomId,
-              userChatRoomMessageId
-            )
-            if (!userChatRoomMessage)
-              throw new Error('userChatRoomMessage not found')
 
-            const currentContent = userChatRoomMessage.data.content
-            const newContent = currentContent + message
-            await updateGrandChildCollectionItem<
-              UserChatRoomMessage,
-              UserChatRoom,
-              User
-            >(
-              collectionName,
-              childCollectionName,
-              grandChildCollectionName,
-              userId,
-              userChatRoomId,
-              userChatRoomMessageId,
-              { content: newContent }
-            )
             console.log(message)
+            messageResults.push(message)
+            while (!streamClosed && res.writableLength > 0) {
+              await sleep(10)
+            }
+            res.write(JSON.stringify({ text: message }))
           } catch (error) {
             console.log(`Error with JSON.parse and ${payload}.\n${error}`)
           }
         }
       }
+      res.once('error', () => (streamClosed = true))
+      res.once('close', () => (streamClosed = true))
+      if (streamClosed) res.end('Stream disconnected')
     })
 
-    stream.on('end', () => console.log('Stream done'))
+    stream.on('end', () => {
+      console.log(`Stream end - ${messageResults.join('')}`)
+      res.end('Stream done')
+    })
     stream.on('error', (e: Error) => console.error(e))
-  } catch (error: any) {
-    if (error.response?.status) {
-      console.error(error.response.status, error.message)
-      error.response.data.on('data', (data: any) => {
-        const message = data.toString()
-        try {
-          const parsed = JSON.parse(message)
-          console.error('An error occurred during OpenAI request: ', parsed)
-        } catch (error) {
-          console.error('An error occurred during OpenAI request: ', message)
-        }
-      })
-    } else {
-      console.error('An error occurred during OpenAI request', error)
-    }
+  } catch (error) {
+    console.error(error)
   }
 }

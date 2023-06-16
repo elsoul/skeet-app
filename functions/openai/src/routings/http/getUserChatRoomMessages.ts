@@ -1,13 +1,9 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
-import {
-  queryGrandChildCollectionItem,
-  order,
-} from '@skeet-framework/firestore'
 import { TypedRequestBody } from '@/index'
 import { GetUserChatRoomMessagesParams } from '@/types/http/getUserChatRoomParams'
 import { publicHttpOption } from '@/routings/options'
 import { getUserAuth } from '@/lib/getUserAuth'
+import { getMessages } from '@/models/lib/getMessages'
 
 export const getUserChatRoomMessages = onRequest(
   publicHttpOption,
@@ -18,24 +14,10 @@ export const getUserChatRoomMessages = onRequest(
         userId: user.uid,
         userChatRoomId: req.body.userChatRoomId,
       }
-      const parentCollectionName = 'User'
-      const childCollectionName = 'UserChatRoom'
-      const grandChildCollectionName = 'UserChatRoomMessage'
-      const messages = await queryGrandChildCollectionItem<
-        UserChatRoomMessage,
-        UserChatRoom,
-        User
-      >(
-        parentCollectionName,
-        childCollectionName,
-        grandChildCollectionName,
-        body.userId,
-        body.userChatRoomId,
-        [order('createdAt', 'asc')]
-      )
+      const messages = await getMessages(user.uid, body.userChatRoomId)
       res.json({
         status: 'success',
-        messages: messages.map((message) => message.data),
+        messages,
       })
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })

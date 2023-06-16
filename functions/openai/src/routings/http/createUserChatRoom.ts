@@ -1,8 +1,12 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
+import {
+  User,
+  UserChatRoom,
+  userChatRoomCollectionName,
+  userCollectionName,
+} from '@/models'
 import {
   addChildCollectionItem,
-  addGrandChildCollectionItem,
   getCollectionItem,
   queryChildCollectionItem,
   order,
@@ -11,6 +15,7 @@ import { TypedRequestBody } from '@/index'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib/getUserAuth'
+import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
 
 export const createUserChatRoom = onRequest(
   publicHttpOption,
@@ -31,20 +36,17 @@ export const createUserChatRoom = onRequest(
         stream: req.body.stream || true,
       }
       const user = await getUserAuth(req)
-      const parentCollectionName = 'User'
-      const childCollectionName = 'UserChatRoom'
-      const grandChildCollectionName = 'UserChatRoomMessage'
 
       const userDoc = await getCollectionItem<User>(
-        parentCollectionName,
+        userCollectionName,
         user.uid
       )
       if (!userDoc) throw new Error('userDoc is not found')
       console.log(`userDoc: ${userDoc}`)
 
       const userChatRoom = await queryChildCollectionItem<UserChatRoom, User>(
-        parentCollectionName,
-        childCollectionName,
+        userCollectionName,
+        userChatRoomCollectionName,
         user.uid,
         [order('createdAt', 'desc')]
       )
@@ -61,28 +63,18 @@ export const createUserChatRoom = onRequest(
         stream: body.stream,
       }
       const userChatRoomRef = await addChildCollectionItem<UserChatRoom, User>(
-        parentCollectionName,
-        childCollectionName,
+        userCollectionName,
+        userChatRoomCollectionName,
         parentId,
         params
       )
       console.log(`created userChatRoomRef: ${userChatRoomRef.id}`)
-      const systemMessage: UserChatRoomMessage = {
+
+      const userChatRoomMessageRef = await createUserChatRoomMessage(
         userChatRoomRef,
-        role: 'system',
-        content: body.systemContent,
-      }
-      const userChatRoomMessageRef = await addGrandChildCollectionItem<
-        UserChatRoomMessage,
-        UserChatRoom,
-        User
-      >(
-        parentCollectionName,
-        childCollectionName,
-        grandChildCollectionName,
         user.uid,
-        userChatRoomRef.id,
-        systemMessage
+        body.systemContent,
+        'system'
       )
       res.json({ status: 'success', userChatRoomRef, userChatRoomMessageRef })
     } catch (error) {

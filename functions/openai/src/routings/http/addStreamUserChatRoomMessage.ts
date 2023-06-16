@@ -1,23 +1,22 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { User, UserChatRoom, UserChatRoomMessage } from '@/models'
-import {
-  ChatCompletionRequestMessage,
-  CreateChatCompletionRequest,
-} from 'openai'
+import { CreateChatCompletionRequest } from 'openai'
 import { streamChat } from '@/lib/openai/openAi'
 import { TypedRequestBody } from '@/index'
-import {
-  addGrandChildCollectionItem,
-  getChildCollectionItem,
-  order,
-  queryGrandChildCollectionItem,
-  updateChildCollectionItem,
-} from '@skeet-framework/firestore'
+import { updateChildCollectionItem } from '@skeet-framework/firestore'
 import { getUserAuth } from '@/lib/getUserAuth'
 import { publicHttpOption } from '@/routings'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
 import { generateChatRoomTitle } from '@/lib/openai/generateChatRoomTitle'
 import { defineSecret } from 'firebase-functions/params'
+import {
+  User,
+  UserChatRoom,
+  userChatRoomCollectionName,
+  userCollectionName,
+} from '@/models'
+import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
+import { getMessages } from '@/models/lib/getMessages'
+import { getUserChatRoom } from '@/models/lib/getUserChatRoom'
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
 
@@ -40,97 +39,16 @@ export const addStreamUserChatRoomMessage = onRequest(
       // Get User Info from Firebase Auth
       const user = await getUserAuth(req)
 
-      // Define Collection Name
-      const userCollectionName = 'User'
-      const userChatRoomCollectionName = 'UserChatRoom'
-      const userChatRoomMessageCollectionName = 'UserChatRoomMessage'
-
       // Get UserChatRoom
-      const userChatRoom = await getChildCollectionItem<UserChatRoom, User>(
-        userCollectionName,
-        userChatRoomCollectionName,
-        user.uid,
-        body.userChatRoomId
-      )
-      if (!userChatRoom) throw new Error('userChatRoom not found')
+      const userChatRoom = await getUserChatRoom(user.uid, body.userChatRoomId)
       if (userChatRoom.data.stream === false)
         throw new Error('stream must be true')
 
       // Add UserChatRoomMessage
-      const newMessage: UserChatRoomMessage = {
-        userChatRoomRef: userChatRoom.ref,
-        role: 'user',
-        content: body.content,
-      }
-      await addGrandChildCollectionItem<
-        UserChatRoomMessage,
-        UserChatRoom,
-        User
-      >(
-        userCollectionName,
-        userChatRoomCollectionName,
-        userChatRoomMessageCollectionName,
-        user.uid,
-        body.userChatRoomId,
-        newMessage
-      )
+      await createUserChatRoomMessage(userChatRoom.ref, user.uid, body.content)
 
       // Get UserChatRoomMessages for OpenAI Request
-      const userChatRoomMessages = await queryGrandChildCollectionItem<
-        UserChatRoomMessage,
-        UserChatRoom,
-        User
-      >(
-        userCollectionName,
-        userChatRoomCollectionName,
-        userChatRoomMessageCollectionName,
-        user.uid,
-        body.userChatRoomId,
-        [order('createdAt', 'asc')]
-      )
-      const messages = []
-      for await (const message of userChatRoomMessages) {
-        messages.push({
-          role: message.data.role,
-          content: message.data.content,
-        } as ChatCompletionRequestMessage)
-      }
-
-      // Add Empty UserChatRoomMessage for Stream ID
-      const systemMessage: UserChatRoomMessage = {
-        userChatRoomRef: userChatRoom.ref,
-        role: 'assistant',
-        content: '',
-      }
-      const userChatRoomMessageRef = await addGrandChildCollectionItem<
-        UserChatRoomMessage,
-        UserChatRoom,
-        User
-      >(
-        userCollectionName,
-        userChatRoomCollectionName,
-        userChatRoomMessageCollectionName,
-        user.uid,
-        body.userChatRoomId,
-        systemMessage
-      )
-
-      // Send Request to OpenAI
-      const openAiBody: CreateChatCompletionRequest = {
-        model: userChatRoom.data.model,
-        max_tokens: userChatRoom.data.maxTokens,
-        temperature: userChatRoom.data.temperature,
-        n: 1,
-        top_p: 1,
-        stream: userChatRoom.data.stream,
-        messages,
-      }
-      await streamChat(
-        user.uid,
-        body.userChatRoomId,
-        userChatRoomMessageRef.id,
-        openAiBody
-      )
+      const messages = await getMessages(user.uid, body.userChatRoomId)
 
       console.log('messages.length', messages.length)
       // Update UserChatRoom Title
@@ -149,11 +67,17 @@ export const addStreamUserChatRoomMessage = onRequest(
         )
       }
 
-      // Response
-      res.json({
-        status: 'streaming',
-        userChatRoomMessageId: userChatRoomMessageRef.id,
-      })
+      // Send Request to OpenAI
+      const openAiBody: CreateChatCompletionRequest = {
+        model: userChatRoom.data.model,
+        max_tokens: userChatRoom.data.maxTokens,
+        temperature: userChatRoom.data.temperature,
+        n: 1,
+        top_p: 1,
+        stream: userChatRoom.data.stream,
+        messages,
+      }
+      await streamChat(res, openAiBody, chatGptOrg.value(), chatGptKey.value())
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }

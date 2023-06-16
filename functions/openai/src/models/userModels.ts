@@ -1,5 +1,10 @@
 import { Ref, Timestamp } from '@skeet-framework/firestore'
 
+// Define Collection Name
+export const userCollectionName = 'User'
+export const userChatRoomCollectionName = 'UserChatRoom'
+export const userChatRoomMessageCollectionName = 'UserChatRoomMessage'
+
 // CollectionId: User
 // DocumentId: uid
 export type User = {
