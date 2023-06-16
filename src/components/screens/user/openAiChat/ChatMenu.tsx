@@ -362,7 +362,7 @@ export default function ChatMenu({
       <View
         style={tw`w-full sm:w-64 sm:h-screen-bar flex flex-col items-center justify-start`}
       >
-        <View style={tw`w-full p-4 sm:hidden`}>
+        <View style={tw`w-full px-4 sm:hidden`}>
           <View style={tw`flex flex-row justify-center items-center`}>
             <Pressable
               onPress={() => {
