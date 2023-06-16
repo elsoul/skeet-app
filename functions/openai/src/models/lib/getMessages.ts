@@ -1,4 +1,5 @@
 import {
+  limit,
   order,
   queryGrandChildCollectionItem,
 } from '@skeet-framework/firestore'
@@ -24,7 +25,7 @@ export const getMessages = async (userId: string, userChatRoomId: string) => {
       userChatRoomMessageCollectionName,
       userId,
       userChatRoomId,
-      [order('createdAt', 'asc')]
+      [order('createdAt', 'asc'), limit(5)]
     )
     const messages = []
     for await (const message of userChatRoomMessages) {
