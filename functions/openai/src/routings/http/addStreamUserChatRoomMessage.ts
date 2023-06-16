@@ -17,6 +17,7 @@ import {
 import { createUserChatRoomMessage } from '@/models/lib/createUserChatRoomMessage'
 import { getMessages } from '@/models/lib/getMessages'
 import { getUserChatRoom } from '@/models/lib/getUserChatRoom'
+import { sleep } from '@/utils/time'
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
 
@@ -28,8 +29,11 @@ export const addStreamUserChatRoomMessage = onRequest(
 
     try {
       if (!organization || !apiKey)
-        throw new Error('ChatGPT organization or apiKey is empty')
+        throw new Error(
+          `ChatGPT organization or apiKey is empty\nPlease run \`skeet add secret CHAT_GPT_ORG/CHAT_GPT_KEY\``
+        )
 
+      // Get Request Body
       const body = {
         userChatRoomId: req.body.userChatRoomId || '',
         content: req.body.content,
@@ -77,14 +81,58 @@ export const addStreamUserChatRoomMessage = onRequest(
         stream: userChatRoom.data.stream,
         messages,
       }
-      await streamChat(
-        res,
+
+      // Get OpenAI Stream
+      const stream = await streamChat(
         openAiBody,
         chatGptOrg.value(),
-        chatGptKey.value(),
-        user.uid,
-        userChatRoom.ref
+        chatGptKey.value()
       )
+      const messageResults: string[] = []
+      let streamClosed = false
+      stream.on('data', async (chunk: Buffer) => {
+        const payloads = chunk.toString().split('\n\n')
+        for await (const payload of payloads) {
+          if (payload.includes('[DONE]')) return
+          if (payload.startsWith('data:')) {
+            const data = payload.replaceAll(/(\n)?^data:\s*/g, '')
+            try {
+              const delta = JSON.parse(data.trim())
+              const message = delta.choices[0].delta?.content
+              if (message == undefined) continue
+
+              console.log(message)
+              messageResults.push(message)
+
+              while (!streamClosed && res.writableLength > 0) {
+                await sleep(10)
+              }
+
+              // Send Message to Client
+              res.write(JSON.stringify({ text: message }))
+            } catch (error) {
+              console.log(`Error with JSON.parse and ${payload}.\n${error}`)
+            }
+          }
+        }
+        res.once('error', () => (streamClosed = true))
+        res.once('close', () => (streamClosed = true))
+        if (streamClosed) res.end('Stream disconnected')
+      })
+
+      // Stream End
+      stream.on('end', async () => {
+        const message = messageResults.join('')
+        const lastMessage = await createUserChatRoomMessage(
+          userChatRoom.ref,
+          user.uid,
+          message,
+          'assistant'
+        )
+        console.log(`Stream end - messageId: ${lastMessage.id}`)
+        res.end('Stream done')
+      })
+      stream.on('error', (e: Error) => console.error(e))
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
