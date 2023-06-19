@@ -93,6 +93,8 @@ export const addStreamUserChatRoomMessage = onRequest(
       )
       const messageResults: string[] = []
       let streamClosed = false
+      res.once('error', () => (streamClosed = true))
+      res.once('close', () => (streamClosed = true))
       stream.on('data', async (chunk: Buffer) => {
         const payloads = chunk.toString().split('\n\n')
         for await (const payload of payloads) {
@@ -118,8 +120,6 @@ export const addStreamUserChatRoomMessage = onRequest(
             }
           }
         }
-        res.once('error', () => (streamClosed = true))
-        res.once('close', () => (streamClosed = true))
         if (streamClosed) res.end('Stream disconnected')
       })
 
