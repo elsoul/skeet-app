@@ -38,7 +38,7 @@ export default function UserLayout({ children }: Props) {
           <KeyboardAvoidingView
             behavior="position"
             style={tw`flex-1 min-h-screen max-h-screen bg-white dark:bg-gray-900`}
-            keyboardVerticalOffset={24}
+            keyboardVerticalOffset={Platform.OS === 'web' ? 0 : 40}
           >
             <Modal
               animationType="fade"

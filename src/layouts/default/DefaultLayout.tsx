@@ -1,7 +1,7 @@
 import LanguageChanger from '@/components/utils/LanguageChanger'
 import tw from '@/lib/tailwind'
 import type { ReactNode } from 'react'
-import { KeyboardAvoidingView, Pressable, View } from 'react-native'
+import { KeyboardAvoidingView, Pressable, Platform, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ColorModeChanger from '@/components/utils/ColorModeChanger'
 import useColorModeRefresh from '@/hooks/useColorModeRefresh'
@@ -23,7 +23,7 @@ export default function DefaultLayout({ children }: Props) {
           <KeyboardAvoidingView
             behavior="position"
             style={tw`flex-1 min-h-screen max-h-screen bg-white dark:bg-gray-900`}
-            keyboardVerticalOffset={-80}
+            keyboardVerticalOffset={Platform.OS === 'web' ? 0 : -80}
           >
             <View style={tw`h-24 w-full bg-white dark:bg-gray-900`}>
               <View
