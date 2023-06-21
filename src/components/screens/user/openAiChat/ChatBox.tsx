@@ -122,6 +122,9 @@ export default function ChatBox({
   }, [chatMessages, scrollToEnd])
 
   const [chatContent, setChatContent] = useState<string>('')
+  const chatContentLines = useMemo(() => {
+    return (chatContent.match(/\n/g) || []).length + 1
+  }, [chatContent])
   const [chatContentError, setChatContentError] = useState('')
   const validateChatContent = useCallback(() => {
     try {
@@ -444,7 +447,12 @@ export default function ChatBox({
             <View style={tw`flex flex-row gap-4 items-end`}>
               <TextInput
                 multiline
-                style={tw`flex-1 border-2 border-gray-900 dark:border-gray-50 p-2 sm:p-3 text-sm sm:text-lg font-loaded-normal text-gray-900 dark:text-white h-10 sm:h-32`}
+                style={tw`${clsx(
+                  chatContentLines > 4
+                    ? 'h-36'
+                    : `h-${10 + (chatContentLines - 1) * 8}}`,
+                  'flex-1 border-2 border-gray-900 p-1 dark:border-gray-50 text-sm sm:text-lg font-loaded-normal text-gray-900 dark:text-white'
+                )}`}
                 inputMode="text"
                 value={chatContent}
                 onChangeText={setChatContent}
