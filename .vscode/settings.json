@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "https://json.schemastore.org/sourcehut-build-0.65.0.json": "file:///Users/ktm/dev/skeet-app/github/workflows/firebase-rules.yml"
+  }
+}
