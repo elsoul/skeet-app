@@ -161,7 +161,7 @@ export default function UserLayout({ children }: Props) {
 
               <View style={tw`flex flex-col flex-1 h-screen`}>
                 <View
-                  style={tw`flex-shrink- top-0 z-10 flex h-16 md:h-18 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
+                  style={tw`flex-shrink- z-10 flex h-16 md:h-18 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
                 >
                   <View
                     style={tw`flex flex-row items-center justify-between px-4 md:px-6 py-3 md:py-4 md:justify-start md:gap-10`}
