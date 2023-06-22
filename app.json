@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#ffffff"
       },
-      "versionCode": "0.1.0",
+      "versionCode": 1,
       "package": "com.elsoullabo.skeetapp"
     },
     "web": {
