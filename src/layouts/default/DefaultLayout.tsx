@@ -8,6 +8,7 @@ import useColorModeRefresh from '@/hooks/useColorModeRefresh'
 import { useNavigation } from '@react-navigation/native'
 import { ArrowLeftIcon } from 'react-native-heroicons/outline'
 import clsx from 'clsx'
+import { TextDecoder } from 'text-encoding'
 
 type Props = {
   children: ReactNode
@@ -19,10 +20,12 @@ export default function DefaultLayout({ children }: Props) {
   return (
     <>
       <View style={tw`relative w-full h-full bg-white dark:bg-gray-900`}>
-        <SafeAreaView style={tw`bg-white dark:bg-gray-900`}>
+        <SafeAreaView
+          style={tw`bg-white dark:bg-gray-900 min-h-screen max-h-screen`}
+        >
           <KeyboardAvoidingView
             behavior="position"
-            style={tw`flex-1 min-h-screen max-h-screen bg-white dark:bg-gray-900`}
+            style={tw`flex-1 h-full bg-white dark:bg-gray-900`}
             keyboardVerticalOffset={Platform.OS === 'web' ? 0 : -80}
           >
             <View style={tw`h-24 w-full bg-white dark:bg-gray-900`}>
