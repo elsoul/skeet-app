@@ -18,7 +18,6 @@ import UserMenu from './UserMenu'
 import { useTranslation } from 'react-i18next'
 import { userRoutes } from '@/routes/UserRoutes'
 import LogoHorizontal from '@/components/common/atoms/LogoHorizontal'
-import { ScrollView } from 'react-native-gesture-handler'
 
 type Props = {
   children: ReactNode
@@ -34,11 +33,12 @@ export default function UserLayout({ children }: Props) {
   return (
     <>
       <View style={tw`relative w-full bg-white dark:bg-gray-900`}>
-        <SafeAreaView style={tw`bg-white dark:bg-gray-900`}>
+        <SafeAreaView
+          style={tw`bg-white dark:bg-gray-900 min-h-screen max-h-screen`}
+        >
           <KeyboardAvoidingView
             behavior="position"
-            style={tw`flex-1 min-h-screen max-h-screen bg-white dark:bg-gray-900`}
-            keyboardVerticalOffset={Platform.OS === 'web' ? 0 : 40}
+            style={tw`flex-1 h-full bg-white dark:bg-gray-900`}
           >
             <Modal
               animationType="fade"
@@ -114,9 +114,7 @@ export default function UserLayout({ children }: Props) {
               </SafeAreaView>
             </Modal>
             <View style={tw`flex flex-row max-w-full`}>
-              <View
-                style={tw`z-10 hidden lg:inset-y-0 lg:flex lg:w-64 lg:flex-col`}
-              >
+              <View style={tw`hidden lg:inset-y-0 lg:flex lg:w-64 lg:flex-col`}>
                 <View
                   style={tw`flex flex-grow flex-col bg-white pt-5 dark:bg-gray-900`}
                 >
@@ -159,9 +157,9 @@ export default function UserLayout({ children }: Props) {
                 </View>
               </View>
 
-              <View style={tw`flex flex-col flex-1 h-screen`}>
+              <View style={tw`flex flex-col flex-1`}>
                 <View
-                  style={tw`flex-shrink- z-10 flex h-16 md:h-18 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
+                  style={tw`flex bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90`}
                 >
                   <View
                     style={tw`flex flex-row items-center justify-between px-4 md:px-6 py-3 md:py-4 md:justify-start md:gap-10`}
@@ -195,9 +193,8 @@ export default function UserLayout({ children }: Props) {
                     </View>
                   </View>
                 </View>
-                <ScrollView>
-                  <View style={tw`w-full`}>{children}</View>
-                </ScrollView>
+
+                <View style={tw`flex w-full`}>{children}</View>
               </View>
             </View>
           </KeyboardAvoidingView>
