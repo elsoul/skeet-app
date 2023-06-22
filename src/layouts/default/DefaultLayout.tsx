@@ -8,7 +8,6 @@ import useColorModeRefresh from '@/hooks/useColorModeRefresh'
 import { useNavigation } from '@react-navigation/native'
 import { ArrowLeftIcon } from 'react-native-heroicons/outline'
 import clsx from 'clsx'
-import { TextDecoder } from 'text-encoding'
 
 type Props = {
   children: ReactNode
