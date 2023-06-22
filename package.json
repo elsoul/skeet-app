@@ -32,6 +32,7 @@
     "build:production:ios": "eas build --platform ios --profile production",
     "build:production:android": "eas build --platform android --profile production",
     "build:production:webapp": "expo export:web",
+    "deploy:android": "eas submit --platform android",
     "deploy:webapp": "yarn build:production:webapp && npx firebase deploy --only hosting",
     "deploy:rules": "npx firebase deploy --only firestore:rules,storage",
     "check:webapp": "npx serve web-build",

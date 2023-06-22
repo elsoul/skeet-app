@@ -32,6 +32,7 @@ import CodeEditor, {
   CodeEditorSyntaxStyles,
 } from '@rivascva/react-native-code-editor'
 import { signOut } from 'firebase/auth'
+import { TextDecoder } from 'text-encoding'
 
 type ChatMessage = {
   id: string
