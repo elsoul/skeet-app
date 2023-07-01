@@ -72,7 +72,7 @@ export default function ResetPasswordAction({ oobCode }: Props) {
         text1: t('resetPasswordSuccessTitle') ?? 'Reset Success',
         text2:
           t('resetPasswordSuccessBody') ??
-          'Something went wrong... Please try it again later.',
+          'Your new password has been registered. Please sign in with it.',
       })
       navigation.navigate('Login')
     } catch (err) {
