@@ -50,12 +50,34 @@ export default function ResetPasswordScreen() {
         navigation.navigate('CheckEmail')
       } catch (err) {
         console.error(err)
-        Toast.show({
-          type: 'error',
-          text1:
-            t('sentResetPasswordRequest') ?? 'Succeed Reset Password Request',
-          text2: t('confirmEmail') ?? 'Check your email',
-        })
+        if (err instanceof Error && err.message === 'Not verified') {
+          Toast.show({
+            type: 'error',
+            text1: t('errorNotVerifiedTitle') ?? 'Not verified.',
+            text2:
+              t('errorNotVerifiedBody') ??
+              'Sent email to verify. Please check your email box.',
+          })
+        } else if (
+          err instanceof Error &&
+          err.message.includes('auth/user-not-found')
+        ) {
+          Toast.show({
+            type: 'error',
+            text1: t('userNotFoundTitle') ?? 'User not found',
+            text2:
+              t('userNotFoundBody') ??
+              'This email address is not registered. Please try to sign up.',
+          })
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: t('errorLoginTitle') ?? 'Failed to sign in.',
+            text2:
+              t('errorLoginBody') ??
+              'Something went wrong... Please try it again.',
+          })
+        }
       } finally {
         setLoading(false)
       }

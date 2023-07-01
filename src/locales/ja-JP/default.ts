@@ -66,6 +66,9 @@ const defaultJA = {
   errorBody: '大変お手数おかけしますが、もう一度お試しください。',
   noTitle: '無題',
   tokens: 'トークン',
+  userNotFoundTitle: 'ユーザーが見つかりません',
+  userNotFoundBody:
+    'このメールアドレスはまだ登録されていません。アカウントを作成してください。',
 }
 
 export default defaultJA
