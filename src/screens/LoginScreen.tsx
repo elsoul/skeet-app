@@ -86,6 +86,17 @@ export default function LoginScreen() {
               t('errorNotVerifiedBody') ??
               'Sent email to verify. Please check your email box.',
           })
+        } else if (
+          err instanceof Error &&
+          err.message.includes('auth/user-not-found')
+        ) {
+          Toast.show({
+            type: 'error',
+            text1: t('userNotFoundTitle') ?? 'User not found',
+            text2:
+              t('userNotFoundBody') ??
+              'This email address is not registered. Please try to sign up.',
+          })
         } else {
           Toast.show({
             type: 'error',
