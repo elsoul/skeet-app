@@ -65,6 +65,9 @@ const defaultEN = {
   errorBody: 'Something went wrong... Please try it again later.',
   noTitle: 'No title',
   tokens: 'tokens',
+  userNotFoundTitle: 'User not found',
+  userNotFoundBody:
+    'This email address is not registered. Please try to sign up.',
 }
 
 export default defaultEN
