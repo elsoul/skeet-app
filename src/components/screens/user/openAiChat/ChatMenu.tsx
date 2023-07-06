@@ -730,18 +730,27 @@ export default function ChatMenu({
                           )}`}
                         />
                         <View style={tw`flex flex-col gap-2`}>
+                          {chat.title !== '' ? (
+                            <Text
+                              style={tw`font-loaded-medium text-gray-900 dark:text-white`}
+                            >
+                              {chat.title}
+                            </Text>
+                          ) : (
+                            <Text
+                              style={tw`font-loaded-light italic text-gray-600 dark:text-gray-300`}
+                            >
+                              {t('noTitle')}
+                            </Text>
+                          )}
+
                           <Text
-                            style={tw`font-loaded-medium text-gray-900 dark:text-white`}
+                            style={tw`font-loaded-light text-gray-700 dark:text-gray-200`}
                           >
                             {format(
                               chat.createdAt.toDate(),
                               'yyyy-MM-dd HH:mm'
                             )}
-                          </Text>
-                          <Text
-                            style={tw`font-loaded-normal text-gray-900 dark:text-white`}
-                          >
-                            {chat.model} ({chat.maxTokens}, {chat.temperature})
                           </Text>
                         </View>
                       </Pressable>
