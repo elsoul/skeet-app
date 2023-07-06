@@ -13,8 +13,16 @@ import {
 } from '@/models'
 import { ChatCompletionRequestMessage } from 'openai'
 
-export const getMessages = async (userId: string, userChatRoomId: string) => {
+export const getMessages = async (
+  userId: string,
+  userChatRoomId: string,
+  limitCount?: number
+) => {
   try {
+    const query: any[] = [order('createdAt', 'desc')]
+    if (limitCount) {
+      query.push(limit(limitCount))
+    }
     const userChatRoomMessages = await queryGrandChildCollectionItem<
       UserChatRoomMessage,
       UserChatRoom,
@@ -25,7 +33,7 @@ export const getMessages = async (userId: string, userChatRoomId: string) => {
       userChatRoomMessageCollectionName,
       userId,
       userChatRoomId,
-      [order('createdAt', 'asc'), limit(5)]
+      query
     )
     const messages = []
     for await (const message of userChatRoomMessages) {
@@ -34,7 +42,7 @@ export const getMessages = async (userId: string, userChatRoomId: string) => {
         content: message.data.content,
       } as ChatCompletionRequestMessage)
     }
-    return messages
+    return messages.reverse()
   } catch (error) {
     throw new Error(`getUserChatRoomMessages: ${error}`)
   }
