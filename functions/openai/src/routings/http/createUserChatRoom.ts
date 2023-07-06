@@ -44,15 +44,6 @@ export const createUserChatRoom = onRequest(
       if (!userDoc) throw new Error('userDoc is not found')
       console.log(`userDoc: ${userDoc}`)
 
-      const userChatRoom = await queryChildCollectionItem<UserChatRoom, User>(
-        userCollectionName,
-        userChatRoomCollectionName,
-        user.uid,
-        [order('createdAt', 'desc')]
-      )
-      if (userChatRoom.length > 0)
-        throw new Error('userChatRoom is already created')
-
       const parentId = user.uid || ''
       const params: UserChatRoom = {
         userRef: userDoc.ref,
