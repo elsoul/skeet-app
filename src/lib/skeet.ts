@@ -36,8 +36,6 @@ export const fetchSkeetFunctions = async <T>(
       if (auth) {
         signOut(auth)
       }
-    } else if (err instanceof Error) {
-      throw new Error(err.message)
     }
   }
 }
