@@ -7,16 +7,20 @@ import { signOut } from 'firebase/auth'
 
 export default function useLogout() {
   const { t } = useTranslation()
-  const logout = useRecoilCallback(({ reset }) => async () => {
-    if (auth) {
-      reset(userState)
-      await signOut(auth)
-      Toast.show({
-        type: 'success',
-        text1: t('succeedLogout') ?? 'Succeed to sign out',
-        text2: t('seeYouSoon') ?? 'See you soon👋',
-      })
-    }
-  })
+  const logout = useRecoilCallback(
+    ({ reset }) =>
+      async () => {
+        if (auth) {
+          reset(userState)
+          await signOut(auth)
+          Toast.show({
+            type: 'success',
+            text1: t('succeedLogout') ?? 'Succeed to sign out',
+            text2: t('seeYouSoon') ?? 'See you soon👋',
+          })
+        }
+      },
+    [t]
+  )
   return logout
 }
