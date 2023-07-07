@@ -13,7 +13,6 @@ import useScreens from '@/hooks/useScreens'
 import { auth, db } from '@/lib/firebase'
 import { signOut, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import Toast from 'react-native-toast-message'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')

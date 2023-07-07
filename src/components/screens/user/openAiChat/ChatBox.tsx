@@ -46,11 +46,13 @@ type ChatMessage = {
 type Props = {
   setNewChatModalOpen: (_value: boolean) => void
   currentChatRoomId: string | null
+  getChatRooms: () => void
 }
 
 export default function ChatBox({
   setNewChatModalOpen,
   currentChatRoomId,
+  getChatRooms,
 }: Props) {
   const { t } = useTranslation()
   const user = useRecoilValue(userState)
@@ -208,6 +210,7 @@ export default function ChatBox({
 
         if (chatRoom && chatRoom.title == '') {
           await getChatRoom()
+          await getChatRooms()
         }
         await getUserChatRoomMessage()
         setChatContent('')
@@ -252,6 +255,7 @@ export default function ChatBox({
     chatRoom,
     getChatRoom,
     getUserChatRoomMessage,
+    getChatRooms,
   ])
 
   const viewWithCodeEditor = useCallback(
@@ -314,130 +318,134 @@ export default function ChatBox({
                           'bg-gray-100 dark:bg-gray-700',
                         chatMessage.role === 'assistant' &&
                           'bg-blue-50 dark:bg-gray-800',
-                        'flex flex-row p-4 justify-start items-start gap-4 md:gap-8'
+                        ''
                       )}`}
                     >
-                      {chatMessage.role === 'user' && (
-                        <View style={tw`flex`}>
-                          <Image
-                            source={user.iconUrl === '' ? null : user.iconUrl}
-                            placeholder={blurhash}
-                            contentFit="cover"
-                            style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                          />
-                        </View>
-                      )}
-                      {(chatMessage.role === 'assistant' ||
-                        chatMessage.role === 'system') &&
-                        chatRoom?.model === 'gpt-3.5-turbo' && (
+                      <View
+                        style={tw`flex flex-row p-4 justify-start items-start gap-4 md:gap-8 w-full max-w-3xl mx-auto`}
+                      >
+                        {chatMessage.role === 'user' && (
                           <View style={tw`flex`}>
                             <Image
-                              source={
-                                'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
-                              }
+                              source={user.iconUrl === '' ? null : user.iconUrl}
                               placeholder={blurhash}
                               contentFit="cover"
                               style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
                             />
                           </View>
                         )}
-                      {(chatMessage.role === 'assistant' ||
-                        chatMessage.role === 'system') &&
-                        chatRoom?.model === 'gpt-4' && (
-                          <View style={tw`flex`}>
-                            <Image
-                              source={
-                                'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
-                              }
-                              placeholder={blurhash}
-                              contentFit="cover"
-                              style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
-                            />
-                          </View>
-                        )}
-                      {chatMessage.viewWithCodeEditor ? (
-                        <>
-                          <View style={tw`flex-auto dark:hidden w-full`}>
-                            <CodeEditor
-                              language="javascript"
-                              style={tw`w-full`}
-                              syntaxStyle={CodeEditorSyntaxStyles.github}
-                              initialValue={chatMessage.content}
-                            />
-                          </View>
-                          <View style={tw`hidden dark:flex-auto w-full`}>
-                            <CodeEditor
-                              language="javascript"
-                              style={tw`w-full`}
-                              syntaxStyle={
-                                CodeEditorSyntaxStyles.monokaiSublime
-                              }
-                              initialValue={chatMessage.content}
-                            />
-                          </View>
-                        </>
-                      ) : (
-                        <>
-                          <View style={tw`flex-auto`}>
-                            {chatMessage.role === 'system' && (
-                              <View style={tw`pb-2`}>
-                                <Text
-                                  style={tw`font-loaded-bold text-gray-900 dark:text-white text-base`}
-                                >
-                                  {chatRoom?.title
-                                    ? chatRoom?.title
-                                    : t('noTitle')}
-                                </Text>
-                                <Text
-                                  style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
-                                >
-                                  {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
-                                  {t('tokens')}
-                                </Text>
-                              </View>
-                            )}
-                            <Text
-                              style={tw`font-loaded-normal text-gray-900 dark:text-white`}
-                            >
-                              {chatMessage.content}
-                            </Text>
-                          </View>
-                        </>
-                      )}
-                      <View>
+                        {(chatMessage.role === 'assistant' ||
+                          chatMessage.role === 'system') &&
+                          chatRoom?.model === 'gpt-3.5-turbo' && (
+                            <View style={tw`flex`}>
+                              <Image
+                                source={
+                                  'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
+                                }
+                                placeholder={blurhash}
+                                contentFit="cover"
+                                style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                              />
+                            </View>
+                          )}
+                        {(chatMessage.role === 'assistant' ||
+                          chatMessage.role === 'system') &&
+                          chatRoom?.model === 'gpt-4' && (
+                            <View style={tw`flex`}>
+                              <Image
+                                source={
+                                  'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
+                                }
+                                placeholder={blurhash}
+                                contentFit="cover"
+                                style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                              />
+                            </View>
+                          )}
                         {chatMessage.viewWithCodeEditor ? (
-                          <Pressable
-                            onPress={() => {
-                              viewWithCodeEditor(chatMessage.id, false)
-                            }}
-                            style={({ pressed }) =>
-                              tw`${clsx(
-                                pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                                'w-5 h-5'
-                              )}`
-                            }
-                          >
-                            <XMarkIcon
-                              style={tw`w-5 h-5 text-gray-500 dark:text-gray-400`}
-                            />
-                          </Pressable>
+                          <>
+                            <View style={tw`flex-auto dark:hidden w-full`}>
+                              <CodeEditor
+                                language="javascript"
+                                style={tw`w-full`}
+                                syntaxStyle={CodeEditorSyntaxStyles.github}
+                                initialValue={chatMessage.content}
+                              />
+                            </View>
+                            <View style={tw`hidden dark:flex-auto w-full`}>
+                              <CodeEditor
+                                language="javascript"
+                                style={tw`w-full`}
+                                syntaxStyle={
+                                  CodeEditorSyntaxStyles.monokaiSublime
+                                }
+                                initialValue={chatMessage.content}
+                              />
+                            </View>
+                          </>
                         ) : (
-                          <Pressable
-                            onPress={() => {
-                              viewWithCodeEditor(chatMessage.id, true)
-                            }}
-                            style={({ pressed }) =>
-                              tw`${clsx(
-                                pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
-                                'w-5 h-5'
-                              )}`
-                            }
-                          >
-                            <PencilSquareIcon
-                              style={tw`w-5 h-5 text-gray-500 dark:text-gray-400`}
-                            />
-                          </Pressable>
+                          <>
+                            <View style={tw`flex-auto`}>
+                              {chatMessage.role === 'system' && (
+                                <View style={tw`pb-2`}>
+                                  <Text
+                                    style={tw`font-loaded-bold text-gray-900 dark:text-white text-base`}
+                                  >
+                                    {chatRoom?.title
+                                      ? chatRoom?.title
+                                      : t('noTitle')}
+                                  </Text>
+                                  <Text
+                                    style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
+                                  >
+                                    {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
+                                    {t('tokens')}
+                                  </Text>
+                                </View>
+                              )}
+                              <Text
+                                style={tw`font-loaded-normal text-gray-900 dark:text-white`}
+                              >
+                                {chatMessage.content}
+                              </Text>
+                            </View>
+                          </>
                         )}
+                        <View>
+                          {chatMessage.viewWithCodeEditor ? (
+                            <Pressable
+                              onPress={() => {
+                                viewWithCodeEditor(chatMessage.id, false)
+                              }}
+                              style={({ pressed }) =>
+                                tw`${clsx(
+                                  pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                  'w-5 h-5'
+                                )}`
+                              }
+                            >
+                              <XMarkIcon
+                                style={tw`w-5 h-5 text-gray-500 dark:text-gray-400`}
+                              />
+                            </Pressable>
+                          ) : (
+                            <Pressable
+                              onPress={() => {
+                                viewWithCodeEditor(chatMessage.id, true)
+                              }}
+                              style={({ pressed }) =>
+                                tw`${clsx(
+                                  pressed ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                  'w-5 h-5'
+                                )}`
+                              }
+                            >
+                              <PencilSquareIcon
+                                style={tw`w-5 h-5 text-gray-500 dark:text-gray-400`}
+                              />
+                            </Pressable>
+                          )}
+                        </View>
                       </View>
                     </View>
                   ))}
@@ -445,7 +453,9 @@ export default function ChatBox({
               </ScrollView>
             </View>
 
-            <View style={tw`flex flex-row gap-4 items-end`}>
+            <View
+              style={tw`flex flex-row gap-4 items-end w-full max-w-3xl mx-auto`}
+            >
               <TextInput
                 multiline
                 style={tw`${clsx(

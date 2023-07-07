@@ -45,8 +45,8 @@ import {
   QueryDocumentSnapshot,
   Timestamp,
   collection,
+  getDocs,
   limit,
-  onSnapshot,
   orderBy,
   query,
   startAfter,
@@ -54,7 +54,6 @@ import {
 import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ChatMenuLoading from '@/components/loading/ChatMenuLoading'
 import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
 
@@ -73,6 +72,13 @@ type Props = {
   setNewChatModalOpen: (_value: boolean) => void
   currentChatRoomId: string | null
   setCurrentChatRoomId: (_value: string | null) => void
+  chatList: ChatRoom[]
+  setChatList: (_value: ChatRoom[]) => void
+  lastChat: QueryDocumentSnapshot<DocumentData> | null
+  setLastChat: (_value: QueryDocumentSnapshot<DocumentData> | null) => void
+  isDataLoading: boolean
+  setDataLoading: (_value: boolean) => void
+  getChatRooms: () => void
 }
 
 export default function ChatMenu({
@@ -80,20 +86,22 @@ export default function ChatMenu({
   setNewChatModalOpen,
   currentChatRoomId,
   setCurrentChatRoomId,
+  chatList,
+  setChatList,
+  lastChat,
+  setLastChat,
+  isDataLoading,
+  setDataLoading,
+  getChatRooms,
 }: Props) {
   const { t } = useTranslation()
   const user = useRecoilValue(userState)
   const [isCreateLoading, setCreateLoading] = useState(false)
   const [isChatListModalOpen, setChatListModalOpen] = useState(false)
 
-  const [chatList, setChatList] = useState<ChatRoom[]>([])
-  const [lastChat, setLastChat] =
-    useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [reachLast, setReachLast] = useState(false)
-  const [isDataLoading, setDataLoading] = useState(false)
 
   const queryMore = useCallback(async () => {
-    let unsubscribe = () => {}
     if (db && lastChat) {
       try {
         const q = query(
@@ -103,22 +111,21 @@ export default function ChatMenu({
           startAfter(lastChat)
         )
 
-        unsubscribe = onSnapshot(q, (querySnapshot) => {
-          setDataLoading(true)
-          const list: ChatRoom[] = []
-          querySnapshot.forEach((doc) => {
-            const data = doc.data()
-            list.push({ id: doc.id, ...data } as ChatRoom)
-          })
-
-          if (querySnapshot.docs[querySnapshot.docs.length - 1] === lastChat) {
-            setReachLast(true)
-          } else {
-            setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
-            setChatList([...chatList, ...list])
-          }
-          setDataLoading(false)
+        const querySnapshot = await getDocs(q)
+        setDataLoading(true)
+        const list: ChatRoom[] = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data()
+          list.push({ id: doc.id, ...data } as ChatRoom)
         })
+
+        if (querySnapshot.docs[querySnapshot.docs.length - 1] === lastChat) {
+          setReachLast(true)
+        } else {
+          setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
+          setChatList([...chatList, ...list])
+        }
+        setDataLoading(false)
       } catch (err) {
         console.log(err)
         if (err instanceof Error && err.message.includes('permission-denied')) {
@@ -140,8 +147,15 @@ export default function ChatMenu({
         }
       }
     }
-    return () => unsubscribe()
-  }, [chatList, lastChat, t, user.uid, setDataLoading])
+  }, [
+    chatList,
+    lastChat,
+    t,
+    user.uid,
+    setDataLoading,
+    setLastChat,
+    setChatList,
+  ])
 
   const scrollViewRef = useRef<ScrollView>(null)
   const scrollViewRefModal = useRef<ScrollView>(null)
@@ -160,51 +174,6 @@ export default function ChatMenu({
     },
     [queryMore, reachLast]
   )
-
-  useEffect(() => {
-    let unsubscribe = () => {}
-    if (db) {
-      try {
-        const q = query(
-          collection(db, `User/${user.uid}/UserChatRoom`),
-          orderBy('createdAt', 'desc'),
-          limit(15)
-        )
-
-        unsubscribe = onSnapshot(q, (querySnapshot) => {
-          setDataLoading(true)
-          const list: ChatRoom[] = []
-          querySnapshot.forEach((doc) => {
-            const data = doc.data()
-            list.push({ id: doc.id, ...data } as ChatRoom)
-          })
-          setChatList(list)
-          setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
-          setDataLoading(false)
-        })
-      } catch (err) {
-        console.log(err)
-        if (err instanceof Error && err.message.includes('permission-denied')) {
-          Toast.show({
-            type: 'error',
-            text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
-            text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
-          })
-          if (auth) {
-            signOut(auth)
-          }
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: t('errorTitle') ?? 'Error',
-            text2:
-              t('errorBody') ?? 'Something went wrong... Please try it again.',
-          })
-        }
-      }
-    }
-    return () => unsubscribe()
-  }, [user.uid, t])
 
   const [model, setModel] = useState<GPTModel>(allowedGPTModel[0])
   const [modelError, setModelError] = useState('')
@@ -344,6 +313,7 @@ export default function ChatMenu({
     } finally {
       setNewChatModalOpen(false)
       setCreateLoading(false)
+      await getChatRooms()
     }
   }, [
     setNewChatModalOpen,
@@ -355,6 +325,7 @@ export default function ChatMenu({
     setCreateLoading,
     isNewChatDisabled,
     setCurrentChatRoomId,
+    getChatRooms,
   ])
 
   return (
@@ -448,7 +419,7 @@ export default function ChatMenu({
                         </Text>
                       ) : (
                         <Text
-                          style={tw`font-loaded-light italic text-gray-600 dark:text-gray-300`}
+                          style={tw`font-loaded-light text-gray-600 dark:text-gray-300`}
                         >
                           {t('noTitle')}
                         </Text>
@@ -463,7 +434,6 @@ export default function ChatMenu({
                   </Pressable>
                 ))}
               </View>
-              {isDataLoading && <ChatMenuLoading />}
             </View>
           </ScrollView>
         </View>
@@ -738,7 +708,7 @@ export default function ChatMenu({
                             </Text>
                           ) : (
                             <Text
-                              style={tw`font-loaded-light italic text-gray-600 dark:text-gray-300`}
+                              style={tw`font-loaded-light text-gray-600 dark:text-gray-300`}
                             >
                               {t('noTitle')}
                             </Text>
@@ -758,7 +728,6 @@ export default function ChatMenu({
                   </View>
                 </View>
               </View>
-              {isDataLoading && <ChatMenuLoading />}
             </View>
           </ScrollView>
         </SafeAreaView>
