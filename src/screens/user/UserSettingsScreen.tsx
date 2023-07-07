@@ -42,7 +42,7 @@ export default function UserSettingsScreen() {
             style={tw`flex flex-col items-center justify-center sm:items-start bg-white dark:bg-gray-900 w-full`}
           >
             <View
-              style={tw`flex flex-col sm:flex-row items-center max-w-md sm:gap-8 px-4 w-full`}
+              style={tw`flex flex-col sm:flex-row items-start max-w-md sm:gap-8 px-4 w-full`}
             >
               <View style={tw`flex flex-col items-center`}>
                 <EditUserIconUrl />

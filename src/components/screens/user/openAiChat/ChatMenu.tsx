@@ -448,7 +448,7 @@ export default function ChatMenu({
                         </Text>
                       ) : (
                         <Text
-                          style={tw`font-loaded-light italic text-gray-600 dark:text-gray-300`}
+                          style={tw`font-loaded-light text-gray-600 dark:text-gray-300`}
                         >
                           {t('noTitle')}
                         </Text>
@@ -738,7 +738,7 @@ export default function ChatMenu({
                             </Text>
                           ) : (
                             <Text
-                              style={tw`font-loaded-light italic text-gray-600 dark:text-gray-300`}
+                              style={tw`font-loaded-light text-gray-600 dark:text-gray-300`}
                             >
                               {t('noTitle')}
                             </Text>
