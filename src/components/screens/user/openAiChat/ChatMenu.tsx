@@ -45,8 +45,8 @@ import {
   QueryDocumentSnapshot,
   Timestamp,
   collection,
+  getDocs,
   limit,
-  onSnapshot,
   orderBy,
   query,
   startAfter,
@@ -93,7 +93,6 @@ export default function ChatMenu({
   const [isDataLoading, setDataLoading] = useState(false)
 
   const queryMore = useCallback(async () => {
-    let unsubscribe = () => {}
     if (db && lastChat) {
       try {
         const q = query(
@@ -103,22 +102,21 @@ export default function ChatMenu({
           startAfter(lastChat)
         )
 
-        unsubscribe = onSnapshot(q, (querySnapshot) => {
-          setDataLoading(true)
-          const list: ChatRoom[] = []
-          querySnapshot.forEach((doc) => {
-            const data = doc.data()
-            list.push({ id: doc.id, ...data } as ChatRoom)
-          })
-
-          if (querySnapshot.docs[querySnapshot.docs.length - 1] === lastChat) {
-            setReachLast(true)
-          } else {
-            setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
-            setChatList([...chatList, ...list])
-          }
-          setDataLoading(false)
+        const querySnapshot = await getDocs(q)
+        setDataLoading(true)
+        const list: ChatRoom[] = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data()
+          list.push({ id: doc.id, ...data } as ChatRoom)
         })
+
+        if (querySnapshot.docs[querySnapshot.docs.length - 1] === lastChat) {
+          setReachLast(true)
+        } else {
+          setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
+          setChatList([...chatList, ...list])
+        }
+        setDataLoading(false)
       } catch (err) {
         console.log(err)
         if (err instanceof Error && err.message.includes('permission-denied')) {
@@ -140,7 +138,6 @@ export default function ChatMenu({
         }
       }
     }
-    return () => unsubscribe()
   }, [chatList, lastChat, t, user.uid, setDataLoading])
 
   const scrollViewRef = useRef<ScrollView>(null)
@@ -161,27 +158,25 @@ export default function ChatMenu({
     [queryMore, reachLast]
   )
 
-  useEffect(() => {
-    let unsubscribe = () => {}
+  const getChatRooms = useCallback(async () => {
     if (db) {
       try {
+        setDataLoading(true)
         const q = query(
           collection(db, `User/${user.uid}/UserChatRoom`),
           orderBy('createdAt', 'desc'),
           limit(15)
         )
 
-        unsubscribe = onSnapshot(q, (querySnapshot) => {
-          setDataLoading(true)
-          const list: ChatRoom[] = []
-          querySnapshot.forEach((doc) => {
-            const data = doc.data()
-            list.push({ id: doc.id, ...data } as ChatRoom)
-          })
-          setChatList(list)
-          setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
-          setDataLoading(false)
+        const querySnapshot = await getDocs(q)
+        const list: ChatRoom[] = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data()
+          list.push({ id: doc.id, ...data } as ChatRoom)
         })
+        setChatList(list)
+        setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
+        setDataLoading(false)
       } catch (err) {
         console.log(err)
         if (err instanceof Error && err.message.includes('permission-denied')) {
@@ -203,8 +198,11 @@ export default function ChatMenu({
         }
       }
     }
-    return () => unsubscribe()
   }, [user.uid, t])
+
+  useEffect(() => {
+    getChatRooms()
+  }, [getChatRooms])
 
   const [model, setModel] = useState<GPTModel>(allowedGPTModel[0])
   const [modelError, setModelError] = useState('')
@@ -344,6 +342,7 @@ export default function ChatMenu({
     } finally {
       setNewChatModalOpen(false)
       setCreateLoading(false)
+      await getChatRooms()
     }
   }, [
     setNewChatModalOpen,
@@ -355,6 +354,7 @@ export default function ChatMenu({
     setCreateLoading,
     isNewChatDisabled,
     setCurrentChatRoomId,
+    getChatRooms,
   ])
 
   return (
