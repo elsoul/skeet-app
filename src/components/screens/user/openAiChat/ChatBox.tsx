@@ -46,11 +46,13 @@ type ChatMessage = {
 type Props = {
   setNewChatModalOpen: (_value: boolean) => void
   currentChatRoomId: string | null
+  getChatRooms: () => void
 }
 
 export default function ChatBox({
   setNewChatModalOpen,
   currentChatRoomId,
+  getChatRooms,
 }: Props) {
   const { t } = useTranslation()
   const user = useRecoilValue(userState)
@@ -208,6 +210,7 @@ export default function ChatBox({
 
         if (chatRoom && chatRoom.title == '') {
           await getChatRoom()
+          await getChatRooms()
         }
         await getUserChatRoomMessage()
         setChatContent('')
@@ -252,6 +255,7 @@ export default function ChatBox({
     chatRoom,
     getChatRoom,
     getUserChatRoomMessage,
+    getChatRooms,
   ])
 
   const viewWithCodeEditor = useCallback(
@@ -320,7 +324,6 @@ export default function ChatBox({
                       <View
                         style={tw`flex flex-row p-4 justify-start items-start gap-4 md:gap-8 w-full max-w-3xl mx-auto`}
                       >
-                        {' '}
                         {chatMessage.role === 'user' && (
                           <View style={tw`flex`}>
                             <Image

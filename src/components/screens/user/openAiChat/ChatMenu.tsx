@@ -54,7 +54,6 @@ import {
 import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ChatMenuLoading from '@/components/loading/ChatMenuLoading'
 import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
 
@@ -73,6 +72,13 @@ type Props = {
   setNewChatModalOpen: (_value: boolean) => void
   currentChatRoomId: string | null
   setCurrentChatRoomId: (_value: string | null) => void
+  chatList: ChatRoom[]
+  setChatList: (_value: ChatRoom[]) => void
+  lastChat: QueryDocumentSnapshot<DocumentData> | null
+  setLastChat: (_value: QueryDocumentSnapshot<DocumentData> | null) => void
+  isDataLoading: boolean
+  setDataLoading: (_value: boolean) => void
+  getChatRooms: () => void
 }
 
 export default function ChatMenu({
@@ -80,17 +86,20 @@ export default function ChatMenu({
   setNewChatModalOpen,
   currentChatRoomId,
   setCurrentChatRoomId,
+  chatList,
+  setChatList,
+  lastChat,
+  setLastChat,
+  isDataLoading,
+  setDataLoading,
+  getChatRooms,
 }: Props) {
   const { t } = useTranslation()
   const user = useRecoilValue(userState)
   const [isCreateLoading, setCreateLoading] = useState(false)
   const [isChatListModalOpen, setChatListModalOpen] = useState(false)
 
-  const [chatList, setChatList] = useState<ChatRoom[]>([])
-  const [lastChat, setLastChat] =
-    useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [reachLast, setReachLast] = useState(false)
-  const [isDataLoading, setDataLoading] = useState(false)
 
   const queryMore = useCallback(async () => {
     if (db && lastChat) {
@@ -138,7 +147,15 @@ export default function ChatMenu({
         }
       }
     }
-  }, [chatList, lastChat, t, user.uid, setDataLoading])
+  }, [
+    chatList,
+    lastChat,
+    t,
+    user.uid,
+    setDataLoading,
+    setLastChat,
+    setChatList,
+  ])
 
   const scrollViewRef = useRef<ScrollView>(null)
   const scrollViewRefModal = useRef<ScrollView>(null)
@@ -157,52 +174,6 @@ export default function ChatMenu({
     },
     [queryMore, reachLast]
   )
-
-  const getChatRooms = useCallback(async () => {
-    if (db) {
-      try {
-        setDataLoading(true)
-        const q = query(
-          collection(db, `User/${user.uid}/UserChatRoom`),
-          orderBy('createdAt', 'desc'),
-          limit(15)
-        )
-
-        const querySnapshot = await getDocs(q)
-        const list: ChatRoom[] = []
-        querySnapshot.forEach((doc) => {
-          const data = doc.data()
-          list.push({ id: doc.id, ...data } as ChatRoom)
-        })
-        setChatList(list)
-        setLastChat(querySnapshot.docs[querySnapshot.docs.length - 1])
-        setDataLoading(false)
-      } catch (err) {
-        console.log(err)
-        if (err instanceof Error && err.message.includes('permission-denied')) {
-          Toast.show({
-            type: 'error',
-            text1: t('errorTokenExpiredTitle') ?? 'Token Expired.',
-            text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
-          })
-          if (auth) {
-            signOut(auth)
-          }
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: t('errorTitle') ?? 'Error',
-            text2:
-              t('errorBody') ?? 'Something went wrong... Please try it again.',
-          })
-        }
-      }
-    }
-  }, [user.uid, t])
-
-  useEffect(() => {
-    getChatRooms()
-  }, [getChatRooms])
 
   const [model, setModel] = useState<GPTModel>(allowedGPTModel[0])
   const [modelError, setModelError] = useState('')
@@ -463,7 +434,6 @@ export default function ChatMenu({
                   </Pressable>
                 ))}
               </View>
-              {isDataLoading && <ChatMenuLoading />}
             </View>
           </ScrollView>
         </View>
@@ -758,7 +728,6 @@ export default function ChatMenu({
                   </View>
                 </View>
               </View>
-              {isDataLoading && <ChatMenuLoading />}
             </View>
           </ScrollView>
         </SafeAreaView>
