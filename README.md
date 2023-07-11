@@ -78,4 +78,17 @@ yarn build:configure
 ## Firebase Emulator for iOS and Android
 
 We can't use Firebase Emulator for iOS and Android.
-So now we can only test the UI of iOS and Android on local using production Firebase environment.
+So now we can only test the UI of iOS and Android locally using the production Firebase environment.
+We're welcome for who solves this problem.
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/elsoul/skeet-app This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+## License
+
+The package is available as open source under the terms of the [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
+
+## Code of Conduct
+
+Everyone interacting in the SKEET project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/elsoul/skeet-app/blob/master/CODE_OF_CONDUCT.md).
