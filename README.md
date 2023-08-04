@@ -20,9 +20,36 @@
   </a>
 </p>
 
-# Skeet Framework Boilerplate
+## Skeet Expo & Firebase Boilerplate
 
-This repo will be generated from _skeet create <project-name>_ .
+- [Firebase - Serverless Platform](https://firebase.google.com/)
+- [Google Cloud - Cloud Platform](https://cloud.google.com/)
+- [Jest - Testing framework](https://jestjs.io/)
+- [TypeScript - Type Check](https://www.typescriptlang.org/)
+- [ESLint - Linter](https://eslint.org/)
+- [Prettier - Formatter](https://prettier.io/)
+- [React Native](https://reactnative.dev/)
+- [Expo](https://docs.expo.dev/)
+- [EAS Build](https://docs.expo.dev/build/introduction/)
+- [Recoil - State Management](https://recoiljs.org/)
+- [React i18n - Localization](https://react.i18next.com/)
+- [twrnc - TailwindCSS](https://github.com/jaredh159/tailwind-react-native-classnames)
+- [React Navigation - Routing](https://reactnavigation.org/)
+
+## What's Skeet?
+
+TypeScript Serverless Framework 'Skeet'.
+
+The Skeet project was launched with the goal of reducing software development, operation, and maintenance costs.
+
+Build Serverless Apps faster.
+
+## Dependency
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [Node](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/)
+- [Google SDK](https://cloud.google.com/sdk/docs)
 
 ## Usage
 
@@ -33,10 +60,14 @@ $ npm i -g @skeet-framework/cli
 
 ```bash
 $ skeet create <project-name>
+$ cd <project-name>
+$ skeet s
 ```
 
+or if you pulled this repo:
+
 ```bash
-$ cd <project-name>
+$ skeet yarn install
 $ skeet s
 ```
 
