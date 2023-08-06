@@ -106,11 +106,12 @@ You need to run this command to setup EAS Build project.
 yarn build:configure
 ```
 
-## Firebase Emulator for iOS and Android
+## Firestore Emulator for iOS and Android
 
-We can't use Firebase Emulator for iOS and Android.
-So now we can only test the UI of iOS and Android locally using the production Firebase environment.
+We can't use Firestore Emulator for iOS and Android.
+So now we can only test the UI of iOS and Android locally using the production Firestore environment.
 We're welcome for who solves this problem.
+Also asking about it to the Firebase support team.
 
 ## Contributing
 
