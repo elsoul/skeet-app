@@ -17,6 +17,8 @@ import { MenuProvider } from 'react-native-popup-menu'
 import Toast from 'react-native-toast-message'
 import { toastConfig } from '@/lib/toast'
 import Routes from '@/routes/Routes'
+import { LogBox } from 'react-native'
+LogBox.ignoreLogs(['']) // Ignore log notification by message
 
 export default function App() {
   useDeviceContext(tw)
