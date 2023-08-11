@@ -11,7 +11,7 @@ import {
   userChatRoomMessageCollectionName,
   userCollectionName,
 } from '@/models'
-import { ChatCompletionRequestMessage } from 'openai'
+import { OpenAIMessage, openai } from '@skeet-framework/ai'
 
 export const getMessages = async (
   userId: string,
@@ -40,9 +40,9 @@ export const getMessages = async (
       messages.push({
         role: message.data.role,
         content: message.data.content,
-      } as ChatCompletionRequestMessage)
+      } as OpenAIMessage)
     }
-    return messages.reverse()
+    return { messages: messages.reverse() }
   } catch (error) {
     throw new Error(`getUserChatRoomMessages: ${error}`)
   }

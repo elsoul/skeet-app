@@ -2,7 +2,7 @@ import { User } from '@/models'
 import { addCollectionItem } from '@skeet-framework/firestore'
 import * as functions from 'firebase-functions/v1'
 import { authPublicOption } from '@/routings'
-import { gravatarIconUrl } from '@/utils/placeholder'
+import { gravatarIconUrl } from '@skeet-framework/utils'
 import skeetConfig from '../../../skeetOptions.json'
 const region = skeetConfig.region
 

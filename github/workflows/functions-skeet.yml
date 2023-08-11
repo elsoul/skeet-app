@@ -1,11 +1,11 @@
-name: Openai
+name: SkeetFunctions
 on:
   push:
     branches:
       - main
     paths:
-      - 'functions/openai/**'
-      - '.github/workflows/functions-openai.yml'
+      - 'functions/skeet/**'
+      - '.github/workflows/functions-skeet.yml'
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.16.0'
+          node-version: '18.17.0'
       - id: auth
         uses: google-github-actions/auth@v0
         with:
@@ -27,8 +27,8 @@ jobs:
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
       - name: Install dependencies
-        run: cd ./functions/openai && yarn install --frozen-lockfile
+        run: cd ./functions/skeet && yarn install --frozen-lockfile
       - name: Build App
-        run: cd ./functions/openai && yarn build
+        run: cd ./functions/skeet && yarn build
       - name: Deploy to Firebase
-        run: firebase deploy --only functions:openai
+        run: firebase deploy --only functions:skeet

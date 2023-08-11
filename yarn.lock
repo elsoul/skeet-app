@@ -3510,11 +3510,12 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@skeet-framework/firestore@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.0.9.tgz#997e3364be12638a59bd86b3e212d226b04c846b"
-  integrity sha512-OW/foqyrbyFuZsDNeL7VZ5RJbMJrU/tUt308Xzy0NTL6+sTLplhYAw8zzFsfp6EKkWsNTGBr23HHEM5naQHTkQ==
+"@skeet-framework/firestore@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-1.1.2.tgz#55f22f73cab8d9fc503cd724c98c15b90e3ca76d"
+  integrity sha512-nwmCBD7kAoZp8O4+HGMQbQGJbJgCAtSBKrYIV3kx6s/ZYTOQJE9PlSlSoQwKRo7g4A4qJ9rCt9MDGx8/32/faA==
   dependencies:
+    crypto "^1.0.1"
     date-fns "2.30.0"
     date-fns-tz "2.0.0"
     dotenv "16.0.3"
@@ -7163,6 +7164,11 @@ crypto-random-string@^4.0.0:
   integrity sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==
   dependencies:
     type-fest "^1.0.1"
+
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
+  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
 
 csrf@~3.0.0:
   version "3.0.6"

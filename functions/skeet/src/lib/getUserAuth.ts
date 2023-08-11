@@ -1,4 +1,4 @@
-import { gravatarIconUrl } from '@/utils/placeholder'
+import { gravatarIconUrl } from '@skeet-framework/utils'
 import { auth } from 'firebase-admin'
 import { Request } from 'firebase-functions/v2/https'
 

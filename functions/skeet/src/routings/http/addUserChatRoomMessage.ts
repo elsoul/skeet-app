@@ -1,12 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { TypedRequestBody } from '@/index'
 import { updateChildCollectionItem } from '@skeet-framework/firestore'
-import {
-  chat,
-  getUserAuth,
-  generateChatRoomTitle,
-  CreateChatCompletionRequest,
-} from '@/lib'
+import { getUserAuth } from '@/lib'
+import { OpenAI, OpenAIOptions } from '@skeet-framework/ai'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
 import { publicHttpOption } from '@/routings/options'
 import {
@@ -47,18 +43,21 @@ export const addUserChatRoomMessage = onRequest(
       await createUserChatRoomMessage(userChatRoom.ref, user.uid, body.content)
 
       const messages = await getMessages(user.uid, body.userChatRoomId)
-      let openAiBody: CreateChatCompletionRequest = {
+      if (messages.messages.length === 0) throw new Error('messages is empty')
+
+      const options: OpenAIOptions = {
+        organizationKey: organization,
+        apiKey,
         model: userChatRoom.data.model,
-        max_tokens: userChatRoom.data.maxTokens,
+        maxTokens: userChatRoom.data.maxTokens,
         temperature: userChatRoom.data.temperature,
         n: 1,
-        top_p: 1,
-        stream: userChatRoom.data.stream,
-        messages,
+        topP: 1,
       }
-      const openAiResponse = await chat(openAiBody, organization, apiKey)
-      if (!openAiResponse) throw new Error('openAiResponse not found')
-      const content = String(openAiResponse.content) || ''
+      const openAi = new OpenAI(options)
+
+      const content = await openAi.prompt(messages)
+      if (!content) throw new Error('openAiResponse not found')
 
       await createUserChatRoomMessage(
         userChatRoom.ref,
@@ -66,12 +65,8 @@ export const addUserChatRoomMessage = onRequest(
         content,
         'assistant'
       )
-      if (messages.length === 3) {
-        const title = await generateChatRoomTitle(
-          body.content,
-          organization,
-          apiKey
-        )
+      if (messages.messages.length === 3) {
+        const title = await openAi.generateTitle(body.content)
         await updateChildCollectionItem<UserChatRoom, User>(
           userCollectionName,
           userChatRoomCollectionName,
@@ -80,7 +75,7 @@ export const addUserChatRoomMessage = onRequest(
           { title }
         )
       }
-      res.json({ status: 'success', openAiResponse })
+      res.json({ status: 'success', response: content })
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }

@@ -1,13 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { TypedRequestBody } from '@/index'
 import { updateChildCollectionItem } from '@skeet-framework/firestore'
-import { sleep } from '@/utils/time'
-import {
-  getUserAuth,
-  generateChatRoomTitle,
-  streamChat,
-  CreateChatCompletionRequest,
-} from '@/lib'
+import { sleep } from '@skeet-framework/utils'
+import { getUserAuth } from '@/lib'
 import { publicHttpOption } from '@/routings'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
 import { defineSecret } from 'firebase-functions/params'
@@ -20,6 +15,7 @@ import {
   getMessages,
   getUserChatRoom,
 } from '@/models'
+import { OpenAI } from '@skeet-framework/ai'
 
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
@@ -57,14 +53,21 @@ export const addStreamUserChatRoomMessage = onRequest(
       // Get UserChatRoomMessages for OpenAI Request
       const messages = await getMessages(user.uid, body.userChatRoomId)
 
-      console.log('messages.length', messages.length)
+      console.log('messages.length', messages.messages.length)
+
+      const openAi = new OpenAI({
+        organizationKey: organization,
+        apiKey,
+        model: userChatRoom.data.model,
+        maxTokens: userChatRoom.data.maxTokens,
+        temperature: userChatRoom.data.temperature,
+        n: 1,
+        topP: 1,
+        stream: userChatRoom.data.stream,
+      })
       // Update UserChatRoom Title
-      if (messages.length === 2) {
-        const title = await generateChatRoomTitle(
-          body.content,
-          organization,
-          apiKey
-        )
+      if (messages.messages.length === 2) {
+        const title = await openAi.generateTitle(body.content)
         await updateChildCollectionItem<UserChatRoom, User>(
           userCollectionName,
           userChatRoomCollectionName,
@@ -74,23 +77,8 @@ export const addStreamUserChatRoomMessage = onRequest(
         )
       }
 
-      // Send Request to OpenAI
-      const openAiBody: CreateChatCompletionRequest = {
-        model: userChatRoom.data.model,
-        max_tokens: userChatRoom.data.maxTokens,
-        temperature: userChatRoom.data.temperature,
-        n: 1,
-        top_p: 1,
-        stream: userChatRoom.data.stream,
-        messages,
-      }
-
       // Get OpenAI Stream
-      const stream = await streamChat(
-        openAiBody,
-        chatGptOrg.value(),
-        chatGptKey.value()
-      )
+      const stream = await openAi.promptStream(messages)
       const messageResults: string[] = []
       let streamClosed = false
       res.once('error', () => (streamClosed = true))
