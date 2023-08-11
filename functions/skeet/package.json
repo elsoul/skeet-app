@@ -3,7 +3,7 @@
   "scripts": {
     "lint": "eslint --ext .ts,.js --fix .",
     "dev": "nodemon",
-    "dev:login": "npx ts-node -r tsconfig-paths/register --transpile-only src/scripts/login.ts",
+    "dev:login": "npx ts-node -r tsconfig-paths/register --transpile-only src/lib/login.ts",
     "build": "npx ts-node build.ts",
     "serve": "firebase emulators:start",
     "shell": "yarn build && firebase functions:shell",
