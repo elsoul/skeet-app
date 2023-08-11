@@ -1,4 +1,4 @@
-import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
+import { CreateUserChatRoomParams } from '@/types/http/skeet/createUserChatRoomParams'
 import { postFetch } from '../jest.setup'
 
 describe('POST without Bearer Token /createUserChatRoom', () => {

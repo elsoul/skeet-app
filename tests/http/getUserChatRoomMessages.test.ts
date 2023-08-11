@@ -1,6 +1,6 @@
-import { AddUserChatRoomMessageParams } from '@/types/http/openai/addUserChatRoomMessageParams'
+import { AddUserChatRoomMessageParams } from '@/types/http/skeet/addUserChatRoomMessageParams'
 import { postFetch } from '../jest.setup'
-import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
+import { CreateUserChatRoomParams } from '@/types/http/skeet/createUserChatRoomParams'
 
 let userChatRoomId = ''
 describe('getUserChatRoomMessages', () => {
@@ -34,6 +34,7 @@ describe('getUserChatRoomMessages', () => {
     const requestBody: AddUserChatRoomMessageParams = {
       userChatRoomId,
       content: 'Hello Test!',
+      isFirstMessage: true,
     }
     const endpoint = '/addUserChatRoomMessage'
     const response = await postFetch<AddUserChatRoomMessageParams>(
