@@ -1,5 +1,5 @@
-import { AddStreamUserChatRoomMessageParams } from '@/types/http/openai/addStreamUserChatRoomMessageParams'
-import { CreateUserChatRoomParams } from '@/types/http/openai/createUserChatRoomParams'
+import { AddStreamUserChatRoomMessageParams } from '@/types/http/skeet/addStreamUserChatRoomMessageParams'
+import { CreateUserChatRoomParams } from '@/types/http/skeet/createUserChatRoomParams'
 import { postFetch } from '../jest.setup'
 
 let userChatRoomId = ''
@@ -34,6 +34,7 @@ describe('addStreamUserChatRoomMessage', () => {
     const requestBody: AddStreamUserChatRoomMessageParams = {
       userChatRoomId,
       content: 'Hello Test!',
+      isFirstMessage: true,
     }
     const endpoint = '/addStreamUserChatRoomMessage'
     const response = await postFetch<AddStreamUserChatRoomMessageParams>(

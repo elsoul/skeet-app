@@ -27,7 +27,7 @@ import { fetchSkeetFunctions } from '@/lib/skeet'
 import { Image } from 'expo-image'
 import { blurhash } from '@/utils/placeholder'
 import { ChatRoom } from './ChatMenu'
-import { AddStreamUserChatRoomMessageParams } from '@/types/http/openai/addStreamUserChatRoomMessageParams'
+import { AddStreamUserChatRoomMessageParams } from '@/types/http/skeet/addStreamUserChatRoomMessageParams'
 import CodeEditor, {
   CodeEditorSyntaxStyles,
 } from '@rivascva/react-native-code-editor'
@@ -171,7 +171,7 @@ export default function ChatBox({
         })
         const res =
           await fetchSkeetFunctions<AddStreamUserChatRoomMessageParams>(
-            'openai',
+            'skeet',
             'addStreamUserChatRoomMessage',
             {
               userChatRoomId: currentChatRoomId,
