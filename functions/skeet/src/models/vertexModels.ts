@@ -36,6 +36,7 @@ export type VertexExampleInput = {
 
 // CollectionId: VertexChatRoomMessage
 // DocumentId: auto
+export const VertexChatRoomMessageCN = 'VertexChatRoomMessage'
 export type VertexChatRoomMessage = {
   vertexChatRoomId: string
   role: VertexChatRoomMessageRole

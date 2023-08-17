@@ -3,15 +3,17 @@ import {
   UserCN,
   VertexChatRoom,
   VertexChatRoomCN,
+  VertexChatRoomMessage,
+  VertexChatRoomMessageRole,
   VertexExample,
   VertexPromptCN,
+  VertexChatRoomMessageCN,
 } from '@/models'
 import { getUserAuth } from '@/lib'
 import { AddVertexMessageParams, TypedRequestBody } from '@/types/http'
 import { onRequest } from 'firebase-functions/v2/https'
 import { publicHttpOption } from '../options'
-import { sendToVertexAI } from '@/models/lib/vertex/sendToVertexAi'
-import { streamResponse } from '@/models/lib/vertex/streamResponse'
+import { sendToVertexAI, streamResponse } from '@/models/lib'
 import {
   createDataRef,
   createFirestoreDataConverter,
@@ -45,7 +47,28 @@ export const addVertexMessage = onRequest(
         vertexExampleData,
         req.body.content,
       )
-      await streamResponse(response, res, req, user, vertexChatRoomData)
+      const messageCollectionRef = db
+        .collection(
+          `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}/${VertexPromptCN}/${req.body.vertexPromptId}/${VertexChatRoomMessageCN}`,
+        )
+        .withConverter(createFirestoreDataConverter<VertexChatRoomMessage>())
+
+      console.log({ messageCollectionRef })
+      const messageBody = {
+        vertexChatRoomId: vertexChatRoomData.userId,
+        role: VertexChatRoomMessageRole.USER,
+        content: req.body.content,
+      }
+      await messageCollectionRef.add(messageBody)
+
+      const messageResBody = {
+        vertexChatRoomId: vertexChatRoomData.userId,
+        role: VertexChatRoomMessageRole.AI,
+        content: response,
+      }
+      await messageCollectionRef.add(messageResBody)
+
+      await streamResponse(response, res)
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
