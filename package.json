@@ -1,6 +1,6 @@
 {
   "name": "skeet-app",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Skeet Framework Boilerplate",
   "author": "ELSOUL LABO B.V.",
   "license": "Apache-2.0",
@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit",
     "skeet": "run-p skeet:*",
     "skeet:skeet": "yarn --cwd functions/skeet dev",
-    "skeet:dev": "firebase emulators:start",
+    "skeet:dev": "firebase emulators:start --import=./tmp/data --export-on-exit",
     "skeet:webapp": "yarn webapp",
     "skeet:webappBuildForEmulator": "yarn build:development:webapp",
     "functions:build": "yarn --cwd functions/skeet build",

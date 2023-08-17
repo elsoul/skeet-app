@@ -16,4 +16,7 @@ export {
   getUserChatRoomMessages,
   addUserChatRoomMessage,
   addStreamUserChatRoomMessage,
+  createVertexChatRoom,
+  addVertexMessage,
+  addVertexPrompt,
 } from '@/routings'
