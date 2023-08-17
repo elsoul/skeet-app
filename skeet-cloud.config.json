@@ -2,10 +2,14 @@
   "app": {
     "name": "skeet-app",
     "projectId": "skeet-app",
+    "fbProjectId": "skeet-app",
+    "template": "Expo (React Native) - Firestore",
     "region": "europe-west6",
-    "appDomain": "",
-    "functionsDomain": "",
-    "secretKeys": []
+    "appDomain": "skeet.dev",
+    "nsDomain": "skeet.dev",
+    "lbDomain": "lb.skeet.dev",
+    "functionsDomain": "lb.skeet.dev",
+    "hasLoadBalancer": true
   },
   "cloudArmor": [
     {
