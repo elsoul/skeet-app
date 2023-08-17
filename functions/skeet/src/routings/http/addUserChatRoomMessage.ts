@@ -1,5 +1,4 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { TypedRequestBody } from '@/index'
 import { updateChildCollectionItem } from '@skeet-framework/firestore'
 import { getUserAuth } from '@/lib'
 import { OpenAI, OpenAIOptions } from '@skeet-framework/ai'
@@ -8,13 +7,14 @@ import { publicHttpOption } from '@/routings/options'
 import {
   User,
   UserChatRoom,
-  userChatRoomCollectionName,
-  userCollectionName,
+  UserChatRoomCN,
+  UserCN,
   createUserChatRoomMessage,
   getMessages,
   getUserChatRoom,
 } from '@/models'
 import { defineSecret } from 'firebase-functions/params'
+import { TypedRequestBody } from '@/types/http'
 
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
@@ -63,21 +63,21 @@ export const addUserChatRoomMessage = onRequest(
         userChatRoom.ref,
         user.uid,
         content,
-        'assistant'
+        'assistant',
       )
       if (messages.messages.length === 3) {
         const title = await openAi.generateTitle(body.content)
         await updateChildCollectionItem<UserChatRoom, User>(
-          userCollectionName,
-          userChatRoomCollectionName,
+          UserCN,
+          UserChatRoomCN,
           user.uid,
           body.userChatRoomId,
-          { title }
+          { title },
         )
       }
       res.json({ status: 'success', response: content })
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
-  }
+  },
 )

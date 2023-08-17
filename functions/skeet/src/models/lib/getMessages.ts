@@ -7,16 +7,16 @@ import {
   User,
   UserChatRoom,
   UserChatRoomMessage,
-  userChatRoomCollectionName,
-  userChatRoomMessageCollectionName,
-  userCollectionName,
+  UserChatRoomCN,
+  UserChatRoomMessageCN,
+  UserCN,
 } from '@/models'
 import { OpenAIMessage, openai } from '@skeet-framework/ai'
 
 export const getMessages = async (
   userId: string,
   userChatRoomId: string,
-  limitCount?: number
+  limitCount?: number,
 ) => {
   try {
     const query: any[] = [order('createdAt', 'desc')]
@@ -28,12 +28,12 @@ export const getMessages = async (
       UserChatRoom,
       User
     >(
-      userCollectionName,
-      userChatRoomCollectionName,
-      userChatRoomMessageCollectionName,
+      UserCN,
+      UserChatRoomCN,
+      UserChatRoomMessageCN,
       userId,
       userChatRoomId,
-      query
+      query,
     )
     const messages = []
     for await (const message of userChatRoomMessages) {

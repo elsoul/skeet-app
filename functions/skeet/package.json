@@ -5,6 +5,7 @@
     "update:packages": "ncu -u && yarn",
     "dev": "nodemon",
     "fb:login": "npx ts-node -r tsconfig-paths/register --transpile-only src/lib/login.ts",
+    "fb:seed": "npx ts-node -r tsconfig-paths/register --transpile-only src/scripts/addVertexMessageSeed.ts",
     "build": "npx ts-node build.ts",
     "serve": "firebase emulators:start",
     "shell": "yarn build && firebase functions:shell",

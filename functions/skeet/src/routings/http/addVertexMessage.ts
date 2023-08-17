@@ -1,116 +1,74 @@
-import { onRequest } from 'firebase-functions/v2/https'
-import { publicHttpOption } from '@/routings/options'
-import { TypedRequestBody } from '@/index'
-import { AddVertexMessageParams } from '@/types/http/addVertexMessageParams'
-import { VertexAI } from '@skeet-framework/ai'
-import skeetOptions from '../../../skeetOptions.json'
-import { getUserAuth } from '@/lib'
+import { db } from '@/index'
 import {
-  addGrandGrandChildCollectionItem,
-  getChildCollectionItem,
-  getCollectionItem,
-  getGrandChildCollectionItem,
-} from '@skeet-framework/firestore'
-import {
-  User,
+  UserCN,
   VertexChatRoom,
+  VertexChatRoomCN,
   VertexChatRoomMessage,
-  VertexPrompt,
+  VertexChatRoomMessageRole,
+  VertexExample,
+  VertexPromptCN,
+  VertexChatRoomMessageCN,
 } from '@/models'
-import { ChunkedStream } from '@/lib/chunk'
+import { getUserAuth } from '@/lib'
+import { AddVertexMessageParams, TypedRequestBody } from '@/types/http'
+import { onRequest } from 'firebase-functions/v2/https'
+import { publicHttpOption } from '../options'
+import { sendToVertexAI, streamResponse } from '@/models/lib'
+import {
+  createDataRef,
+  createFirestoreDataConverter,
+  getFirestoreData,
+} from '@/models/converters'
 
 export const addVertexMessage = onRequest(
   publicHttpOption,
   async (req: TypedRequestBody<AddVertexMessageParams>, res) => {
     try {
       const user = await getUserAuth(req)
-      const userDoc = await getCollectionItem<User>('User', user.uid)
-      if (!userDoc) throw new Error('userDoc is not found')
 
-      const vertexChatRoomDoc = await getChildCollectionItem<
-        VertexChatRoom,
-        User
-      >('User', 'VertexChatRoom', user.uid, req.body.vertexChatRoomId)
-      if (!vertexChatRoomDoc) throw new Error('vertexChatRoomDoc is not found')
-
-      const vertexPromptDoc = await getGrandChildCollectionItem<
-        VertexPrompt,
-        VertexChatRoom,
-        User
-      >(
-        'User',
-        'VertexChatRoom',
-        'VertexPrompt',
-        user.uid,
-        req.body.vertexChatRoomId,
-        req.body.vertexPromptId,
+      // Get VertexChatRoom
+      const vertexChatRoomRef = createDataRef<VertexChatRoom>(
+        db,
+        `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}`,
+        createFirestoreDataConverter<VertexChatRoom>(),
       )
-      if (!vertexPromptDoc) throw new Error('vertexPromptDoc is not found')
+      const vertexChatRoomData = await getFirestoreData(vertexChatRoomRef)
 
-      const vertexAi = new VertexAI({
-        projectId: skeetOptions.projectId,
-        location: skeetOptions.region,
-      })
+      // Get VertexExample
+      const vertexExampleRef = createDataRef<VertexExample>(
+        db,
+        `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}/${VertexPromptCN}/${req.body.vertexPromptId}`,
+        createFirestoreDataConverter<VertexExample>(),
+      )
+      const vertexExampleData = await getFirestoreData(vertexExampleRef)
 
-      const response = await vertexAi.prompt({
-        context: vertexPromptDoc.data.context,
-        examples: vertexPromptDoc.data.examples,
-        messages: [
-          {
-            author: 'user',
-            content: req.body.content,
-          },
-        ],
-      })
-      const stream = new ChunkedStream(response)
-      stream.on('data', (chunk) => {
-        console.log(chunk.toString())
-        res.write(JSON.stringify({ text: chunk.toString() }))
-      })
-      stream.on('end', async () => {
-        const messageBody = {
-          vertexChatRoomRef: vertexChatRoomDoc.ref,
-          role: 'user',
-          content: req.body.content,
-        }
-        await addGrandGrandChildCollectionItem<
-          VertexChatRoomMessage,
-          VertexPrompt,
-          VertexChatRoom,
-          User
-        >(
-          'User',
-          'VertexChatRoom',
-          'VertexPrompt',
-          'VertexChatRoomMessage',
-          user.uid,
-          req.body.vertexChatRoomId,
-          req.body.vertexPromptId,
-          messageBody,
+      const response = await sendToVertexAI(
+        vertexChatRoomData,
+        vertexExampleData,
+        req.body.content,
+      )
+      const messageCollectionRef = db
+        .collection(
+          `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}/${VertexPromptCN}/${req.body.vertexPromptId}/${VertexChatRoomMessageCN}`,
         )
-        const messageResBody = {
-          vertexChatRoomRef: vertexChatRoomDoc.ref,
-          role: 'assistant',
-          content: response,
-        }
-        await addGrandGrandChildCollectionItem<
-          VertexChatRoomMessage,
-          VertexPrompt,
-          VertexChatRoom,
-          User
-        >(
-          'User',
-          'VertexChatRoom',
-          'VertexPrompt',
-          'VertexChatRoomMessage',
-          user.uid,
-          req.body.vertexChatRoomId,
-          req.body.vertexPromptId,
-          messageResBody,
-        )
-        res.end()
-      })
-      stream.on('error', (e: Error) => console.error(e))
+        .withConverter(createFirestoreDataConverter<VertexChatRoomMessage>())
+
+      console.log({ messageCollectionRef })
+      const messageBody = {
+        vertexChatRoomId: vertexChatRoomData.userId,
+        role: VertexChatRoomMessageRole.USER,
+        content: req.body.content,
+      }
+      await messageCollectionRef.add(messageBody)
+
+      const messageResBody = {
+        vertexChatRoomId: vertexChatRoomData.userId,
+        role: VertexChatRoomMessageRole.AI,
+        content: response,
+      }
+      await messageCollectionRef.add(messageResBody)
+
+      await streamResponse(response, res)
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
