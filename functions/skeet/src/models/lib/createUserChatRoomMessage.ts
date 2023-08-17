@@ -2,9 +2,9 @@ import {
   User,
   UserChatRoom,
   UserChatRoomMessage,
-  userChatRoomCollectionName,
-  userChatRoomMessageCollectionName,
-  userCollectionName,
+  UserChatRoomCN,
+  UserChatRoomMessageCN,
+  UserCN,
 } from '@/models'
 import { Ref, addGrandChildCollectionItem } from '@skeet-framework/firestore'
 
@@ -12,7 +12,7 @@ export const createUserChatRoomMessage = async (
   userChatRoomRef: Ref<UserChatRoom>,
   userId: string,
   content: string,
-  role = 'user'
+  role = 'user',
 ) => {
   try {
     const newMessage: UserChatRoomMessage = {
@@ -25,12 +25,12 @@ export const createUserChatRoomMessage = async (
       UserChatRoom,
       User
     >(
-      userCollectionName,
-      userChatRoomCollectionName,
-      userChatRoomMessageCollectionName,
+      UserCN,
+      UserChatRoomCN,
+      UserChatRoomMessageCN,
       userId,
       userChatRoomRef.id,
-      newMessage
+      newMessage,
     )
   } catch (error) {
     throw new Error(`createUserChatRoomMessage: ${error}`)

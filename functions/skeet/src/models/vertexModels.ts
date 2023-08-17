@@ -1,42 +1,50 @@
-import { Ref, Timestamp } from '@skeet-framework/firestore'
-import { User } from './userModels'
-import { VertexExample, VertexMessage } from '@skeet-framework/ai'
-
 // ⚡️ This is a Skeet Framework Sample Models ⚡️
 // Define Your Model Types
 // CollectionId & DocumentId are custamizable
+import { Timestamp, FieldValue } from 'firebase-admin/firestore'
 
 // CollectionId: VertexChatRoom
 // DocumentId: auto
+export const VertexChatRoomCN = 'VertexChatRoom'
 export type VertexChatRoom = {
-  userRef: Ref<User>
+  userId: string
   title: string
+  context: string
   model: string
   maxTokens: number
   temperature: number
   topP: number
   topK: number
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
 
 // CollectionId: VertexPrompt
 // DocumentId: auto
-export type VertexPrompt = {
-  vertexChatRoomRef: Ref<VertexChatRoom>
-  context: string
-  examples: VertexExample[]
-  messages: VertexMessage[]
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+export const VertexPromptCN = 'VertexPrompt'
+export type VertexExample = {
+  vertexChatRoomId: string
+  examples: VertexExampleInput[]
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
 
-// CollectionId: auto
+export type VertexExampleInput = {
+  input: string
+  output: string
+}
+
+// CollectionId: VertexChatRoomMessage
 // DocumentId: auto
 export type VertexChatRoomMessage = {
-  vertexChatRoomRef: Ref<VertexChatRoom>
-  role: string
+  vertexChatRoomId: string
+  role: VertexChatRoomMessageRole
   content: string
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
+}
+
+export enum VertexChatRoomMessageRole {
+  USER = 'user',
+  AI = 'ai',
 }

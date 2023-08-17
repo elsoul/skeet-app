@@ -1,10 +1,9 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { TypedRequestBody } from '@/index'
 import {
   User,
   UserChatRoom,
-  userChatRoomCollectionName,
-  userCollectionName,
+  UserChatRoomCN,
+  UserCN,
   createUserChatRoomMessage,
 } from '@/models'
 import {
@@ -14,6 +13,7 @@ import {
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib'
+import { TypedRequestBody } from '@/types/http'
 
 export const createUserChatRoom = onRequest(
   publicHttpOption,
@@ -35,10 +35,7 @@ export const createUserChatRoom = onRequest(
       }
       const user = await getUserAuth(req)
 
-      const userDoc = await getCollectionItem<User>(
-        userCollectionName,
-        user.uid
-      )
+      const userDoc = await getCollectionItem<User>(UserCN, user.uid)
       if (!userDoc) throw new Error('userDoc is not found')
       console.log(`userDoc: ${userDoc}`)
 
@@ -52,10 +49,10 @@ export const createUserChatRoom = onRequest(
         stream: body.stream,
       }
       const userChatRoomRef = await addChildCollectionItem<UserChatRoom, User>(
-        userCollectionName,
-        userChatRoomCollectionName,
+        UserCN,
+        UserChatRoomCN,
         parentId,
-        params
+        params,
       )
       console.log(`created userChatRoomRef: ${userChatRoomRef.id}`)
 
@@ -63,11 +60,11 @@ export const createUserChatRoom = onRequest(
         userChatRoomRef,
         user.uid,
         body.systemContent,
-        'system'
+        'system',
       )
       res.json({ status: 'success', userChatRoomRef, userChatRoomMessageRef })
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
-  }
+  },
 )

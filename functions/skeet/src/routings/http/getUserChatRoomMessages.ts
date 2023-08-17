@@ -1,9 +1,9 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { TypedRequestBody } from '@/index'
 import { GetUserChatRoomMessagesParams } from '@/types/http/getUserChatRoomParams'
 import { publicHttpOption } from '@/routings/options'
 import { getUserAuth } from '@/lib/getUserAuth'
 import { getMessages } from '@/models/lib/getMessages'
+import { TypedRequestBody } from '@/types/http'
 
 export const getUserChatRoomMessages = onRequest(
   publicHttpOption,
@@ -22,5 +22,5 @@ export const getUserChatRoomMessages = onRequest(
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
-  }
+  },
 )

@@ -1,11 +1,11 @@
 const firebaseConfig = {
-  apiKey: 'AIzaSyAxTADDsXI9QENVObjIb7HVAj5LMMy3L0o',
-  authDomain: 'skeet-graphql.firebaseapp.com',
-  projectId: 'skeet-graphql',
-  storageBucket: 'skeet-graphql.appspot.com',
-  messagingSenderId: '818638014982',
-  appId: '1:818638014982:web:2b634dc809a351340a9187',
-  measurementId: 'G-VSD8SQ0FZD',
+  projectId: 'skeet-app',
+  appId: '1:970336459442:web:292c14b59159c5506407ab',
+  storageBucket: 'skeet-app.appspot.com',
+  locationId: 'europe-west3',
+  apiKey: 'AIzaSyBYXs9JEym42gJCuO1OT7mJ_tyJUpJRB84',
+  authDomain: 'skeet-app.firebaseapp.com',
+  messagingSenderId: '970336459442',
+  measurementId: 'G-PR5LDPJSPY',
 }
-
 export default firebaseConfig

@@ -1,5 +1,4 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { TypedRequestBody } from '@/index'
 import { updateChildCollectionItem } from '@skeet-framework/firestore'
 import { sleep } from '@skeet-framework/utils'
 import { getUserAuth } from '@/lib'
@@ -9,13 +8,14 @@ import { defineSecret } from 'firebase-functions/params'
 import {
   User,
   UserChatRoom,
-  userChatRoomCollectionName,
-  userCollectionName,
+  UserChatRoomCN,
+  UserCN,
   createUserChatRoomMessage,
   getMessages,
   getUserChatRoom,
 } from '@/models'
 import { OpenAI } from '@skeet-framework/ai'
+import { TypedRequestBody } from '@/types/http'
 
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
@@ -29,7 +29,7 @@ export const addStreamUserChatRoomMessage = onRequest(
     try {
       if (!organization || !apiKey)
         throw new Error(
-          `ChatGPT organization or apiKey is empty\nPlease run \`skeet add secret CHAT_GPT_ORG/CHAT_GPT_KEY\``
+          `ChatGPT organization or apiKey is empty\nPlease run \`skeet add secret CHAT_GPT_ORG/CHAT_GPT_KEY\``,
         )
 
       // Get Request Body
@@ -69,11 +69,11 @@ export const addStreamUserChatRoomMessage = onRequest(
       if (messages.messages.length === 2) {
         const title = await openAi.generateTitle(body.content)
         await updateChildCollectionItem<UserChatRoom, User>(
-          userCollectionName,
-          userChatRoomCollectionName,
+          UserCN,
+          UserChatRoomCN,
           user.uid,
           body.userChatRoomId,
-          { title }
+          { title },
         )
       }
 
@@ -118,7 +118,7 @@ export const addStreamUserChatRoomMessage = onRequest(
           userChatRoom.ref,
           user.uid,
           message,
-          'assistant'
+          'assistant',
         )
         console.log(`Stream end - messageId: ${lastMessage.id}`)
         res.end('Stream done')
@@ -127,5 +127,5 @@ export const addStreamUserChatRoomMessage = onRequest(
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }
-  }
+  },
 )
