@@ -1475,10 +1475,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@skeet-framework/ai@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/ai/-/ai-1.2.0.tgz#e0a90f0cd928fa9c018d47e89f296bc908d324e4"
-  integrity sha512-h7RHh+WEchMs34XY0G9gCsrQqtly5XeUGr7GqOPTA/FDUnM+lqvCNqUW8RnGqevep+Xe1Frr5zNxKo5sZrftxQ==
+"@skeet-framework/ai@1.3.10":
+  version "1.3.10"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/ai/-/ai-1.3.10.tgz#f186bd69db7a8fd64c22d45c63118e0a8d5957e8"
+  integrity sha512-WkwLT4I4GeMk7zWEuCVJg+pnlaVMsRiYMct9V9r8oaRV0B34mFdM2lKPZ9uOaFbQ0jeOxod2lK0EtFPZ98kMcw==
   dependencies:
     "@google-cloud/aiplatform" "2.17.0"
     "@google-cloud/translate" "7.2.2"
@@ -1500,7 +1500,7 @@
     node-fetch "2.6.7"
     typesaurus "7"
 
-"@skeet-framework/utils@^1.0.4":
+"@skeet-framework/utils@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@skeet-framework/utils/-/utils-1.0.4.tgz#ede69962322108d6531a3bd798629d53c2af0cdd"
   integrity sha512-4qYeG9PqjNzA3/PGs2vB5hq48pR4FQo8j2MmsHvZMEWqF9ZrBuu03NxcKX6x/qQEw/uVkj+35Te2HNRss47G0g==
