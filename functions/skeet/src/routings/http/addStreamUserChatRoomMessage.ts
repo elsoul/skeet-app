@@ -1,7 +1,7 @@
 import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
 import { getUserAuth } from '@/lib'
-import { publicHttpOption } from '@/routings'
+import { publicHttpOption } from '@/routings/options'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
 import { defineSecret } from 'firebase-functions/params'
 import {

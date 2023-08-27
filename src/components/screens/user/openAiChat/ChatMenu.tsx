@@ -283,7 +283,7 @@ export default function ChatMenu({
             t('openAiChat.chatRoomCreatedSuccessBody') ??
             'Chat room has been created successfully.',
         })
-        setCurrentChatRoomId(data.userChatRoomRef.id)
+        setCurrentChatRoomId(data.userChatRoomId)
       } else {
         throw new Error('validateError')
       }
