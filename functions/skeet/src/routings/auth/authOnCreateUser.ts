@@ -24,7 +24,7 @@ export const authOnCreateUser = functions
             : photoURL,
       }
       const userRef = await add<User>(db, 'User', userParams, uid)
-      console.log({ status: 'success', userRef })
+      console.log({ status: 'success', userId: userRef.id })
     } catch (error) {
       console.log({ status: 'error', message: String(error) })
     }

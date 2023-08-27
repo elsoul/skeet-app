@@ -26,6 +26,7 @@ export type UserChatRoom = {
   model: string
   maxTokens: number
   temperature: number
+  context: string
   stream: boolean
   createdAt?: Timestamp
   updatedAt?: Timestamp
@@ -35,6 +36,7 @@ export type UserChatRoom = {
 // DocumentId: auto
 export type UserChatRoomMessage = {
   id?: string
+  userChatRoomId: string
   role: string
   content: string
   createdAt?: Timestamp

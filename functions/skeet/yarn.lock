@@ -1486,17 +1486,17 @@
     node-fetch "2.6.9"
     openai "4.2.0"
 
-"@skeet-framework/firestore@^2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-2.0.6.tgz#f13dd385a9b499bd0ba5bc190e9942585442626d"
-  integrity sha512-jPs0nICEyhCkCQ1Ivh1MbiFgekjOCU4pkXSFcexkjKJ11ZImWs7HDeL//d+2PAja2l6cW/x+EUiDYu5zfzakYQ==
+"@skeet-framework/firestore@2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-2.0.7.tgz#41473f1c3b48652f6f896b2cf99411e06b83dd38"
+  integrity sha512-7anLCPVcBEstt9HbkPYqKG6M6bsvgkAB4a+reUpXY5pwmwNO8Z7hC/6S89t3mwJhz/Fl9yzmKTg7haCx0Uakug==
   dependencies:
     dotenv "16.0.3"
     firebase-admin "11.10.1"
     jest "29.4.3"
     node-fetch "2.6.9"
 
-"@skeet-framework/utils@1.1.3":
+"@skeet-framework/utils@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@skeet-framework/utils/-/utils-1.1.3.tgz#e478c24e51551d4d08cbd83a7dd1e366e88fc585"
   integrity sha512-FPIVi8mtHhqOlGc0vAwnzWaQ7PF+1f+US7y2bREtyv7bx6IKWeBR9A3qUHeBqkIzU106ghiPcTN4jkfKCkczUQ==

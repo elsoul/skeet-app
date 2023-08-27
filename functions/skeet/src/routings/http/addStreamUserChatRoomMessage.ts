@@ -14,6 +14,7 @@ import {
 import { OpenAI, OpenAIMessage } from '@skeet-framework/ai'
 import { TypedRequestBody } from '@/types/http'
 import { add, get, query, update } from '@skeet-framework/firestore'
+import { inspect } from 'util'
 
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
@@ -49,19 +50,39 @@ export const addStreamUserChatRoomMessage = onRequest(
       )
 
       // Add User Message to UserChatRoomMessage
-      await add<UserChatRoomMessage>(db, chatRoomPath, {
+      const messagesPath = `${chatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
+      await add<UserChatRoomMessage>(db, messagesPath, {
+        userChatRoomId: body.userChatRoomId,
         content: body.content,
         role: 'user',
       })
 
       // Get UserChatRoomMessages for OpenAI Request
-      const messagesPath = `${chatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
+
+      const allMessages = await query<UserChatRoomMessage>(db, messagesPath, [
+        {
+          field: 'createdAt',
+          orderDirection: 'desc',
+        },
+        {
+          limit: 5,
+        },
+      ])
+      allMessages.reverse()
+
+      let promptMessages = allMessages.map((message: UserChatRoomMessage) => {
+        return {
+          role: message.role,
+          content: message.content,
+        }
+      })
+      promptMessages.unshift({
+        role: 'system',
+        content: userChatRoom.context,
+      })
+      console.log('promptMessages', promptMessages)
       const messages = {
-        messages: (await query<UserChatRoomMessage>(
-          db,
-          messagesPath,
-          [],
-        )) as OpenAIMessage[],
+        messages: promptMessages as OpenAIMessage[],
       }
 
       console.log('messages.length', messages.messages.length)
@@ -86,19 +107,21 @@ export const addStreamUserChatRoomMessage = onRequest(
 
       // Get OpenAI Stream
       const stream = await openAi.promptStream(messages)
-      const messageResults: string[] = []
+      const messageResults: any[] = []
       for await (const part of stream) {
-        const message = String(part.choices[0].delta)
-        console.log(message)
+        const message = String(part.choices[0].delta.content)
+        if (message === '' || message === 'undefined') continue
+        console.log(inspect(message, false, null, true /* enable colors */))
         res.write(JSON.stringify({ text: message }))
         messageResults.push(message)
       }
       const message = messageResults.join('')
       await add<UserChatRoomMessage>(db, messagesPath, {
+        userChatRoomId: body.userChatRoomId,
         content: message,
         role: 'assistant',
       })
-      res.json({ status: 'success', message })
+      res.end()
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }

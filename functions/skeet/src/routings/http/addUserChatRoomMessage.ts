@@ -9,6 +9,7 @@ import {
   UserChatRoom,
   UserChatRoomCN,
   UserChatRoomMessage,
+  UserChatRoomMessageCN,
   UserCN,
 } from '@/models'
 import { defineSecret } from 'firebase-functions/params'
@@ -42,8 +43,9 @@ export const addUserChatRoomMessage = onRequest(
       if (!userChatRoom) throw new Error('userChatRoom not found')
       if (userChatRoom.stream === true) throw new Error('stream must be false')
 
-      const userChatRoomMessagePath = `${userChatRoomPath}/${body.userChatRoomId}/${UserChatRoomCN}`
+      const userChatRoomMessagePath = `${userChatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
       const messageBody = {
+        userChatRoomId: body.userChatRoomId,
         role: 'user',
         content: body.content,
       } as UserChatRoomMessage
@@ -71,6 +73,7 @@ export const addUserChatRoomMessage = onRequest(
       if (!content) throw new Error('openAiResponse not found')
 
       const messageBody2 = {
+        userChatRoomId: body.userChatRoomId,
         role: 'assistant',
         content,
       } as UserChatRoomMessage
