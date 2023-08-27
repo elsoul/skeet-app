@@ -3,10 +3,19 @@ import {
   VertexExample,
   VertexChatRoomCN,
   UserCN,
-  VertexPromptCN,
+  VertexExampleCN,
 } from '@/models'
-import { createFirestoreDataConverter } from '@/models/converters'
+import { add, serverTimestamp } from '@skeet-framework/firestore'
 import admin from 'firebase-admin'
+import dotenv from 'dotenv'
+import { loginSeed } from '@/lib/login'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+dotenv.config()
+
+admin.initializeApp()
+const SkeetEnv = process.env.NODE_ENV || 'development'
+const db = getFirestore()
+if (SkeetEnv === 'development') connectFirestoreEmulator(db, '127.0.0.1', 8080)
 
 export const addVertexMessageSeed = async (
   uid: string,
@@ -22,18 +31,16 @@ export const addVertexMessageSeed = async (
     temperature: 0.2,
     topP: 0.95,
     topK: 40,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   }
 
   console.log({ uid, vertexChatRoomParams })
 
-  const vertexChatRoomConverter = createFirestoreDataConverter<VertexChatRoom>()
-  const vertexChatRoomCollection = db
-    .collection(`${UserCN}/${vertexChatRoomParams.userId}/${VertexChatRoomCN}`)
-    .withConverter(vertexChatRoomConverter)
-
-  const vertexChatRoomDocRef = await vertexChatRoomCollection.add(
+  const vertexChatRoomPath = `${UserCN}/${uid}/${VertexChatRoomCN}`
+  const vertexChatRoomDocRef = await add<VertexChatRoom>(
+    db,
+    vertexChatRoomPath,
     vertexChatRoomParams,
   )
 
@@ -47,15 +54,19 @@ export const addVertexMessageSeed = async (
           'The Skeet framework is an open-source full-stack app development solution that aims to lower the development and operation cost of applications. It allows developers to focus more on the application logic and worry less about infrastructure. The framework can be assembled with a combination of SQL and NoSQL.',
       },
     ],
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   }
-  const vertexPromptConverter = createFirestoreDataConverter<VertexExample>()
-  const vertexPromptCollection = vertexChatRoomDocRef
-    .collection(VertexPromptCN)
-    .withConverter(vertexPromptConverter)
-
-  await vertexPromptCollection.add(vertexPromptOptions)
+  const vertexExamplePath = `${vertexChatRoomPath}/${vertexChatRoomDocRef.id}/${VertexExampleCN}`
+  await add<VertexExample>(db, vertexExamplePath, vertexPromptOptions)
 
   console.log('Seed addVertexMessageSeed added successfully!')
 }
+
+const run = async () => {
+  const { uid } = await loginSeed()
+  const db = admin.firestore()
+  await addVertexMessageSeed(uid, db)
+}
+
+run()

@@ -17,7 +17,7 @@ if (SkeetEnv === 'development')
 
 export const loginSeed = async (
   email = 'elsoul-labo@example.com',
-  password = 'password'
+  password = 'password',
 ) => {
   let loginUserCredential: any
   try {
@@ -25,19 +25,19 @@ export const loginSeed = async (
     loginUserCredential = await signInWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     )
   } catch (error) {
     loginUserCredential = await signInWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     )
   }
 
   const user = loginUserCredential.user
   await firestoreLogExport(user.accessToken)
-  return true
+  return { accessToken: user.accessToken as string, uid: user.uid as string }
 }
 
 export const firestoreLogExport = async (accessToken: string) => {

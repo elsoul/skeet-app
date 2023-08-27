@@ -6,7 +6,7 @@ import {
   VertexChatRoomMessage,
   VertexChatRoomMessageRole,
   VertexExample,
-  VertexPromptCN,
+  VertexExampleCN,
   VertexChatRoomMessageCN,
 } from '@/models'
 import { getUserAuth } from '@/lib'
@@ -14,11 +14,7 @@ import { AddVertexMessageParams, TypedRequestBody } from '@/types/http'
 import { onRequest } from 'firebase-functions/v2/https'
 import { publicHttpOption } from '../options'
 import { sendToVertexAI, streamResponse } from '@/models/lib'
-import {
-  createDataRef,
-  createFirestoreDataConverter,
-  getFirestoreData,
-} from '@/models/converters'
+import { add, get } from '@skeet-framework/firestore'
 
 export const addVertexMessage = onRequest(
   publicHttpOption,
@@ -27,47 +23,46 @@ export const addVertexMessage = onRequest(
       const user = await getUserAuth(req)
 
       // Get VertexChatRoom
-      const vertexChatRoomRef = createDataRef<VertexChatRoom>(
+      const chatRoomPath = `${UserCN}/${user.uid}/${VertexChatRoomCN}`
+      const vertexChatRoomData = await get<VertexChatRoom>(
         db,
-        `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}`,
-        createFirestoreDataConverter<VertexChatRoom>(),
+        chatRoomPath,
+        req.body.vertexChatRoomId,
       )
-      const vertexChatRoomData = await getFirestoreData(vertexChatRoomRef)
 
       // Get VertexExample
-      const vertexExampleRef = createDataRef<VertexExample>(
+      const vertexExamplePath = `${chatRoomPath}/${req.body.vertexChatRoomId}/${VertexExampleCN}`
+      const vertexExampleData = await get<VertexExample>(
         db,
-        `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}/${VertexPromptCN}/${req.body.vertexPromptId}`,
-        createFirestoreDataConverter<VertexExample>(),
+        vertexExamplePath,
+        req.body.vertexExampleId,
       )
-      const vertexExampleData = await getFirestoreData(vertexExampleRef)
 
+      // Send to VertexAI
       const response = await sendToVertexAI(
         vertexChatRoomData,
         vertexExampleData,
         req.body.content,
       )
-      const messageCollectionRef = db
-        .collection(
-          `${UserCN}/${user.uid}/${VertexChatRoomCN}/${req.body.vertexChatRoomId}/${VertexPromptCN}/${req.body.vertexPromptId}/${VertexChatRoomMessageCN}`,
-        )
-        .withConverter(createFirestoreDataConverter<VertexChatRoomMessage>())
 
-      console.log({ messageCollectionRef })
+      // Add User Message to VertexChatRoomMessage
+      const messagePath = `${vertexExamplePath}/${req.body.vertexExampleId}/${VertexChatRoomMessageCN}`
       const messageBody = {
         vertexChatRoomId: vertexChatRoomData.userId,
         role: VertexChatRoomMessageRole.USER,
         content: req.body.content,
-      }
-      await messageCollectionRef.add(messageBody)
+      } as VertexChatRoomMessage
+      await add<VertexChatRoomMessage>(db, messagePath, messageBody)
 
+      // Add AI Message to VertexChatRoomMessage
       const messageResBody = {
         vertexChatRoomId: vertexChatRoomData.userId,
         role: VertexChatRoomMessageRole.AI,
         content: response,
       }
-      await messageCollectionRef.add(messageResBody)
+      await add<VertexChatRoomMessage>(db, messagePath, messageResBody)
 
+      // Stream Response
       await streamResponse(response, res)
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })

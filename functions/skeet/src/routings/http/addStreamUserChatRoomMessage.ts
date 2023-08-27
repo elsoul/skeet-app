@@ -1,21 +1,20 @@
+import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
-import { updateChildCollectionItem } from '@skeet-framework/firestore'
-import { sleep } from '@skeet-framework/utils'
 import { getUserAuth } from '@/lib'
-import { publicHttpOption } from '@/routings'
+import { publicHttpOption } from '@/routings/options'
 import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
 import { defineSecret } from 'firebase-functions/params'
 import {
-  User,
   UserChatRoom,
   UserChatRoomCN,
   UserCN,
-  createUserChatRoomMessage,
-  getMessages,
-  getUserChatRoom,
+  UserChatRoomMessage,
+  UserChatRoomMessageCN,
 } from '@/models'
-import { OpenAI } from '@skeet-framework/ai'
+import { OpenAI, OpenAIMessage } from '@skeet-framework/ai'
 import { TypedRequestBody } from '@/types/http'
+import { add, get, query, update } from '@skeet-framework/firestore'
+import { inspect } from 'util'
 
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')
@@ -43,87 +42,86 @@ export const addStreamUserChatRoomMessage = onRequest(
       const user = await getUserAuth(req)
 
       // Get UserChatRoom
-      const userChatRoom = await getUserChatRoom(user.uid, body.userChatRoomId)
-      if (userChatRoom.data.stream === false)
-        throw new Error('stream must be true')
+      const chatRoomPath = `${UserCN}/${user.uid}/${UserChatRoomCN}`
+      const userChatRoom = await get<UserChatRoom>(
+        db,
+        chatRoomPath,
+        body.userChatRoomId,
+      )
 
-      // Add UserChatRoomMessage
-      await createUserChatRoomMessage(userChatRoom.ref, user.uid, body.content)
+      // Add User Message to UserChatRoomMessage
+      const messagesPath = `${chatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
+      await add<UserChatRoomMessage>(db, messagesPath, {
+        userChatRoomId: body.userChatRoomId,
+        content: body.content,
+        role: 'user',
+      })
 
       // Get UserChatRoomMessages for OpenAI Request
-      const messages = await getMessages(user.uid, body.userChatRoomId)
+
+      const allMessages = await query<UserChatRoomMessage>(db, messagesPath, [
+        {
+          field: 'createdAt',
+          orderDirection: 'desc',
+        },
+        {
+          limit: 5,
+        },
+      ])
+      allMessages.reverse()
+
+      let promptMessages = allMessages.map((message: UserChatRoomMessage) => {
+        return {
+          role: message.role,
+          content: message.content,
+        }
+      })
+      promptMessages.unshift({
+        role: 'system',
+        content: userChatRoom.context,
+      })
+      console.log('promptMessages', promptMessages)
+      const messages = {
+        messages: promptMessages as OpenAIMessage[],
+      }
 
       console.log('messages.length', messages.messages.length)
 
       const openAi = new OpenAI({
         organizationKey: organization,
         apiKey,
-        model: userChatRoom.data.model,
-        maxTokens: userChatRoom.data.maxTokens,
-        temperature: userChatRoom.data.temperature,
+        model: userChatRoom.model,
+        maxTokens: userChatRoom.maxTokens,
+        temperature: userChatRoom.temperature,
         n: 1,
         topP: 1,
-        stream: userChatRoom.data.stream,
+        stream: true,
       })
       // Update UserChatRoom Title
       if (messages.messages.length === 2) {
         const title = await openAi.generateTitle(body.content)
-        await updateChildCollectionItem<UserChatRoom, User>(
-          UserCN,
-          UserChatRoomCN,
-          user.uid,
-          body.userChatRoomId,
-          { title },
-        )
+        await update<UserChatRoom>(db, chatRoomPath, body.userChatRoomId, {
+          title,
+        })
       }
 
       // Get OpenAI Stream
       const stream = await openAi.promptStream(messages)
-      const messageResults: string[] = []
-      let streamClosed = false
-      res.once('error', () => (streamClosed = true))
-      res.once('close', () => (streamClosed = true))
-      stream.on('data', async (chunk: Buffer) => {
-        const payloads = chunk.toString().split('\n\n')
-        for await (const payload of payloads) {
-          if (payload.includes('[DONE]')) return
-          if (payload.startsWith('data:')) {
-            const data = payload.replaceAll(/(\n)?^data:\s*/g, '')
-            try {
-              const delta = JSON.parse(data.trim())
-              const message = delta.choices[0].delta?.content
-              if (message == undefined) continue
-
-              console.log(message)
-              messageResults.push(message)
-
-              while (!streamClosed && res.writableLength > 0) {
-                await sleep(10)
-              }
-
-              // Send Message to Client
-              res.write(JSON.stringify({ text: message }))
-            } catch (error) {
-              console.log(`Error with JSON.parse and ${payload}.\n${error}`)
-            }
-          }
-        }
-        if (streamClosed) res.end('Stream disconnected')
+      const messageResults: any[] = []
+      for await (const part of stream) {
+        const message = String(part.choices[0].delta.content)
+        if (message === '' || message === 'undefined') continue
+        console.log(inspect(message, false, null, true /* enable colors */))
+        res.write(JSON.stringify({ text: message }))
+        messageResults.push(message)
+      }
+      const message = messageResults.join('')
+      await add<UserChatRoomMessage>(db, messagesPath, {
+        userChatRoomId: body.userChatRoomId,
+        content: message,
+        role: 'assistant',
       })
-
-      // Stream End
-      stream.on('end', async () => {
-        const message = messageResults.join('')
-        const lastMessage = await createUserChatRoomMessage(
-          userChatRoom.ref,
-          user.uid,
-          message,
-          'assistant',
-        )
-        console.log(`Stream end - messageId: ${lastMessage.id}`)
-        res.end('Stream done')
-      })
-      stream.on('error', (e: Error) => console.error(e))
+      res.end()
     } catch (error) {
       res.status(500).json({ status: 'error', message: String(error) })
     }

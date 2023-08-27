@@ -1,17 +1,16 @@
+import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
-import { updateChildCollectionItem } from '@skeet-framework/firestore'
+import { add, get, query, update } from '@skeet-framework/firestore'
 import { getUserAuth } from '@/lib'
 import { OpenAI, OpenAIOptions } from '@skeet-framework/ai'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
 import { publicHttpOption } from '@/routings/options'
 import {
-  User,
   UserChatRoom,
   UserChatRoomCN,
+  UserChatRoomMessage,
+  UserChatRoomMessageCN,
   UserCN,
-  createUserChatRoomMessage,
-  getMessages,
-  getUserChatRoom,
 } from '@/models'
 import { defineSecret } from 'firebase-functions/params'
 import { TypedRequestBody } from '@/types/http'
@@ -35,22 +34,36 @@ export const addUserChatRoomMessage = onRequest(
       if (body.userChatRoomId === '') throw new Error('userChatRoomId is empty')
       const user = await getUserAuth(req)
 
-      const userChatRoom = await getUserChatRoom(user.uid, body.userChatRoomId)
+      const userChatRoomPath = `${UserCN}/${user.uid}/${UserChatRoomCN}`
+      const userChatRoom = await get<UserChatRoom>(
+        db,
+        userChatRoomPath,
+        body.userChatRoomId,
+      )
       if (!userChatRoom) throw new Error('userChatRoom not found')
-      if (userChatRoom.data.stream === true)
-        throw new Error('stream must be false')
+      if (userChatRoom.stream === true) throw new Error('stream must be false')
 
-      await createUserChatRoomMessage(userChatRoom.ref, user.uid, body.content)
+      const userChatRoomMessagePath = `${userChatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
+      const messageBody = {
+        userChatRoomId: body.userChatRoomId,
+        role: 'user',
+        content: body.content,
+      } as UserChatRoomMessage
+      await add<UserChatRoomMessage>(db, userChatRoomMessagePath, messageBody)
 
-      const messages = await getMessages(user.uid, body.userChatRoomId)
-      if (messages.messages.length === 0) throw new Error('messages is empty')
+      const messages = await query<UserChatRoomMessage>(
+        db,
+        userChatRoomPath,
+        [],
+      )
+      if (messages.length === 0) throw new Error('messages is empty')
 
       const options: OpenAIOptions = {
         organizationKey: organization,
         apiKey,
-        model: userChatRoom.data.model,
-        maxTokens: userChatRoom.data.maxTokens,
-        temperature: userChatRoom.data.temperature,
+        model: userChatRoom.model,
+        maxTokens: userChatRoom.maxTokens,
+        temperature: userChatRoom.temperature,
         n: 1,
         topP: 1,
       }
@@ -59,21 +72,17 @@ export const addUserChatRoomMessage = onRequest(
       const content = await openAi.prompt(messages)
       if (!content) throw new Error('openAiResponse not found')
 
-      await createUserChatRoomMessage(
-        userChatRoom.ref,
-        user.uid,
+      const messageBody2 = {
+        userChatRoomId: body.userChatRoomId,
+        role: 'assistant',
         content,
-        'assistant',
-      )
-      if (messages.messages.length === 3) {
+      } as UserChatRoomMessage
+      await add<UserChatRoomMessage>(db, userChatRoomMessagePath, messageBody2)
+      if (messages.length === 3) {
         const title = await openAi.generateTitle(body.content)
-        await updateChildCollectionItem<UserChatRoom, User>(
-          UserCN,
-          UserChatRoomCN,
-          user.uid,
-          body.userChatRoomId,
-          { title },
-        )
+        await update<UserChatRoom>(db, userChatRoomPath, body.userChatRoomId, {
+          title,
+        })
       }
       res.json({ status: 'success', response: content })
     } catch (error) {
