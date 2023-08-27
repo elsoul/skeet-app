@@ -1,13 +1,7 @@
 import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
-import {
-  User,
-  UserChatRoom,
-  UserChatRoomCN,
-  UserChatRoomMessageCN,
-  UserCN,
-} from '@/models'
-import { add, get } from '@skeet-framework/firestore'
+import { UserChatRoom, UserChatRoomCN, UserCN } from '@/models'
+import { add } from '@skeet-framework/firestore'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib'
