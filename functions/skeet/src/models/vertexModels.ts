@@ -7,6 +7,7 @@ import { Timestamp, FieldValue } from 'firebase-admin/firestore'
 // DocumentId: auto
 export const VertexChatRoomCN = 'VertexChatRoom'
 export type VertexChatRoom = {
+  id?: string
   userId: string
   title: string
   context: string
@@ -21,7 +22,7 @@ export type VertexChatRoom = {
 
 // CollectionId: VertexPrompt
 // DocumentId: auto
-export const VertexPromptCN = 'VertexPrompt'
+export const VertexExampleCN = 'VertexExample'
 export type VertexExample = {
   vertexChatRoomId: string
   examples: VertexExampleInput[]

@@ -1,15 +1,7 @@
+import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
-import {
-  User,
-  UserChatRoom,
-  UserChatRoomCN,
-  UserCN,
-  createUserChatRoomMessage,
-} from '@/models'
-import {
-  addChildCollectionItem,
-  getCollectionItem,
-} from '@skeet-framework/firestore'
+import { User, UserChatRoom, UserChatRoomCN, UserCN } from '@/models'
+import { add, get } from '@skeet-framework/firestore'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib'
@@ -35,32 +27,35 @@ export const createUserChatRoom = onRequest(
       }
       const user = await getUserAuth(req)
 
-      const userDoc = await getCollectionItem<User>(UserCN, user.uid)
-      if (!userDoc) throw new Error('userDoc is not found')
+      const userDoc = await get<User>(db, UserCN, user.uid)
+
       console.log(`userDoc: ${userDoc}`)
 
       const parentId = user.uid || ''
       const params: UserChatRoom = {
-        userRef: userDoc.ref,
         title: '',
         model: body.model,
         maxTokens: body.maxTokens,
         temperature: body.temperature,
         stream: body.stream,
       }
-      const userChatRoomRef = await addChildCollectionItem<UserChatRoom, User>(
-        UserCN,
-        UserChatRoomCN,
-        parentId,
+      const userChatRoomPath = `${UserCN}/${parentId}/${UserChatRoomCN}`
+      const userChatRoomRef = await add<UserChatRoom>(
+        db,
+        userChatRoomPath,
         params,
       )
-      console.log(`created userChatRoomRef: ${userChatRoomRef.id}`)
+      console.log(`created userChatRoom: ${userChatRoomRef.id}`)
 
-      const userChatRoomMessageRef = await createUserChatRoomMessage(
-        userChatRoomRef,
-        user.uid,
-        body.systemContent,
-        'system',
+      const userChatRoomMessagePath = `${userChatRoomPath}/${userChatRoomRef.id}/${UserChatRoomCN}`
+      const messageBody = {
+        content: body.systemContent,
+        role: 'system',
+      }
+      const userChatRoomMessageRef = await add(
+        db,
+        userChatRoomMessagePath,
+        messageBody,
       )
       res.json({ status: 'success', userChatRoomRef, userChatRoomMessageRef })
     } catch (error) {

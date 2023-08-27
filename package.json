@@ -15,6 +15,7 @@
     "skeet:dev": "firebase emulators:start --import=./tmp/data --export-on-exit",
     "skeet:webapp": "yarn webapp",
     "skeet:webappBuildForEmulator": "yarn build:development:webapp",
+    "functions:seed": "yarn --cwd functions/skeet seed",
     "functions:build": "yarn --cwd functions/skeet build",
     "functions:dev": "firebase emulators:start --only functions",
     "functions:deploy": "firebase deploy --only functions",

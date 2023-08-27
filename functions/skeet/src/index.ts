@@ -6,11 +6,9 @@ admin.initializeApp()
 export const db = admin.firestore()
 
 export {
-  seed,
   authOnCreateUser,
-  createUserChatRoom,
-  getUserChatRoomMessages,
-  addUserChatRoomMessage,
   addStreamUserChatRoomMessage,
   addVertexMessage,
+  createUserChatRoom,
+  addUserChatRoomMessage,
 } from '@/routings'

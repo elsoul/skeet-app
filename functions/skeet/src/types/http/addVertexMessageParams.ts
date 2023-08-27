@@ -1,5 +1,5 @@
 export type AddVertexMessageParams = {
   vertexChatRoomId: string
-  vertexPromptId: string
+  vertexExampleId: string
   content: string
 }

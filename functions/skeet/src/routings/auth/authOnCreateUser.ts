@@ -1,5 +1,6 @@
+import { db } from '@/index'
 import { User } from '@/models'
-import { addCollectionItem } from '@skeet-framework/firestore'
+import { add } from '@skeet-framework/firestore'
 import * as functions from 'firebase-functions/v1'
 import { authPublicOption } from '@/routings'
 import { gravatarIconUrl } from '@skeet-framework/utils'
@@ -22,7 +23,7 @@ export const authOnCreateUser = functions
             ? gravatarIconUrl(email ?? 'info@skeet.dev')
             : photoURL,
       }
-      const userRef = await addCollectionItem<User>('User', userParams, uid)
+      const userRef = await add<User>(db, 'User', userParams, uid)
       console.log({ status: 'success', userRef })
     } catch (error) {
       console.log({ status: 'error', message: String(error) })
