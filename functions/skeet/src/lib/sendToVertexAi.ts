@@ -1,6 +1,6 @@
 import { VertexChatRoom, VertexExample } from '@/models/vertexModels'
 import { VertexAI } from '@skeet-framework/ai'
-import skeetOptions from '../../../../skeetOptions.json'
+import skeetOptions from '../../skeetOptions.json'
 
 export const sendToVertexAI = async (
   vertexChatRoomData: VertexChatRoom,

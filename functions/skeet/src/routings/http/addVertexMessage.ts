@@ -13,7 +13,7 @@ import { getUserAuth } from '@/lib'
 import { AddVertexMessageParams, TypedRequestBody } from '@/types/http'
 import { onRequest } from 'firebase-functions/v2/https'
 import { publicHttpOption } from '../options'
-import { sendToVertexAI, streamResponse } from '@/models/lib'
+import { sendToVertexAI, streamResponse } from '@/lib'
 import { add, get } from '@skeet-framework/firestore'
 
 export const addVertexMessage = onRequest(
