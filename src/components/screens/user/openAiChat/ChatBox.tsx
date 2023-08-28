@@ -310,6 +310,57 @@ export default function ChatBox({
             <View style={tw`flex flex-1`}>
               <ScrollView ref={scrollViewRef}>
                 <View style={tw`pb-24`}>
+                  <View style={tw`${clsx('bg-gray-100 dark:bg-gray-700', '')}`}>
+                    <View
+                      style={tw`flex flex-row p-4 justify-start items-start gap-4 md:gap-8 w-full max-w-3xl mx-auto`}
+                    >
+                      {chatRoom?.model === 'gpt-3.5-turbo' && (
+                        <View style={tw`flex`}>
+                          <Image
+                            source={
+                              'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Jake.png'
+                            }
+                            placeholder={blurhash}
+                            contentFit="cover"
+                            style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                          />
+                        </View>
+                      )}
+                      {chatRoom?.model === 'gpt-4' && (
+                        <View style={tw`flex`}>
+                          <Image
+                            source={
+                              'https://storage.googleapis.com/epics-bucket/BuidlersCollective/Legend.png'
+                            }
+                            placeholder={blurhash}
+                            contentFit="cover"
+                            style={tw`w-6 h-6 sm:w-10 sm:h-10 rounded-full aspect-square`}
+                          />
+                        </View>
+                      )}
+
+                      <View style={tw`flex-auto`}>
+                        <View style={tw`pb-2`}>
+                          <Text
+                            style={tw`font-loaded-bold text-gray-900 dark:text-white text-base`}
+                          >
+                            {chatRoom?.title ? chatRoom?.title : t('noTitle')}
+                          </Text>
+                          <Text
+                            style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
+                          >
+                            {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
+                            {t('tokens')}
+                          </Text>
+                        </View>
+                        <Text
+                          style={tw`font-loaded-normal text-gray-900 dark:text-white`}
+                        >
+                          {chatRoom?.context}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
                   {chatMessages.map((chatMessage) => (
                     <View
                       key={chatMessage.id}
