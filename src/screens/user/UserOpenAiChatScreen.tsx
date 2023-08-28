@@ -21,8 +21,9 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { createFirestoreDataConverter, db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
+import { UserChatRoom } from '@/types/models'
 
 export default function UserOpenAiChatScreen() {
   useColorModeRefresh()
@@ -49,7 +50,7 @@ export default function UserOpenAiChatScreen() {
           collection(db, `User/${user.uid}/UserChatRoom`),
           orderBy('createdAt', 'desc'),
           limit(15)
-        )
+        ).withConverter(createFirestoreDataConverter<UserChatRoom>())
 
         const querySnapshot = await getDocs(q)
         const list: ChatRoom[] = []
