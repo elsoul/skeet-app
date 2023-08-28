@@ -10,11 +10,12 @@ import { userState } from '@/store/user'
 import Button from '@/components/common/atoms/Button'
 import { usernameSchema } from '@/utils/form'
 import { TextInput } from 'react-native-gesture-handler'
-import { auth, db } from '@/lib/firebase'
+import { auth, createFirestoreDataConverter, db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
 import { doc, updateDoc } from 'firebase/firestore'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { signOut } from 'firebase/auth'
+import { User } from '@/types/models'
 
 export default function EditUserProfile() {
   const { t } = useTranslation()
@@ -41,7 +42,9 @@ export default function EditUserProfile() {
     if (db && usernameError == '') {
       try {
         setLoading(true)
-        const docRef = doc(db, 'User', user.uid)
+        const docRef = doc(db, 'User', user.uid).withConverter(
+          createFirestoreDataConverter<User>()
+        )
         await updateDoc(docRef, { username })
         setUser({
           ...user,
