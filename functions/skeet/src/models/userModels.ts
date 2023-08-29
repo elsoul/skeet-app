@@ -7,6 +7,8 @@ export const UserChatRoomMessageCN = 'UserChatRoomMessage'
 
 // CollectionId: User
 // DocumentId: auto
+// Path: User
+
 export type User = {
   id?: string
   uid: string
@@ -20,6 +22,7 @@ export type User = {
 
 // CollectionId: UserChatRoom
 // DocumentId: auto
+// Path: User/{uid}/UserChatRoom
 export type UserChatRoom = {
   id?: string
   title: string
@@ -34,6 +37,7 @@ export type UserChatRoom = {
 
 // CollectionId: UserChatRoomMessage
 // DocumentId: auto
+// Path: User/{uid}/UserChatRoom/{userChatRoomId}/UserChatRoomMessage
 export type UserChatRoomMessage = {
   id?: string
   userChatRoomId: string

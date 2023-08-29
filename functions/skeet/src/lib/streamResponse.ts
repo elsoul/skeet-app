@@ -1,6 +1,7 @@
 import { ChunkedStream } from '@/lib/chunk'
+import { Response } from 'firebase-functions/v1'
 
-export const streamResponse = async (response: any, res: any) => {
+export const streamResponse = async (response: string, res: Response) => {
   const stream = new ChunkedStream(response)
 
   stream.on('data', async (chunk) => {

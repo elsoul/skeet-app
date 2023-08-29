@@ -5,8 +5,6 @@ import {
   VertexChatRoomCN,
   VertexChatRoomMessage,
   VertexChatRoomMessageRole,
-  VertexExample,
-  VertexExampleCN,
   VertexChatRoomMessageCN,
 } from '@/models'
 import { getUserAuth } from '@/lib'
@@ -30,13 +28,7 @@ export const addVertexMessage = onRequest(
         req.body.vertexChatRoomId,
       )
 
-      // Get VertexExample
-      const vertexExamplePath = `${chatRoomPath}/${req.body.vertexChatRoomId}/${VertexExampleCN}`
-      const vertexExampleData = await get<VertexExample>(
-        db,
-        vertexExamplePath,
-        req.body.vertexExampleId,
-      )
+      const vertexExampleData = vertexChatRoomData.examples
 
       // Send to VertexAI
       const response = await sendToVertexAI(
@@ -46,7 +38,7 @@ export const addVertexMessage = onRequest(
       )
 
       // Add User Message to VertexChatRoomMessage
-      const messagePath = `${vertexExamplePath}/${req.body.vertexExampleId}/${VertexChatRoomMessageCN}`
+      const messagePath = `${chatRoomPath}/${req.body.vertexChatRoomId}/${VertexChatRoomMessageCN}`
       const messageBody = {
         vertexChatRoomId: vertexChatRoomData.userId,
         role: VertexChatRoomMessageRole.USER,

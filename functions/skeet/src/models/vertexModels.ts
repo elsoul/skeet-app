@@ -5,6 +5,7 @@ import { Timestamp } from '@skeet-framework/firestore'
 
 // CollectionId: VertexChatRoom
 // DocumentId: auto
+// Path: User/{uid}/VertexChatRoom
 export const VertexChatRoomCN = 'VertexChatRoom'
 export type VertexChatRoom = {
   id?: string
@@ -16,15 +17,6 @@ export type VertexChatRoom = {
   temperature: number
   topP: number
   topK: number
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
-}
-
-// CollectionId: VertexPrompt
-// DocumentId: auto
-export const VertexExampleCN = 'VertexExample'
-export type VertexExample = {
-  vertexChatRoomId: string
   examples: VertexExampleInput[]
   createdAt?: Timestamp
   updatedAt?: Timestamp
@@ -37,6 +29,7 @@ export type VertexExampleInput = {
 
 // CollectionId: VertexChatRoomMessage
 // DocumentId: auto
+// Path: User/{uid}/VertexChatRoom/{vertexChatRoomId}/VertexChatRoomMessage
 export const VertexChatRoomMessageCN = 'VertexChatRoomMessage'
 export type VertexChatRoomMessage = {
   vertexChatRoomId: string
