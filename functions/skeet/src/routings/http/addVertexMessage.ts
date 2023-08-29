@@ -40,7 +40,6 @@ export const addVertexMessage = onRequest(
       // Add User Message to VertexChatRoomMessage
       const messagePath = `${chatRoomPath}/${req.body.vertexChatRoomId}/${VertexChatRoomMessageCN}`
       const messageBody = {
-        vertexChatRoomId: vertexChatRoomData.userId,
         role: VertexChatRoomMessageRole.USER,
         content: req.body.content,
       } as VertexChatRoomMessage
@@ -48,7 +47,6 @@ export const addVertexMessage = onRequest(
 
       // Add AI Message to VertexChatRoomMessage
       const messageResBody = {
-        vertexChatRoomId: vertexChatRoomData.userId,
         role: VertexChatRoomMessageRole.AI,
         content: response,
       }
