@@ -11,4 +11,5 @@ export {
   addVertexMessage,
   createUserChatRoom,
   addUserChatRoomMessage,
+  generateTitle,
 } from '@/routings'
