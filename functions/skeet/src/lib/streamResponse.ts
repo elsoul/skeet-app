@@ -9,7 +9,7 @@ export const streamResponse = async (response: string, res: Response) => {
       res.setHeader('Content-Type', 'application/json')
     }
     console.log(`chunk: ${chunk}`)
-    await res.write(JSON.stringify({ text: chunk.toString() }))
+    res.write(JSON.stringify({ text: chunk.toString() }))
   })
 
   stream.on('end', async () => {
