@@ -1,7 +1,7 @@
 // ⚡️ This is a Skeet Framework Sample Models ⚡️
 // Define Your Model Types
 // CollectionId & DocumentId are custamizable
-import { Timestamp } from '@skeet-framework/firestore'
+import { Timestamp, FieldValue } from '@skeet-framework/firestore'
 
 // CollectionId: VertexChatRoom
 // DocumentId: auto
@@ -17,8 +17,8 @@ export type VertexChatRoom = {
   topP: number
   topK: number
   examples: VertexExampleInput[]
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
 
 export type VertexExampleInput = {
@@ -33,8 +33,8 @@ export const VertexChatRoomMessageCN = 'VertexChatRoomMessage'
 export type VertexChatRoomMessage = {
   role: VertexChatRoomMessageRole
   content: string
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
 
 export enum VertexChatRoomMessageRole {

@@ -1,10 +1,4 @@
-import {
-  VertexChatRoom,
-  VertexExample,
-  VertexChatRoomCN,
-  UserCN,
-  VertexExampleCN,
-} from '@/models'
+import { VertexChatRoom, VertexChatRoomCN, UserCN } from '@/models'
 import { add, serverTimestamp } from '@skeet-framework/firestore'
 import admin from 'firebase-admin'
 import dotenv from 'dotenv'
@@ -22,7 +16,6 @@ export const addVertexMessageSeed = async (
   db: admin.firestore.Firestore,
 ) => {
   const vertexChatRoomParams: VertexChatRoom = {
-    userId: uid,
     title: 'Test Room',
     context:
       'You are a developer who is knowledgeable about the Skeet framework, a framework for building web applications.',
@@ -31,21 +24,6 @@ export const addVertexMessageSeed = async (
     temperature: 0.2,
     topP: 0.95,
     topK: 40,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  }
-
-  console.log({ uid, vertexChatRoomParams })
-
-  const vertexChatRoomPath = `${UserCN}/${uid}/${VertexChatRoomCN}`
-  const vertexChatRoomDocRef = await add<VertexChatRoom>(
-    db,
-    vertexChatRoomPath,
-    vertexChatRoomParams,
-  )
-
-  const vertexPromptOptions: VertexExample = {
-    vertexChatRoomId: vertexChatRoomDocRef.id,
     examples: [
       {
         input:
@@ -57,8 +35,11 @@ export const addVertexMessageSeed = async (
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }
-  const vertexExamplePath = `${vertexChatRoomPath}/${vertexChatRoomDocRef.id}/${VertexExampleCN}`
-  await add<VertexExample>(db, vertexExamplePath, vertexPromptOptions)
+
+  console.log({ uid, vertexChatRoomParams })
+
+  const vertexChatRoomPath = `${UserCN}/${uid}/${VertexChatRoomCN}`
+  await add<VertexChatRoom>(db, vertexChatRoomPath, vertexChatRoomParams)
 
   console.log('Seed addVertexMessageSeed added successfully!')
 }
