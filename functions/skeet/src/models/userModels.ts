@@ -1,4 +1,4 @@
-import { Timestamp } from '@skeet-framework/firestore'
+import { Timestamp, FieldValue } from '@skeet-framework/firestore'
 
 // Define Collection Name
 export const UserCN = 'User'
@@ -16,8 +16,8 @@ export type User = {
   email: string
   iconUrl: string
   userChatRoomIds?: string[]
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
 
 // CollectionId: UserChatRoom
@@ -31,8 +31,8 @@ export type UserChatRoom = {
   temperature: number
   context: string
   stream: boolean
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
 
 // CollectionId: UserChatRoomMessage
@@ -43,6 +43,6 @@ export type UserChatRoomMessage = {
   userChatRoomId: string
   role: string
   content: string
-  createdAt?: Timestamp
-  updatedAt?: Timestamp
+  createdAt?: Timestamp | FieldValue
+  updatedAt?: Timestamp | FieldValue
 }
