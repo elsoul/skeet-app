@@ -5,7 +5,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import dotenv from 'dotenv'
+import { dotenv } from '@skeet-framework/utils'
 import firebaseConfig from '@/lib/firebaseConfig'
 dotenv.config()
 

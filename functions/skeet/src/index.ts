@@ -1,5 +1,5 @@
 import admin from 'firebase-admin'
-import dotenv from 'dotenv'
+import { dotenv } from '@skeet-framework/utils'
 
 dotenv.config()
 admin.initializeApp()

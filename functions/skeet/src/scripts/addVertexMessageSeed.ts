@@ -1,7 +1,7 @@
 import { VertexChatRoom, VertexChatRoomCN, UserCN } from '@/models'
 import { add, serverTimestamp } from '@skeet-framework/firestore'
 import admin from 'firebase-admin'
-import dotenv from 'dotenv'
+import { dotenv } from '@skeet-framework/utils'
 import { loginSeed } from '@/lib/login'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 dotenv.config()
