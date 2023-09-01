@@ -6,11 +6,10 @@ import { OpenAI, OpenAIOptions } from '@skeet-framework/ai'
 import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
 import { publicHttpOption } from '@/routings/options'
 import {
+  genUserChatRoomMessagePath,
+  genUserChatRoomPath,
   UserChatRoom,
-  UserChatRoomCN,
   UserChatRoomMessage,
-  UserChatRoomMessageCN,
-  UserCN,
 } from '@/models'
 import { defineSecret } from 'firebase-functions/params'
 import { TypedRequestBody } from '@/types/http'
@@ -34,7 +33,7 @@ export const addUserChatRoomMessage = onRequest(
       if (body.userChatRoomId === '') throw new Error('userChatRoomId is empty')
       const user = await getUserAuth(req)
 
-      const userChatRoomPath = `${UserCN}/${user.uid}/${UserChatRoomCN}`
+      const userChatRoomPath = genUserChatRoomPath(user.uid)
       const userChatRoom = await get<UserChatRoom>(
         db,
         userChatRoomPath,
@@ -43,7 +42,10 @@ export const addUserChatRoomMessage = onRequest(
       if (!userChatRoom) throw new Error('userChatRoom not found')
       if (userChatRoom.stream === true) throw new Error('stream must be false')
 
-      const userChatRoomMessagePath = `${userChatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
+      const userChatRoomMessagePath = genUserChatRoomMessagePath(
+        user.uid,
+        body.userChatRoomId,
+      )
       const messageBody = {
         userChatRoomId: body.userChatRoomId,
         role: 'user',
