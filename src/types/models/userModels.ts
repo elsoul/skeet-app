@@ -1,14 +1,10 @@
 import { Timestamp, FieldValue } from '@skeet-framework/firestore'
 
-// Define Collection Name
-export const UserCN = 'User'
-export const UserChatRoomCN = 'UserChatRoom'
-export const UserChatRoomMessageCN = 'UserChatRoomMessage'
-
 // CollectionId: User
 // DocumentId: auto
 // Path: User
-
+export const UserCN = 'User'
+export const genUserPath = () => `${UserCN}`
 export type User = {
   id?: string
   uid: string
@@ -23,6 +19,9 @@ export type User = {
 // CollectionId: UserChatRoom
 // DocumentId: auto
 // Path: User/{uid}/UserChatRoom
+export const UserChatRoomCN = 'UserChatRoom'
+export const genUserChatRoomPath = (uid: string) =>
+  `${UserCN}/${uid}/${UserChatRoomCN}`
 export type UserChatRoom = {
   id?: string
   title: string
@@ -38,6 +37,12 @@ export type UserChatRoom = {
 // CollectionId: UserChatRoomMessage
 // DocumentId: auto
 // Path: User/{uid}/UserChatRoom/{userChatRoomId}/UserChatRoomMessage
+export const UserChatRoomMessageCN = 'UserChatRoomMessage'
+export const genUserChatRoomMessagePath = (
+  uid: string,
+  userChatRoomId: string,
+) =>
+  `${UserCN}/${uid}/${UserChatRoomCN}/${userChatRoomId}/${UserChatRoomMessageCN}`
 export type UserChatRoomMessage = {
   id?: string
   userChatRoomId: string

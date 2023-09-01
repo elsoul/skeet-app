@@ -13,6 +13,7 @@ import useScreens from '@/hooks/useScreens'
 import { auth, db } from '@/lib/firebase'
 import { signOut, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
+import { genUserPath } from '@/types/models'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')
@@ -37,7 +38,7 @@ export default function Routes() {
           await signOut(auth)
           setUser(defaultUser)
         }
-        const docRef = doc(db, 'User', user.uid)
+        const docRef = doc(db, genUserPath(), user.uid)
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
           setUser({

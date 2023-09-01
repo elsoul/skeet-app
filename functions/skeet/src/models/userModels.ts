@@ -4,6 +4,7 @@ import { Timestamp, FieldValue } from '@skeet-framework/firestore'
 // DocumentId: auto
 // Path: User
 export const UserCN = 'User'
+export const genUserPath = () => `${UserCN}`
 export type User = {
   id?: string
   uid: string
