@@ -21,7 +21,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@skeet-framework/ai": "1.4.22",
+    "@skeet-framework/ai": "1.5.0",
     "@skeet-framework/firestore": "2.1.1",
     "@skeet-framework/utils": "1.2.1",
     "firebase-admin": "11.10.1",
