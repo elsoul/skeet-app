@@ -95,3 +95,4 @@ gcloud-key.json
 .firebase
 firebase-debug.log
 tmp
+firebase-export-*
