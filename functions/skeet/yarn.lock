@@ -1477,7 +1477,7 @@
     node-fetch "2.6.9"
     openai "4.2.0"
 
-"@skeet-framework/firestore@^2.1.1":
+"@skeet-framework/firestore@2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@skeet-framework/firestore/-/firestore-2.1.1.tgz#f325c12212a47da0834456f33da777cf6d8fce69"
   integrity sha512-njfp45zBJHEo/mzH8NDDmLjCfYFvHUyXSw+zknKF0eFwakkWrX9y7XVZ3ab0XgsILfUpJToJO1Cjc37QbAmBdg==

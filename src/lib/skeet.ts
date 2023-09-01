@@ -1,6 +1,6 @@
 import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import { toKebabCase } from '@/utils/character'
-import { auth, platformDevIP } from '@/lib/firebase'
+import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
 
 export const fetchSkeetFunctions = async <T>(
@@ -11,10 +11,12 @@ export const fetchSkeetFunctions = async <T>(
   try {
     const url =
       process.env.NODE_ENV === 'production'
-        ? `https://${
-            skeetCloudConfig.app.functionsDomain
-          }/${functionName}/${toKebabCase(methodName)}`
-        : `http://${platformDevIP}:5001/${skeetCloudConfig.app.projectId}/${skeetCloudConfig.app.region}/${methodName}`
+        ? skeetCloudConfig.app.hasLoadBalancer
+          ? `https://${
+              skeetCloudConfig.app.lbDomain
+            }/${functionName}/${toKebabCase(methodName)}`
+          : `https://${skeetCloudConfig.app.region}-${skeetCloudConfig.app.projectId}.cloudfunctions.net/${methodName}`
+        : `http://127.0.0.1:5001/${skeetCloudConfig.app.projectId}/${skeetCloudConfig.app.region}/${methodName}`
     const skeetToken = await auth?.currentUser?.getIdToken()
     const res = await fetch(`${url}`, {
       method: 'POST',
