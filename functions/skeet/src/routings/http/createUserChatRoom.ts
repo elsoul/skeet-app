@@ -1,6 +1,6 @@
 import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
-import { UserChatRoom, UserChatRoomCN, UserCN } from '@/models'
+import { genUserChatRoomPath, UserChatRoom } from '@/models'
 import { add } from '@skeet-framework/firestore'
 import { publicHttpOption } from '@/routings/options'
 import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
@@ -36,7 +36,7 @@ export const createUserChatRoom = onRequest(
         stream: body.stream,
         context: body.systemContent,
       }
-      const userChatRoomPath = `${UserCN}/${parentId}/${UserChatRoomCN}`
+      const userChatRoomPath = genUserChatRoomPath(parentId)
       const userChatRoomDoc = await add<UserChatRoom>(
         db,
         userChatRoomPath,

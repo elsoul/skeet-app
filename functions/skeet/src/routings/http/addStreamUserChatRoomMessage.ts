@@ -6,10 +6,9 @@ import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserCh
 import { defineSecret } from 'firebase-functions/params'
 import {
   UserChatRoom,
-  UserChatRoomCN,
-  UserCN,
   UserChatRoomMessage,
-  UserChatRoomMessageCN,
+  genUserChatRoomPath,
+  genUserChatRoomMessagePath,
 } from '@/models'
 import { OpenAI, OpenAIMessage } from '@skeet-framework/ai'
 import { TypedRequestBody } from '@/types/http'
@@ -42,7 +41,7 @@ export const addStreamUserChatRoomMessage = onRequest(
       const user = await getUserAuth(req)
 
       // Get UserChatRoom
-      const chatRoomPath = `${UserCN}/${user.uid}/${UserChatRoomCN}`
+      const chatRoomPath = genUserChatRoomPath(user.uid)
       const userChatRoom = await get<UserChatRoom>(
         db,
         chatRoomPath,
@@ -50,7 +49,10 @@ export const addStreamUserChatRoomMessage = onRequest(
       )
 
       // Add User Message to UserChatRoomMessage
-      const messagesPath = `${chatRoomPath}/${body.userChatRoomId}/${UserChatRoomMessageCN}`
+      const messagesPath = genUserChatRoomMessagePath(
+        user.uid,
+        body.userChatRoomId,
+      )
       await add<UserChatRoomMessage>(db, messagesPath, {
         userChatRoomId: body.userChatRoomId,
         content: body.content,

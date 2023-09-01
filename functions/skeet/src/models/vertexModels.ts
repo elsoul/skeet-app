@@ -2,11 +2,14 @@
 // Define Your Model Types
 // CollectionId & DocumentId are custamizable
 import { Timestamp, FieldValue } from '@skeet-framework/firestore'
+import { UserCN } from './userModels'
 
 // CollectionId: VertexChatRoom
 // DocumentId: auto
 // Path: User/{uid}/VertexChatRoom
 export const VertexChatRoomCN = 'VertexChatRoom'
+export const genVertexChatRoomPath = (uid: string) =>
+  `${UserCN}/${uid}/${VertexChatRoomCN}`
 export type VertexChatRoom = {
   id?: string
   title: string
@@ -30,6 +33,11 @@ export type VertexExampleInput = {
 // DocumentId: auto
 // Path: User/{uid}/VertexChatRoom/{vertexChatRoomId}/VertexChatRoomMessage
 export const VertexChatRoomMessageCN = 'VertexChatRoomMessage'
+export const genVertexChatRoomMessagePath = (
+  uid: string,
+  vertexChatRoomId: string,
+) =>
+  `${UserCN}/${uid}/${VertexChatRoomCN}/${vertexChatRoomId}/${VertexChatRoomMessageCN}`
 export type VertexChatRoomMessage = {
   role: VertexChatRoomMessageRole
   content: string
