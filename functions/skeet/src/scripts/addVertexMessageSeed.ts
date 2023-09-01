@@ -1,4 +1,4 @@
-import { VertexChatRoom, VertexChatRoomCN, UserCN } from '@/models'
+import { VertexChatRoom, genVertexChatRoomPath } from '@/models'
 import { add, serverTimestamp } from '@skeet-framework/firestore'
 import admin from 'firebase-admin'
 import { dotenv } from '@skeet-framework/utils'
@@ -38,8 +38,11 @@ export const addVertexMessageSeed = async (
 
   console.log({ uid, vertexChatRoomParams })
 
-  const vertexChatRoomPath = `${UserCN}/${uid}/${VertexChatRoomCN}`
-  await add<VertexChatRoom>(db, vertexChatRoomPath, vertexChatRoomParams)
+  await add<VertexChatRoom>(
+    db,
+    genVertexChatRoomPath(uid),
+    vertexChatRoomParams,
+  )
 
   console.log('Seed addVertexMessageSeed added successfully!')
 }
