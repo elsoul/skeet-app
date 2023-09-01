@@ -11,7 +11,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { userState } from '@/store/user'
-import { auth, db } from '@/lib/firebase'
+import { auth, db, createFirestoreDataConverter } from '@/lib/firebase'
 import {
   collection,
   doc,
@@ -33,12 +33,19 @@ import CodeEditor, {
 } from '@rivascva/react-native-code-editor'
 import { signOut } from 'firebase/auth'
 import { TextDecoder } from 'text-encoding'
+import {
+  UserChatRoom,
+  UserChatRoomMessage,
+  genUserChatRoomPath,
+  genUserChatRoomMessagePath,
+} from '@/types/models'
+import { Timestamp } from '@skeet-framework/firestore'
 
 type ChatMessage = {
   id: string
   role: string
-  createdAt: string
-  updatedAt: string
+  createdAt: Timestamp | undefined
+  updatedAt: Timestamp | undefined
   content: string
   viewWithCodeEditor: boolean
 }
@@ -70,8 +77,9 @@ export default function ChatBox({
     if (db && user.uid && currentChatRoomId) {
       const docRef = doc(
         db,
-        `User/${user.uid}/UserChatRoom/${currentChatRoomId}`
-      )
+        genUserChatRoomPath(user.uid),
+        currentChatRoomId
+      ).withConverter(createFirestoreDataConverter<UserChatRoom>())
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
         const data = docSnap.data()
@@ -94,12 +102,9 @@ export default function ChatBox({
   const getUserChatRoomMessage = useCallback(async () => {
     if (db && user.uid && currentChatRoomId) {
       const q = query(
-        collection(
-          db,
-          `User/${user.uid}/UserChatRoom/${currentChatRoomId}/UserChatRoomMessage`
-        ),
+        collection(db, genUserChatRoomMessagePath(user.uid, currentChatRoomId)),
         orderBy('createdAt', 'asc')
-      )
+      ).withConverter(createFirestoreDataConverter<UserChatRoomMessage>())
       const querySnapshot = await getDocs(q)
       const messages: ChatMessage[] = []
       querySnapshot.forEach((doc) => {
@@ -154,16 +159,16 @@ export default function ChatBox({
           prev.push({
             id: `UserSendingMessage${new Date().toISOString()}`,
             role: 'user',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            createdAt: undefined,
+            updatedAt: undefined,
             content: chatContent,
             viewWithCodeEditor: false,
           })
           prev.push({
             id: `AssistantAnsweringMessage${new Date().toISOString()}`,
             role: 'assistant',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            createdAt: undefined,
+            updatedAt: undefined,
             content: '',
             viewWithCodeEditor: false,
           })

@@ -15,7 +15,7 @@ import { blurhash } from '@/utils/placeholder'
 import { getImageBlob } from '@/utils/storage'
 import Toast from 'react-native-toast-message'
 import { signOut } from 'firebase/auth'
-import { User } from '@/types/models'
+import { User, genUserPath } from '@/types/models'
 
 export default function EditUserIconUrl() {
   const { t } = useTranslation()
@@ -47,7 +47,7 @@ export default function EditUserIconUrl() {
 
         const downloadUrl = await getDownloadURL(newProfileIconRef)
 
-        const docRef = doc(db, 'User', user.uid).withConverter(
+        const docRef = doc(db, genUserPath(), user.uid).withConverter(
           createFirestoreDataConverter<User>()
         )
         await updateDoc(docRef, { iconUrl: downloadUrl })
