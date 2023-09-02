@@ -96,3 +96,4 @@ gcloud-key.json
 firebase-debug.log
 tmp
 firebase-export-*
+.secret*
