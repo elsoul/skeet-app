@@ -1,6 +1,7 @@
 {
   "name": "skeet-app",
   "projectId": "skeet-app",
+  "fbProjectId": "skeet-app",
   "region": "europe-west6",
   "appDomain": ""
 }

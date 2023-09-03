@@ -15,8 +15,8 @@ export const fetchSkeetFunctions = async <T>(
           ? `https://${
               skeetCloudConfig.app.lbDomain
             }/${functionName}/${toKebabCase(methodName)}`
-          : `https://${skeetCloudConfig.app.region}-${skeetCloudConfig.app.projectId}.cloudfunctions.net/${methodName}`
-        : `http://${platformDevIP}:5001/${skeetCloudConfig.app.projectId}/${skeetCloudConfig.app.region}/${methodName}`
+          : `https://${skeetCloudConfig.app.region}-${skeetCloudConfig.app.fbProjectId}.cloudfunctions.net/${methodName}`
+        : `http://${platformDevIP}:5001/${skeetCloudConfig.app.fbProjectId}/${skeetCloudConfig.app.region}/${methodName}`
     const skeetToken = await auth?.currentUser?.getIdToken()
     const res = await fetch(`${url}`, {
       method: 'POST',
