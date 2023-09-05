@@ -155,7 +155,9 @@ export default function EditUserProfile() {
               </Pressable>
             </View>
             <View style={tw`flex flex-grow flex-col pt-10 gap-8`}>
-              <Text style={tw`text-center font-loaded-bold text-lg`}>
+              <Text
+                style={tw`text-center font-loaded-bold text-lg text-gray-900 dark:text-gray-50`}
+              >
                 {t('settings.editProfile')}
               </Text>
               <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
@@ -193,7 +195,7 @@ export default function EditUserProfile() {
                       className={clsx(
                         isDisabled
                           ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
-                          : '',
+                          : 'bg-gray-900 dark:bg-gray-300',
                         'w-full px-3 py-2'
                       )}
                     >

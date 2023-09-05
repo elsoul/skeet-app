@@ -350,7 +350,9 @@ export default function ChatMenu({
               />
             </Pressable>
             <View style={tw`flex-grow`} />
-            <Text style={tw`text-center font-loaded-bold`}>
+            <Text
+              style={tw`text-center font-loaded-bold text-gray-900 dark:text-white`}
+            >
               {t('openAiChat.title')}
             </Text>
             <View style={tw`flex-grow`} />
