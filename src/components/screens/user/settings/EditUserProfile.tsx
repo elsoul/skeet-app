@@ -97,11 +97,13 @@ export default function EditUserProfile() {
     <>
       <View style={tw`p-4 text-center sm:text-left`}>
         <Text
-          style={tw`font-loaded-bold text-3xl text-gray-900 dark:text-gray-50`}
+          style={tw`font-loaded-bold text-3xl text-gray-900 dark:text-gray-50 text-center sm:text-left`}
         >
           {user.username}
         </Text>
-        <Text style={tw`font-loaded-medium text-gray-500 dark:text-gray-300`}>
+        <Text
+          style={tw`font-loaded-medium text-gray-500 dark:text-gray-300 text-center sm:text-left`}
+        >
           {user.email}
         </Text>
       </View>
@@ -114,7 +116,11 @@ export default function EditUserProfile() {
             setIsModalOpen(true)
           }}
         >
-          <PencilSquareIcon style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0')}`} />
+          <PencilSquareIcon
+            style={tw`${clsx(
+              'mr-3 h-6 w-6 flex-shrink-0 text-gray-900 dark:text-gray-50'
+            )}`}
+          />
           <Text
             style={tw`py-2 font-loaded-medium text-gray-900 dark:text-gray-50`}
           >

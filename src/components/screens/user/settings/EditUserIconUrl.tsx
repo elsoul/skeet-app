@@ -110,7 +110,11 @@ export default function EditUserIconUrl() {
             pickImage()
           }}
         >
-          <PencilSquareIcon style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0')}`} />
+          <PencilSquareIcon
+            style={tw`${clsx(
+              'mr-3 h-6 w-6 flex-shrink-0 text-gray-900 dark:text-gray-50'
+            )}`}
+          />
           <Text
             style={tw`py-2 font-loaded-medium text-gray-900 dark:text-gray-50`}
           >
