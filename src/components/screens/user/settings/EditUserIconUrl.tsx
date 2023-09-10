@@ -6,16 +6,16 @@ import { PencilSquareIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 import * as ImagePicker from 'expo-image-picker'
-import { doc, updateDoc } from 'firebase/firestore'
 import { useRecoilState } from 'recoil'
 import { userState } from '@/store/user'
-import { auth, createFirestoreDataConverter, db, storage } from '@/lib/firebase'
+import { auth, db, storage } from '@/lib/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { blurhash } from '@/utils/placeholder'
 import { getImageBlob } from '@/utils/storage'
 import Toast from 'react-native-toast-message'
 import { signOut } from 'firebase/auth'
 import { User, genUserPath } from '@/types/models'
+import { update } from '@/lib/skeet/firestore'
 
 export default function EditUserIconUrl() {
   const { t } = useTranslation()
@@ -47,10 +47,9 @@ export default function EditUserIconUrl() {
 
         const downloadUrl = await getDownloadURL(newProfileIconRef)
 
-        const docRef = doc(db, genUserPath(), user.uid).withConverter(
-          createFirestoreDataConverter<User>()
-        )
-        await updateDoc(docRef, { iconUrl: downloadUrl })
+        await update<User>(db, genUserPath(), user.uid, {
+          iconUrl: downloadUrl,
+        })
         setUser({
           ...user,
           iconUrl: downloadUrl,

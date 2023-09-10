@@ -79,7 +79,6 @@
     "recoil": "0.7.7",
     "text-encoding": "0.7.0",
     "twrnc": "3.6.1",
-    "typesaurus": "7",
     "zod": "3.21.4"
   },
   "devDependencies": {
