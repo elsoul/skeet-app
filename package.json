@@ -24,6 +24,7 @@
     "ios": "EXPO_USE_PATH_ALIASES=1 expo start --ios",
     "webapp": "EXPO_USE_PATH_ALIASES=1 expo start --web",
     "update:packages": "ncu -x 'react-native-reanimated,react-native-svg' && yarn",
+    "build": "yarn build:production:webapp",
     "build:configure": "eas build:configure",
     "build:development:ios": "eas build --platform ios --profile development",
     "build:development:android": "eas build --platform android --profile development",
