@@ -12,8 +12,8 @@ import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import useScreens from '@/hooks/useScreens'
 import { auth, db } from '@/lib/firebase'
 import { signOut, User } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
-import { genUserPath } from '@/types/models'
+import { genUserPath, User as UserModel } from '@/types/models'
+import { get } from '@/lib/skeet/firestore'
 
 const Stack = createNativeStackNavigator()
 const prefix = Linking.createURL('/')
@@ -31,24 +31,27 @@ export default function Routes() {
   const [user, setUser] = useRecoilState(userState)
 
   const onAuthStateChanged = useCallback(
-    async (user: User | null) => {
+    async (fbUser: User | null) => {
       if (initializing) setInitializing(false)
-      if (auth && db && user) {
-        if (!user?.emailVerified) {
+      if (auth && db && fbUser) {
+        if (!fbUser?.emailVerified) {
           await signOut(auth)
           setUser(defaultUser)
         }
-        const docRef = doc(db, genUserPath(), user.uid)
-        const docSnap = await getDoc(docRef)
-        if (docSnap.exists()) {
+        try {
+          const { username, iconUrl } = await get<UserModel>(
+            db,
+            genUserPath(),
+            fbUser.uid
+          )
           setUser({
-            uid: user.uid,
-            email: user.email ?? '',
-            username: docSnap.data().username,
-            iconUrl: docSnap.data().iconUrl,
-            emailVerified: user.emailVerified,
+            uid: fbUser.uid,
+            email: fbUser.email ?? '',
+            username,
+            iconUrl,
+            emailVerified: fbUser.emailVerified,
           })
-        } else {
+        } catch (e) {
           await signOut(auth)
           setUser(defaultUser)
         }

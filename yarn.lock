@@ -19056,11 +19056,6 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typesaurus@7:
-  version "7.2.0"
-  resolved "https://registry.npmjs.org/typesaurus/-/typesaurus-7.2.0.tgz"
-  integrity sha512-qngW0ECsnEoPmX/nI2hNarmkQKGDH7R48InIZWsxmQa07NHVICutUZUkY2HdJX4LvcdDWZdcBedh0wudNMu1NA==
-
 typescript@4.9.4:
   version "4.9.4"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.9.4.tgz"

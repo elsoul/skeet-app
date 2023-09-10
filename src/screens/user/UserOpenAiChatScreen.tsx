@@ -15,15 +15,13 @@ import { useTranslation } from 'react-i18next'
 import {
   DocumentData,
   QueryDocumentSnapshot,
-  collection,
-  getDocs,
   limit,
   orderBy,
-  query,
 } from 'firebase/firestore'
-import { createFirestoreDataConverter, db } from '@/lib/firebase'
+import { db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
 import { UserChatRoom, genUserChatRoomPath } from '@/types/models'
+import { query } from '@/lib/skeet/firestore'
 
 export default function UserOpenAiChatScreen() {
   useColorModeRefresh()
@@ -46,13 +44,11 @@ export default function UserOpenAiChatScreen() {
     if (db) {
       try {
         setDataLoading(true)
-        const q = query(
-          collection(db, genUserChatRoomPath(user.uid)),
-          orderBy('createdAt', 'desc'),
-          limit(15)
-        ).withConverter(createFirestoreDataConverter<UserChatRoom>())
-
-        const querySnapshot = await getDocs(q)
+        const querySnapshot = await query<UserChatRoom>(
+          db,
+          genUserChatRoomPath(user.uid),
+          [orderBy('createdAt', 'desc'), limit(15)]
+        )
         const list: ChatRoom[] = []
         querySnapshot.forEach((doc) => {
           const data = doc.data()
