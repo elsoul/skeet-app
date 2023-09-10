@@ -72,7 +72,7 @@ export const addStreamUserChatRoomMessage = onRequest(
       ])
       allMessages.reverse()
 
-      let promptMessages = allMessages.map((message: UserChatRoomMessage) => {
+      const promptMessages = allMessages.map((message: UserChatRoomMessage) => {
         return {
           role: message.role,
           content: message.content,
