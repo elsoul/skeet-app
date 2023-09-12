@@ -86,7 +86,13 @@ export default function ChatBox({
   }, [currentChatRoomId, user.uid])
 
   useEffect(() => {
-    getChatRoom()
+    void (async () => {
+      try {
+        await getChatRoom()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [getChatRoom])
 
   const [isSending, setSending] = useState(false)
@@ -112,7 +118,13 @@ export default function ChatBox({
   }, [currentChatRoomId, user.uid])
 
   useEffect(() => {
-    getUserChatRoomMessage()
+    void (async () => {
+      try {
+        await getUserChatRoomMessage()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [getUserChatRoomMessage])
 
   useEffect(() => {
@@ -228,7 +240,7 @@ export default function ChatBox({
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
         if (auth) {
-          signOut(auth)
+          await signOut(auth)
         }
       } else {
         Toast.show({
@@ -517,8 +529,8 @@ export default function ChatBox({
                 onChangeText={setChatContent}
               />
               <Pressable
-                onPress={() => {
-                  chatMessageSubmit()
+                onPress={async () => {
+                  await chatMessageSubmit()
                 }}
                 disabled={isChatMessageDisabled}
                 style={tw`${clsx(

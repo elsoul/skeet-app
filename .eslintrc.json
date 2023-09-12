@@ -7,6 +7,7 @@
     "prettier"
   ],
   "parserOptions": {
+    "project": "./tsconfig.json",
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
@@ -25,6 +26,13 @@
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-unused-vars": 0,
     "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
       {
@@ -34,13 +42,14 @@
   },
   "overrides": [
     {
-      "files": ["./functions/**/*.ts", "./graphql/**/*.ts"],
+      "files": ["./functions/**/*.ts"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier"
       ],
       "parserOptions": {
+        "project": "./functions/skeet/tsconfig.json",
         "sourceType": "module",
         "ecmaVersion": "latest"
       },
@@ -54,6 +63,13 @@
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/no-unused-vars": 0,
         "@typescript-eslint/no-empty-function": 0,
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/no-misused-promises": [
+          "error",
+          {
+            "checksVoidReturn": false
+          }
+        ],
         "@typescript-eslint/ban-ts-comment": [
           "off",
           {

@@ -76,7 +76,7 @@ export default function EditUserIconUrl() {
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
         if (auth) {
-          signOut(auth)
+          await signOut(auth)
         }
       } else {
         Toast.show({
@@ -105,8 +105,8 @@ export default function EditUserIconUrl() {
           style={tw`${clsx(
             'flex flex-row items-center px-2 py-2 text-sm font-medium text-gray-900 dark:text-gray-50'
           )}`}
-          onPress={() => {
-            pickImage()
+          onPress={async () => {
+            await pickImage()
           }}
         >
           <PencilSquareIcon

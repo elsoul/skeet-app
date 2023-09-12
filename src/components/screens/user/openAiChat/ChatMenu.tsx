@@ -130,7 +130,7 @@ export default function ChatMenu({
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
           if (auth) {
-            signOut(auth)
+            await signOut(auth)
           }
         } else {
           Toast.show({
@@ -156,7 +156,7 @@ export default function ChatMenu({
   const scrollViewRefModal = useRef<ScrollView>(null)
 
   const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const { layoutMeasurement, contentOffset, contentSize } =
         event.nativeEvent
 
@@ -164,7 +164,7 @@ export default function ChatMenu({
         layoutMeasurement.height + contentOffset.y >= contentSize.height
 
       if (isScrolledToBottom && !reachLast) {
-        queryMore()
+        await queryMore()
       }
     },
     [queryMore, reachLast]
@@ -288,7 +288,7 @@ export default function ChatMenu({
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
         if (auth) {
-          signOut(auth)
+          await signOut(auth)
         }
       } else {
         Toast.show({
@@ -602,8 +602,8 @@ export default function ChatMenu({
 
                       <View>
                         <Pressable
-                          onPress={() => {
-                            newChatSubmit()
+                          onPress={async () => {
+                            await newChatSubmit()
                           }}
                           disabled={isNewChatDisabled}
                           style={tw`${clsx(
