@@ -43,7 +43,13 @@ export default function VerifyEmailAction({ oobCode }: Props) {
   }, [navigation, t, oobCode])
 
   useEffect(() => {
-    verifyUser()
+    void (async () => {
+      try {
+        await verifyUser()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [verifyUser])
 
   if (isLoading) {

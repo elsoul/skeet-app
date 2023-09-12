@@ -78,7 +78,13 @@ export default function UserOpenAiChatScreen() {
   }, [user.uid, t, setDataLoading, setChatList, setLastChat])
 
   useEffect(() => {
-    getChatRooms()
+    void (async () => {
+      try {
+        await getChatRooms()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [getChatRooms])
 
   return (

@@ -107,7 +107,7 @@ export default function LoginScreen() {
           })
         }
         if (auth?.currentUser) {
-          signOut(auth)
+          await signOut(auth)
         }
       } finally {
         setLoading(false)
@@ -220,8 +220,8 @@ export default function LoginScreen() {
               </View>
               <View>
                 <Button
-                  onPress={() => {
-                    login()
+                  onPress={async () => {
+                    await login()
                   }}
                   disabled={isDisabled}
                   className={clsx(

@@ -70,7 +70,7 @@ export default function EditUserProfile() {
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
           if (auth) {
-            signOut(auth)
+            await signOut(auth)
           }
         } else {
           Toast.show({
@@ -194,8 +194,8 @@ export default function EditUserProfile() {
 
                   <View>
                     <Button
-                      onPress={() => {
-                        submit()
+                      onPress={async () => {
+                        await submit()
                       }}
                       disabled={isDisabled}
                       className={clsx(
