@@ -49,7 +49,7 @@
         "prettier"
       ],
       "parserOptions": {
-        "project": "./skeet/tsconfig.json",
+        "project": "./functions/skeet/tsconfig.json",
         "sourceType": "module",
         "ecmaVersion": "latest"
       },
