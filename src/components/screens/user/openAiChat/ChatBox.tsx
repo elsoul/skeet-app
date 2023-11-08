@@ -14,7 +14,7 @@ import { userState } from '@/store/user'
 import { auth, db } from '@/lib/firebase'
 import { orderBy } from 'firebase/firestore'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import { chatContentSchema } from '@/utils/form'
+import { chatContentSchema, gptChatRoomName } from '@/utils/form'
 import Toast from 'react-native-toast-message'
 import { fetchSkeetFunctions } from '@/lib/skeet/functions'
 import { Image } from 'expo-image'
@@ -335,7 +335,7 @@ export default function ChatBox({
                           />
                         </View>
                       )}
-                      {chatRoom?.model === 'gpt-4' && (
+                      {chatRoom?.model.includes('gpt-4') && (
                         <View style={tw`flex`}>
                           <Image
                             source={
@@ -358,8 +358,8 @@ export default function ChatBox({
                           <Text
                             style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
                           >
-                            {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
-                            {t('tokens')}
+                            {gptChatRoomName(chatRoom?.model)}:{' '}
+                            {chatRoom?.maxTokens} {t('tokens')}
                           </Text>
                         </View>
                         <Text
@@ -410,7 +410,7 @@ export default function ChatBox({
                           )}
                         {(chatMessage.role === 'assistant' ||
                           chatMessage.role === 'system') &&
-                          chatRoom?.model === 'gpt-4' && (
+                          chatRoom?.model.includes('gpt-4') && (
                             <View style={tw`flex`}>
                               <Image
                                 source={
@@ -458,8 +458,8 @@ export default function ChatBox({
                                   <Text
                                     style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
                                   >
-                                    {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
-                                    {t('tokens')}
+                                    {gptChatRoomName(chatRoom?.model)}:{' '}
+                                    {chatRoom?.maxTokens} {t('tokens')}
                                   </Text>
                                 </View>
                               )}
