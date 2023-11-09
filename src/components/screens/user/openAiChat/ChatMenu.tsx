@@ -29,7 +29,7 @@ import {
   temperatureSchema,
   maxTokensSchema,
   systemContentSchema,
-  gptChatRoomName,
+  getGptChatModelName,
 } from '@/utils/form'
 import {
   Menu,
@@ -498,7 +498,7 @@ export default function ChatMenu({
                                 <Text
                                   style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
                                 >
-                                  {gptChatRoomName(model)}
+                                  {getGptChatModelName(model)}
                                 </Text>
                                 <View style={tw`flex-grow`} />
                                 <ChevronDownIcon
@@ -521,7 +521,7 @@ export default function ChatMenu({
                                     <Text
                                       style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
                                     >
-                                      {gptChatRoomName(allowedModel)}
+                                      {getGptChatModelName(allowedModel)}
                                     </Text>
                                   </MenuOption>
                                 ))}

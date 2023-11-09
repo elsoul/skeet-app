@@ -16,7 +16,7 @@ export const gptModelSchema = z.union([
   z.literal('gpt-3.5-turbo'),
 ])
 
-export const gptChatRoomName = (name = 'gpt-4-1106-preview') => {
+export const getGptChatModelName = (name = 'gpt-4-1106-preview') => {
   const chatRoomNames = {
     'gpt-4-1106-preview': 'GPT-4 Turbo (preview)',
     'gpt-4': 'GPT-4',
