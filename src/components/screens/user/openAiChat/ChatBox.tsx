@@ -14,7 +14,7 @@ import { userState } from '@/store/user'
 import { auth, db } from '@/lib/firebase'
 import { orderBy } from 'firebase/firestore'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import { chatContentSchema, gptChatRoomName } from '@/utils/form'
+import { chatContentSchema, getGptChatModelName } from '@/utils/form'
 import Toast from 'react-native-toast-message'
 import { fetchSkeetFunctions } from '@/lib/skeet/functions'
 import { Image } from 'expo-image'
@@ -358,7 +358,7 @@ export default function ChatBox({
                           <Text
                             style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
                           >
-                            {gptChatRoomName(chatRoom?.model)}:{' '}
+                            {getGptChatModelName(chatRoom?.model)}:{' '}
                             {chatRoom?.maxTokens} {t('tokens')}
                           </Text>
                         </View>
@@ -458,7 +458,7 @@ export default function ChatBox({
                                   <Text
                                     style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
                                   >
-                                    {gptChatRoomName(chatRoom?.model)}:{' '}
+                                    {getGptChatModelName(chatRoom?.model)}:{' '}
                                     {chatRoom?.maxTokens} {t('tokens')}
                                   </Text>
                                 </View>
