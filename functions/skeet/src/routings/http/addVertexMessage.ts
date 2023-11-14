@@ -7,11 +7,12 @@ import {
   genVertexChatRoomMessagePath,
 } from '@/models'
 import { getUserAuth } from '@/lib'
-import { AddVertexMessageParams, TypedRequestBody } from '@/types/http'
+import { TypedRequestBody } from '@/types/http'
 import { onRequest } from 'firebase-functions/v2/https'
 import { publicHttpOption } from '../options'
 import { sendToVertexAI, streamResponse } from '@/lib'
 import { add, get } from '@skeet-framework/firestore'
+import { AddVertexMessageParams } from '@/types/http/addVertexMessageParams'
 
 export const addVertexMessage = onRequest(
   publicHttpOption,
@@ -26,6 +27,8 @@ export const addVertexMessage = onRequest(
         chatRoomPath,
         req.body.vertexChatRoomId,
       )
+      if (!vertexChatRoomData) throw new Error('vertexChatRoom is not found')
+
       const vertexExampleData = vertexChatRoomData.examples
 
       // Send to VertexAI

@@ -1,0 +1,41 @@
+name: SkeetFrameworkDiscord
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i -g yarn
+      - run: yarn install
+      - name: Disord Notification Epics
+        run: yarn discord epics ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+          DISCORD_CHANNEL_ID_JA: ${{ secrets.DISCORD_CHANNEL_ID_JA }}
+      - name: Disord Notification LABO
+        run: yarn discord labo ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_TOKEN_LABO: ${{ secrets.DISCORD_TOKEN_LABO }}
+          LABO_SKEET_CHANNEL_ID: ${{ secrets.LABO_SKEET_CHANNEL_ID }}
+      - name: Post X package update notification
+        if: success()
+        run: |
+          curl --location ${{ secrets.TW_ENDPOINT }} \
+          --header 'Content-Type: application/json' \
+          --data '{"repo": "${{ github.repository }}", "hey": "${{ secrets.TW_ENDPOINT_SECRET }}"}'

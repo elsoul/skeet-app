@@ -38,7 +38,8 @@
     "deploy:webapp": "yarn build:production:webapp && npx firebase deploy --only hosting",
     "deploy:rules": "npx firebase deploy --only firestore:rules,storage",
     "check:webapp": "npx serve web-build",
-    "start": "EXPO_USE_PATH_ALIASES=1 expo start -c"
+    "start": "EXPO_USE_PATH_ALIASES=1 expo start -c",
+    "discord": "npx ts-node -r tsconfig-paths/register --transpile-only ./.github/workflows/runDiscordChangeLog.ts"
   },
   "dependencies": {
     "@expo-google-fonts/noto-sans-jp": "0.2.3",
@@ -86,6 +87,7 @@
     "@babel/core": "7.21.0",
     "@expo/metro-config": "0.7.1",
     "@expo/webpack-config": "18.0.1",
+    "@skeet-framework/discord-utils": "^0.2.13",
     "@svgr/webpack": "6.5.1",
     "@types/jest": "29.5.0",
     "@types/node": "18.17.17",
