@@ -57,4 +57,4 @@ const run = async () => {
   await loginSeed()
 }
 
-run()
+void run()

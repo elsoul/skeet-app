@@ -10,12 +10,12 @@ import { userState } from '@/store/user'
 import Button from '@/components/common/atoms/Button'
 import { usernameSchema } from '@/utils/form'
 import { TextInput } from 'react-native-gesture-handler'
-import { auth, createFirestoreDataConverter, db } from '@/lib/firebase'
+import { auth, db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
-import { doc, updateDoc } from 'firebase/firestore'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { signOut } from 'firebase/auth'
 import { User, genUserPath } from '@/types/models'
+import { update } from '@/lib/skeet/firestore'
 
 export default function EditUserProfile() {
   const { t } = useTranslation()
@@ -42,10 +42,10 @@ export default function EditUserProfile() {
     if (db && usernameError == '') {
       try {
         setLoading(true)
-        const docRef = doc(db, genUserPath(), user.uid).withConverter(
-          createFirestoreDataConverter<User>()
-        )
-        await updateDoc(docRef, { username })
+
+        await update<User>(db, genUserPath(), user.uid, {
+          username,
+        })
         setUser({
           ...user,
           username,
@@ -70,7 +70,7 @@ export default function EditUserProfile() {
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
           if (auth) {
-            signOut(auth)
+            await signOut(auth)
           }
         } else {
           Toast.show({
@@ -97,11 +97,13 @@ export default function EditUserProfile() {
     <>
       <View style={tw`p-4 text-center sm:text-left`}>
         <Text
-          style={tw`font-loaded-bold text-3xl text-gray-900 dark:text-gray-50`}
+          style={tw`font-loaded-bold text-3xl text-gray-900 dark:text-gray-50 text-center sm:text-left`}
         >
           {user.username}
         </Text>
-        <Text style={tw`font-loaded-medium text-gray-500 dark:text-gray-300`}>
+        <Text
+          style={tw`font-loaded-medium text-gray-500 dark:text-gray-300 text-center sm:text-left`}
+        >
           {user.email}
         </Text>
       </View>
@@ -114,7 +116,11 @@ export default function EditUserProfile() {
             setIsModalOpen(true)
           }}
         >
-          <PencilSquareIcon style={tw`${clsx('mr-3 h-6 w-6 flex-shrink-0')}`} />
+          <PencilSquareIcon
+            style={tw`${clsx(
+              'mr-3 h-6 w-6 flex-shrink-0 text-gray-900 dark:text-gray-50'
+            )}`}
+          />
           <Text
             style={tw`py-2 font-loaded-medium text-gray-900 dark:text-gray-50`}
           >
@@ -155,7 +161,9 @@ export default function EditUserProfile() {
               </Pressable>
             </View>
             <View style={tw`flex flex-grow flex-col pt-10 gap-8`}>
-              <Text style={tw`text-center font-loaded-bold text-lg`}>
+              <Text
+                style={tw`text-center font-loaded-bold text-lg text-gray-900 dark:text-gray-50`}
+              >
                 {t('settings.editProfile')}
               </Text>
               <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
@@ -186,14 +194,14 @@ export default function EditUserProfile() {
 
                   <View>
                     <Button
-                      onPress={() => {
-                        submit()
+                      onPress={async () => {
+                        await submit()
                       }}
                       disabled={isDisabled}
                       className={clsx(
                         isDisabled
                           ? 'bg-gray-300 dark:bg-gray-800 dark:text-gray-400'
-                          : '',
+                          : 'bg-gray-900 dark:bg-gray-300',
                         'w-full px-3 py-2'
                       )}
                     >

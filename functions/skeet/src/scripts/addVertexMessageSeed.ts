@@ -53,4 +53,4 @@ const run = async () => {
   await addVertexMessageSeed(uid, db)
 }
 
-run()
+void run()

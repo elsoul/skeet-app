@@ -206,8 +206,8 @@ export default function RegisterScreen() {
                       color={isChecked ? colors.indigo[500] : undefined}
                     />
                     <Pressable
-                      onPress={() => {
-                        openUrl('https://skeet.dev/legal/privacy-policy')
+                      onPress={async () => {
+                        await openUrl('https://skeet.dev/legal/privacy-policy')
                       }}
                     >
                       <Text
@@ -227,8 +227,8 @@ export default function RegisterScreen() {
               </View>
               <View>
                 <Button
-                  onPress={() => {
-                    signUp()
+                  onPress={async () => {
+                    await signUp()
                   }}
                   disabled={isDisabled}
                   className={clsx(

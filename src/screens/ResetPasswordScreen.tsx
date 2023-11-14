@@ -146,8 +146,8 @@ export default function ResetPasswordScreen() {
               </View>
               <View>
                 <Button
-                  onPress={() => {
-                    resetPassword()
+                  onPress={async () => {
+                    await resetPassword()
                   }}
                   disabled={isDisabled}
                   className={clsx(

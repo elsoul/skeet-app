@@ -1,5 +1,5 @@
 import { build } from 'esbuild'
-;(async () => {
+void (async () => {
   await build({
     entryPoints: ['./src/index.ts'],
     bundle: true,

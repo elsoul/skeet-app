@@ -28,8 +28,8 @@ export default function LanguageChanger() {
         <MenuOptions>
           <View style={tw`shadow-lg dark:bg-gray-900`}>
             <MenuOption
-              onSelect={() => {
-                changeLanguage('en-US')
+              onSelect={async () => {
+                await changeLanguage('en-US')
               }}
               style={tw`p-3`}
             >
@@ -42,8 +42,8 @@ export default function LanguageChanger() {
               </Text>
             </MenuOption>
             <MenuOption
-              onSelect={() => {
-                changeLanguage('ja-JP')
+              onSelect={async () => {
+                await changeLanguage('ja-JP')
               }}
               style={tw`p-3 border-t-gray-50 dark:border-t-gray-800 border-t`}
             >

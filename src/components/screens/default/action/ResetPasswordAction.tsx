@@ -59,7 +59,13 @@ export default function ResetPasswordAction({ oobCode }: Props) {
   }, [navigation, t, oobCode])
 
   useEffect(() => {
-    verifyEmail()
+    void (async () => {
+      try {
+        await verifyEmail()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [verifyEmail])
 
   const resetPassword = useCallback(async () => {
@@ -148,8 +154,8 @@ export default function ResetPasswordAction({ oobCode }: Props) {
             </View>
             <View>
               <Button
-                onPress={() => {
-                  resetPassword()
+                onPress={async () => {
+                  await resetPassword()
                 }}
                 disabled={isDisabled}
                 className={clsx(

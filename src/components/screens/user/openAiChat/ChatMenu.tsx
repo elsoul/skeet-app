@@ -29,6 +29,7 @@ import {
   temperatureSchema,
   maxTokensSchema,
   systemContentSchema,
+  getGptChatModelName,
 } from '@/utils/form'
 import {
   Menu,
@@ -42,21 +43,17 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   Timestamp,
-  addDoc,
-  collection,
-  getDocs,
   limit,
   orderBy,
-  query,
-  serverTimestamp,
   startAfter,
 } from 'firebase/firestore'
-import { createFirestoreDataConverter, db } from '@/lib/firebase'
+import { db } from '@/lib/firebase'
 import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
 import { UserChatRoom, genUserChatRoomPath } from '@/types/models'
+import { add, query } from '@/lib/skeet/firestore'
 
 export type ChatRoom = {
   id: string
@@ -106,14 +103,11 @@ export default function ChatMenu({
   const queryMore = useCallback(async () => {
     if (db && lastChat) {
       try {
-        const q = query(
-          collection(db, genUserChatRoomPath(user.uid)),
-          orderBy('createdAt', 'desc'),
-          limit(15),
-          startAfter(lastChat)
-        ).withConverter(createFirestoreDataConverter<UserChatRoom>())
-
-        const querySnapshot = await getDocs(q)
+        const querySnapshot = await query<UserChatRoom>(
+          db,
+          genUserChatRoomPath(user.uid),
+          [orderBy('createdAt', 'desc'), limit(15), startAfter(lastChat)]
+        )
         setDataLoading(true)
         const list: ChatRoom[] = []
         querySnapshot.forEach((doc) => {
@@ -137,7 +131,7 @@ export default function ChatMenu({
             text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
           })
           if (auth) {
-            signOut(auth)
+            await signOut(auth)
           }
         } else {
           Toast.show({
@@ -163,7 +157,7 @@ export default function ChatMenu({
   const scrollViewRefModal = useRef<ScrollView>(null)
 
   const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const { layoutMeasurement, contentOffset, contentSize } =
         event.nativeEvent
 
@@ -171,7 +165,7 @@ export default function ChatMenu({
         layoutMeasurement.height + contentOffset.y >= contentSize.height
 
       if (isScrolledToBottom && !reachLast) {
-        queryMore()
+        await queryMore()
       }
     },
     [queryMore, reachLast]
@@ -262,19 +256,13 @@ export default function ChatMenu({
     try {
       setCreateLoading(true)
       if (!isNewChatDisabled && db) {
-        const chatRoomsRef = collection(
-          db,
-          genUserChatRoomPath(user.uid)
-        ).withConverter(createFirestoreDataConverter<UserChatRoom>())
-        const docRef = await addDoc(chatRoomsRef, {
+        const docRef = await add(db, genUserChatRoomPath(user.uid), {
           title: '',
           model,
           context: systemContent,
           maxTokens: Number(maxTokens),
           temperature: Number(temperature),
           stream: true,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
         })
         Toast.show({
           type: 'success',
@@ -301,7 +289,7 @@ export default function ChatMenu({
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
         if (auth) {
-          signOut(auth)
+          await signOut(auth)
         }
       } else {
         Toast.show({
@@ -350,7 +338,9 @@ export default function ChatMenu({
               />
             </Pressable>
             <View style={tw`flex-grow`} />
-            <Text style={tw`text-center font-loaded-bold`}>
+            <Text
+              style={tw`text-center font-loaded-bold text-gray-900 dark:text-white`}
+            >
               {t('openAiChat.title')}
             </Text>
             <View style={tw`flex-grow`} />
@@ -475,8 +465,12 @@ export default function ChatMenu({
                     />
                   </Pressable>
                 </View>
-                <View style={tw`flex flex-grow flex-col gap-8`}>
-                  <Text style={tw`text-center font-loaded-bold text-lg`}>
+                <View
+                  style={tw`flex flex-grow flex-col gap-8 text-gray-900 dark:text-gray-50`}
+                >
+                  <Text
+                    style={tw`text-center font-loaded-bold text-lg text-gray-900 dark:text-gray-50`}
+                  >
                     {t('openAiChat.newChat')}
                   </Text>
                   <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
@@ -504,7 +498,7 @@ export default function ChatMenu({
                                 <Text
                                   style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
                                 >
-                                  {model}
+                                  {getGptChatModelName(model)}
                                 </Text>
                                 <View style={tw`flex-grow`} />
                                 <ChevronDownIcon
@@ -527,7 +521,7 @@ export default function ChatMenu({
                                     <Text
                                       style={tw`font-loaded-medium text-gray-900 dark:text-gray-50`}
                                     >
-                                      {allowedModel}
+                                      {getGptChatModelName(allowedModel)}
                                     </Text>
                                   </MenuOption>
                                 ))}
@@ -609,8 +603,8 @@ export default function ChatMenu({
 
                       <View>
                         <Pressable
-                          onPress={() => {
-                            newChatSubmit()
+                          onPress={async () => {
+                            await newChatSubmit()
                           }}
                           disabled={isNewChatDisabled}
                           style={tw`${clsx(
@@ -678,7 +672,9 @@ export default function ChatMenu({
                 </Pressable>
               </View>
               <View style={tw`flex flex-grow flex-col gap-8`}>
-                <Text style={tw`text-center font-loaded-bold text-lg`}>
+                <Text
+                  style={tw`text-center font-loaded-bold text-lg text-gray-900 dark:text-gray-50`}
+                >
                   {t('openAiChat.chatList')}
                 </Text>
                 <View style={tw`w-full sm:mx-auto sm:max-w-md`}>
@@ -693,7 +689,7 @@ export default function ChatMenu({
                         style={tw`${clsx(
                           currentChatRoomId === chat.id &&
                             'border-2 border-gray-900 dark:border-gray-50',
-                          'p-2 bg-gray-50 dark:bg-gray-800 flex flex-row items-start justify-start gap-2'
+                          'p-2 pr-8 bg-gray-50 dark:bg-gray-800 flex flex-row items-start justify-start gap-2 overflow-hidden'
                         )}`}
                       >
                         <ChatBubbleLeftIcon

@@ -11,19 +11,12 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { userState } from '@/store/user'
-import { auth, db, createFirestoreDataConverter } from '@/lib/firebase'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-} from 'firebase/firestore'
+import { auth, db } from '@/lib/firebase'
+import { orderBy } from 'firebase/firestore'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import { chatContentSchema } from '@/utils/form'
+import { chatContentSchema, getGptChatModelName } from '@/utils/form'
 import Toast from 'react-native-toast-message'
-import { fetchSkeetFunctions } from '@/lib/skeet'
+import { fetchSkeetFunctions } from '@/lib/skeet/functions'
 import { Image } from 'expo-image'
 import { blurhash } from '@/utils/placeholder'
 import { ChatRoom } from './ChatMenu'
@@ -40,6 +33,7 @@ import {
   genUserChatRoomMessagePath,
 } from '@/types/models'
 import { Timestamp } from '@skeet-framework/firestore'
+import { get, query } from '@/lib/skeet/firestore'
 
 type ChatMessage = {
   id: string
@@ -75,37 +69,41 @@ export default function ChatBox({
 
   const getChatRoom = useCallback(async () => {
     if (db && user.uid && currentChatRoomId) {
-      const docRef = doc(
-        db,
-        genUserChatRoomPath(user.uid),
-        currentChatRoomId
-      ).withConverter(createFirestoreDataConverter<UserChatRoom>())
-      const docSnap = await getDoc(docRef)
-      if (docSnap.exists()) {
-        const data = docSnap.data()
+      try {
+        const data = await get<UserChatRoom>(
+          db,
+          genUserChatRoomPath(user.uid),
+          currentChatRoomId
+        )
         if (data.title !== '') {
           setFirstMessage(false)
         }
-        setChatRoom({ id: docSnap.id, ...data } as ChatRoom)
-      } else {
-        console.log('No such document!')
+        setChatRoom(data as ChatRoom)
+      } catch (e) {
+        console.error(e)
       }
     }
   }, [currentChatRoomId, user.uid])
 
   useEffect(() => {
-    getChatRoom()
+    void (async () => {
+      try {
+        await getChatRoom()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [getChatRoom])
 
   const [isSending, setSending] = useState(false)
 
   const getUserChatRoomMessage = useCallback(async () => {
     if (db && user.uid && currentChatRoomId) {
-      const q = query(
-        collection(db, genUserChatRoomMessagePath(user.uid, currentChatRoomId)),
-        orderBy('createdAt', 'asc')
-      ).withConverter(createFirestoreDataConverter<UserChatRoomMessage>())
-      const querySnapshot = await getDocs(q)
+      const querySnapshot = await query<UserChatRoomMessage>(
+        db,
+        genUserChatRoomMessagePath(user.uid, currentChatRoomId),
+        [orderBy('createdAt', 'asc')]
+      )
       const messages: ChatMessage[] = []
       querySnapshot.forEach((doc) => {
         const data = doc.data()
@@ -120,7 +118,13 @@ export default function ChatBox({
   }, [currentChatRoomId, user.uid])
 
   useEffect(() => {
-    getUserChatRoomMessage()
+    void (async () => {
+      try {
+        await getUserChatRoomMessage()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
   }, [getUserChatRoomMessage])
 
   useEffect(() => {
@@ -236,7 +240,7 @@ export default function ChatBox({
           text2: t('errorTokenExpiredBody') ?? 'Please sign in again.',
         })
         if (auth) {
-          signOut(auth)
+          await signOut(auth)
         }
       } else {
         Toast.show({
@@ -297,7 +301,7 @@ export default function ChatBox({
                   setNewChatModalOpen(true)
                 }}
                 style={tw`${clsx(
-                  'flex flex-row items-center gap-4 justify-center w-full px-3 py-2 bg-gray-900 dark:bg-gray-600'
+                  'flex flex-row items-center gap-4 justify-center px-3 py-2 bg-gray-900 dark:bg-gray-600'
                 )}`}
               >
                 <PlusCircleIcon style={tw`${clsx('h-6 w-6 text-white')}`} />
@@ -331,7 +335,7 @@ export default function ChatBox({
                           />
                         </View>
                       )}
-                      {chatRoom?.model === 'gpt-4' && (
+                      {chatRoom?.model.includes('gpt-4') && (
                         <View style={tw`flex`}>
                           <Image
                             source={
@@ -354,8 +358,8 @@ export default function ChatBox({
                           <Text
                             style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
                           >
-                            {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
-                            {t('tokens')}
+                            {getGptChatModelName(chatRoom?.model)}:{' '}
+                            {chatRoom?.maxTokens} {t('tokens')}
                           </Text>
                         </View>
                         <Text
@@ -406,7 +410,7 @@ export default function ChatBox({
                           )}
                         {(chatMessage.role === 'assistant' ||
                           chatMessage.role === 'system') &&
-                          chatRoom?.model === 'gpt-4' && (
+                          chatRoom?.model.includes('gpt-4') && (
                             <View style={tw`flex`}>
                               <Image
                                 source={
@@ -454,8 +458,8 @@ export default function ChatBox({
                                   <Text
                                     style={tw`font-loaded-medium text-gray-500 dark:text-gray-400 text-sm`}
                                   >
-                                    {chatRoom?.model}: {chatRoom?.maxTokens}{' '}
-                                    {t('tokens')}
+                                    {getGptChatModelName(chatRoom?.model)}:{' '}
+                                    {chatRoom?.maxTokens} {t('tokens')}
                                   </Text>
                                 </View>
                               )}
@@ -525,8 +529,8 @@ export default function ChatBox({
                 onChangeText={setChatContent}
               />
               <Pressable
-                onPress={() => {
-                  chatMessageSubmit()
+                onPress={async () => {
+                  await chatMessageSubmit()
                 }}
                 disabled={isChatMessageDisabled}
                 style={tw`${clsx(
