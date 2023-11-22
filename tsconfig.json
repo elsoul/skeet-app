@@ -17,7 +17,8 @@
     "lib/**/*",
     "custom.d.ts",
     "App.tsx",
-    "tests/**/*"
+    "tests/**/*",
+    "metro.config.js"
   ],
   "exclude": ["node_modules", ".expo", "dist"]
 }
