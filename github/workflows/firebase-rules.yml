@@ -25,7 +25,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.SKEET_GCP_SA_KEY }}
       - name: Install firebase tools
-        run: npm i -g npm firebase-tools
+        run: npm i -g firebase-tools
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
       - name: Deploy rules to Firebase
