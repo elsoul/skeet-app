@@ -23,7 +23,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.SKEET_GCP_SA_KEY }}
       - name: Install yarn and firebase tools
-        run: npm i -g npm yarn firebase-tools
+        run: npm i -g yarn firebase-tools
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
       - name: Install dependencies
