@@ -88,6 +88,7 @@
     "@expo/metro-config": "0.7.1",
     "@expo/webpack-config": "18.0.1",
     "@skeet-framework/discord-utils": "^0.2.13",
+    "@skeet-framework/utils": "^1.2.3",
     "@svgr/webpack": "6.5.1",
     "@types/jest": "29.5.0",
     "@types/node": "18.17.17",

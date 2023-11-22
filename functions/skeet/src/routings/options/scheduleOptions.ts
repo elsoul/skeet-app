@@ -16,6 +16,21 @@ export const scheduleDefaultOption: ScheduleOptions = {
   minBackoffSeconds: 1,
   maxBackoffSeconds: 10,
   serviceAccount,
+  timeoutSeconds: 540,
+  labels: {
+    skeet: 'schedule',
+  },
+}
+
+export const schedulePrivateOption: ScheduleOptions = {
+  region,
+  schedule: 'every 1 hours',
+  timeZone: 'UTC',
+  retryCount: 3,
+  maxRetrySeconds: 60,
+  minBackoffSeconds: 1,
+  maxBackoffSeconds: 10,
+  serviceAccount,
   ingressSettings: 'ALLOW_INTERNAL_ONLY',
   vpcConnector,
   vpcConnectorEgressSettings: 'PRIVATE_RANGES_ONLY',

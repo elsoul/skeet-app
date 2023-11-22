@@ -2,7 +2,7 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .ts,.js --fix .",
-    "update:packages": "ncu -u && yarn",
+    "update:packages": "ncu -u --reject node-fetch && yarn",
     "dev": "nodemon",
     "fb:login": "npx ts-node -r tsconfig-paths/register --transpile-only src/lib/login.ts",
     "seed": "npx ts-node -r tsconfig-paths/register --transpile-only src/scripts/addVertexMessageSeed.ts",
@@ -17,7 +17,7 @@
     "open": "npx ts-node -r tsconfig-paths/register --transpile-only src/lib/openai/openAi.ts"
   },
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "main": "dist/index.js",
   "dependencies": {
@@ -28,17 +28,17 @@
     "firebase-functions": "4.5.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.11.0",
-    "@typescript-eslint/parser": "6.11.0",
-    "esbuild": "0.19.5",
-    "eslint": "8.53.0",
+    "@typescript-eslint/eslint-plugin": "6.12.0",
+    "@typescript-eslint/parser": "6.12.0",
+    "esbuild": "0.19.7",
+    "eslint": "8.54.0",
     "eslint-config-google": "0.14.0",
     "eslint-plugin-import": "2.29.0",
     "firebase": "10.6.0",
     "nodemon": "3.0.1",
-    "npm-check-updates": "16.14.6",
+    "npm-check-updates": "16.14.11",
     "prettier": "3.1.0",
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   },
   "private": true
 }
