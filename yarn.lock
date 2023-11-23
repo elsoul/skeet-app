@@ -8162,9 +8162,9 @@ ejs@^3.1.6, ejs@^3.1.7:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.535:
-  version "1.4.591"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.591.tgz#c3f27a29a8dbbd2ae1e22a367ae488bf222b3948"
-  integrity sha512-vLv/P7wwAPKQoY+CVMyyI6rsTp+A14KGtPXx92oz1FY41AAqa9l6Wkizcixg0LDuJgyeo8xgNN9+9hsnGp66UA==
+  version "1.4.592"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.592.tgz#1ffd49ba3da3da3077ea20014b066c910d50c913"
+  integrity sha512-D3NOkROIlF+d5ixnz7pAf3Lu/AuWpd6AYgI9O67GQXMXTcCP1gJQRotOq35eQy5Sb4hez33XH1YdTtILA7Udww==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -9333,10 +9333,10 @@ firebase-admin@11.10.1:
     "@google-cloud/firestore" "^6.6.0"
     "@google-cloud/storage" "^6.9.5"
 
-firebase-tools@12.7.0:
-  version "12.7.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-12.7.0.tgz#e28692a7cfb22b21d2492947d3a498d4722e5fc6"
-  integrity sha512-NBXYEbY9FE20BcEivxL0agXkehNTtcFhQmGGPPWrxntVgWOnbrzy4fh1xjZnQSRgZu4VpEWthXDM+oCkn6ouKQ==
+firebase-tools@12.9.1:
+  version "12.9.1"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-12.9.1.tgz#a24595566bb7c54027ebf3f07f6ff8c7b8807624"
+  integrity sha512-t/oTgGnGm3sLT3wR80B7hY6vdAs6rTlZMsmnZGsP+GeKtVzaB5KHEwLbkZuRXtqij9f35IfkQm2a4TKjKY6xUQ==
   dependencies:
     "@google-cloud/pubsub" "^3.0.1"
     abort-controller "^3.0.0"
@@ -15645,9 +15645,9 @@ rc@1.2.8, rc@^1.0.1, rc@^1.1.6, rc@^1.2.8, rc@~1.2.7:
     strip-json-comments "~2.0.1"
 
 re2@^1.17.7:
-  version "1.20.8"
-  resolved "https://registry.yarnpkg.com/re2/-/re2-1.20.8.tgz#128d00c029880c4adfbab0ade4d5d485cc72172c"
-  integrity sha512-5GArE3towC0ZyinRkkaZARZxlbX3K+z2REXSVltGSW+F/ID8SLrbh1okTXEcTFBp9zsAhKcGH1Vm+zJ2IwMb7Q==
+  version "1.20.9"
+  resolved "https://registry.yarnpkg.com/re2/-/re2-1.20.9.tgz#3e6e5b73cdd911cdbdfe5133cc6670600e33871b"
+  integrity sha512-ZYcPTFr5ha2xq3WQjBDTF9CWPSDK1z28MLh5UFRxc//7X8BNQ3A7yR7ITnP0jO346661ertdKVFqw1qoL3FMEQ==
   dependencies:
     install-artifact-from-github "^1.3.5"
     nan "^2.18.0"
