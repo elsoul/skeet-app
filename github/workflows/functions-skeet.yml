@@ -17,13 +17,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.18.0'
+          node-version: '20.3.1'
       - id: auth
         uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.SKEET_GCP_SA_KEY }}
       - name: Install yarn and firebase tools
-        run: npm i -g npm yarn firebase-tools
+        run: npm i -g yarn firebase-tools
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
       - name: Install dependencies

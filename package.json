@@ -1,6 +1,6 @@
 {
   "name": "skeet-app",
-  "version": "1.6.1",
+  "version": "1.6.3",
   "description": "Skeet Framework Boilerplate",
   "author": "ELSOUL LABO B.V.",
   "license": "Apache-2.0",
@@ -60,7 +60,7 @@
     "expo-image": "1.0.2",
     "expo-image-picker": "14.1.1",
     "expo-linking": "4.0.1",
-    "firebase": "9.17.2",
+    "firebase": "10.5.2",
     "framer-motion": "10.3.4",
     "i18next": "22.4.10",
     "react": "18.2.0",
@@ -119,5 +119,8 @@
     "ts-loader": "9.4.2",
     "tsconfig-paths": "4.1.2",
     "typescript": "4.9.4"
+  },
+  "resolutions": {
+    "@types/react": "~17.0.21"
   }
 }
