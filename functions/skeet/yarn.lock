@@ -947,10 +947,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@google-cloud/aiplatform@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/aiplatform/-/aiplatform-3.5.0.tgz#c1cdd3986f83a5ea4619fd8705ab674f493c16ce"
-  integrity sha512-K+4/B183J9mql8Nhx5sDDlcaTzp2A/nGvg+sgksDED6kS5FVTXfcIR/GUAGu2xan2IXIPDjj0UDD6DIgn5EXfw==
+"@google-cloud/aiplatform@3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/aiplatform/-/aiplatform-3.7.0.tgz#424b270f2a7a82074fe333c0da743d8b7561a045"
+  integrity sha512-ufCzposTr3CSn6JhH8j/ninGVKvj03vc9ymivzKbAoy0Z0j3QvTiMB5tSuk5OXjvEgKHCjwuFJNPxh9qFsxiow==
   dependencies:
     google-gax "^4.0.3"
     protobuf.js "^1.1.2"
@@ -1569,17 +1569,17 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@skeet-framework/ai@1.7.8":
-  version "1.7.8"
-  resolved "https://registry.yarnpkg.com/@skeet-framework/ai/-/ai-1.7.8.tgz#7183037909e7e61889c93b88394e89b4c6ac4036"
-  integrity sha512-yG2ZqLYZ4bPWsCaL9lPq3fhWuS1wA3YjGmcRAHqdh/ocGVikT9AbNH0pf8pifCWDXnyW1Jo/etbkoXrklVaGRg==
+"@skeet-framework/ai@1.7.9":
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/@skeet-framework/ai/-/ai-1.7.9.tgz#f343e576a3602832a86dee0a8cdf611392dd555e"
+  integrity sha512-1m4Dk6pXy1vZGqL2y82bfMbFQIYfZgo+K6GuPphSX3YX/0j2O53Dn2WwZ/h+4QoSCipNOmHqQbJH3IU4J8rqMA==
   dependencies:
-    "@google-cloud/aiplatform" "3.5.0"
+    "@google-cloud/aiplatform" "3.7.0"
     "@google-cloud/translate" "8.0.2"
     crypto-js "4.2.0"
     dotenv "16.3.1"
     node-fetch "2.6.9"
-    openai "4.16.1"
+    openai "4.19.1"
     pako "2.1.0"
 
 "@skeet-framework/firestore@2.4.2":
@@ -5942,10 +5942,10 @@ onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-openai@4.16.1:
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.16.1.tgz#6377682ad2af805affd1b401958fb6eb92a87d61"
-  integrity sha512-Gr+uqUN1ICSk6VhrX64E+zL7skjI1TgPr/XUN+ZQuNLLOvx15+XZulx/lSW4wFEAQzgjBDlMBbBeikguGIjiMg==
+openai@4.19.1:
+  version "4.19.1"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.19.1.tgz#229d6e994248966f255f6a5b849dcec28e3b3439"
+  integrity sha512-9TddzuZBn2xxhghGGTHLZ4EeNBGTLs3xVzh266NiSJvtUsCsZQ5yVV6H5NhnhyAkKK8uUiZOUUlUAk3HdV+4xg==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
