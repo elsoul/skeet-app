@@ -4,11 +4,11 @@ import { useDeviceContext } from 'twrnc'
 import tw from '@/lib/tailwind'
 import { useFonts } from 'expo-font'
 import {
-  Outfit_300Light,
-  Outfit_400Regular,
-  Outfit_500Medium,
-  Outfit_700Bold,
-} from '@expo-google-fonts/outfit'
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter'
 
 import AppLoading from '@/components/loading/AppLoading'
 import { Suspense } from 'react'
@@ -24,10 +24,10 @@ export default function App() {
   useDeviceContext(tw)
 
   const [fontsLoaded] = useFonts({
-    Outfit_300Light,
-    Outfit_400Regular,
-    Outfit_500Medium,
-    Outfit_700Bold,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_700Bold,
   })
 
   if (!fontsLoaded) {
