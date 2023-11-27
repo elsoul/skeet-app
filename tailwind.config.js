@@ -9,10 +9,10 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        'loaded-light': ['Outfit_300Light', ...defaultTheme.fontFamily.sans],
-        'loaded-normal': ['Outfit_400Regular', ...defaultTheme.fontFamily.sans],
-        'loaded-medium': ['Outfit_500Medium', ...defaultTheme.fontFamily.sans],
-        'loaded-bold': ['Outfit_700Bold', ...defaultTheme.fontFamily.sans],
+        'loaded-light': ['Inter_300Light', ...defaultTheme.fontFamily.sans],
+        'loaded-normal': ['Inter_400Regular', ...defaultTheme.fontFamily.sans],
+        'loaded-medium': ['Inter_500Medium', ...defaultTheme.fontFamily.sans],
+        'loaded-bold': ['Inter_700Bold', ...defaultTheme.fontFamily.sans],
       },
       height: {
         'screen-bar-xs': '82vh',
