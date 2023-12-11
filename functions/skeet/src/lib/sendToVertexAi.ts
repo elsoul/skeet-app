@@ -1,4 +1,4 @@
-import { VertexChatRoom, VertexExampleInput } from '@/models/vertexModels'
+import { VertexChatRoom, VertexExampleInput } from '@common/models/vertexModels'
 import { VertexAI } from '@skeet-framework/ai'
 import skeetOptions from '../../skeetOptions.json'
 import { db } from '@/index'

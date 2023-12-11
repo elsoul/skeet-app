@@ -15,6 +15,20 @@ export const firestoreDefaultOption = (document: string): DocumentOptions => ({
   maxInstances: 100,
   minInstances: 0,
   concurrency: 1,
+  timeoutSeconds: 540,
+  labels: {
+    skeet: 'firestore',
+  },
+})
+
+export const firestorePrivateOption = (document: string): DocumentOptions => ({
+  document,
+  region,
+  cpu: 1,
+  memory: '1GiB',
+  maxInstances: 100,
+  minInstances: 0,
+  concurrency: 1,
   serviceAccount,
   ingressSettings: 'ALLOW_INTERNAL_ONLY',
   vpcConnector,
@@ -24,3 +38,4 @@ export const firestoreDefaultOption = (document: string): DocumentOptions => ({
     skeet: 'firestore',
   },
 })
+

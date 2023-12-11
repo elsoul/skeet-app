@@ -5,14 +5,14 @@ import {
   VertexChatRoomMessageRole,
   genVertexChatRoomPath,
   genVertexChatRoomMessagePath,
-} from '@/models'
+} from '@common/models'
 import { getUserAuth } from '@/lib'
-import { TypedRequestBody } from '@/types/http'
+import { TypedRequestBody } from '@common/types/http'
 import { onRequest } from 'firebase-functions/v2/https'
 import { publicHttpOption } from '../options'
 import { sendToVertexAI, streamResponse } from '@/lib'
 import { add, get } from '@skeet-framework/firestore'
-import { AddVertexMessageParams } from '@/types/http/addVertexMessageParams'
+import { AddVertexMessageParams } from '@common/types/http/addVertexMessageParams'
 
 export const addVertexMessage = onRequest(
   publicHttpOption,

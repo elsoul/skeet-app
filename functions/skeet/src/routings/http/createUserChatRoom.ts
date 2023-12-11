@@ -1,11 +1,11 @@
 import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
-import { genUserChatRoomPath, UserChatRoom } from '@/models'
+import { genUserChatRoomPath, UserChatRoom } from '@common/models'
 import { add } from '@skeet-framework/firestore'
 import { publicHttpOption } from '@/routings/options'
-import { CreateUserChatRoomParams } from '@/types/http/createUserChatRoomParams'
+import { CreateUserChatRoomParams } from '@common/types/http/createUserChatRoomParams'
 import { getUserAuth } from '@/lib'
-import { TypedRequestBody } from '@/types/http'
+import { TypedRequestBody } from '@common/types/http'
 
 export const createUserChatRoom = onRequest(
   publicHttpOption,
@@ -21,8 +21,8 @@ export const createUserChatRoom = onRequest(
           req.body.temperature == 0
             ? 0
             : !req.body.temperature
-            ? 1
-            : req.body.temperature,
+              ? 1
+              : req.body.temperature,
         stream: req.body.stream || true,
       }
       const user = await getUserAuth(req)

@@ -1,7 +1,7 @@
 import { onMessagePublished } from 'firebase-functions/v2/pubsub'
 import { pubsubDefaultOption } from '@/routings/options'
 import { parsePubSubMessage } from '@/lib/pubsub'
-import { PubsubExampleParams } from '@/types/pubsub/pubsubExampleParams'
+import { PubsubExampleParams } from '@common/types/pubsub/pubsubExampleParams'
 
 export const pubsubTopic = 'pubsubExample'
 
@@ -19,5 +19,5 @@ export const pubsubExample = onMessagePublished(
     } catch (error) {
       console.error({ status: 'error', message: String(error) })
     }
-  }
+  },
 )
