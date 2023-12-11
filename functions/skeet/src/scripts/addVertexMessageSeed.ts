@@ -1,4 +1,4 @@
-import { VertexChatRoom, genVertexChatRoomPath } from '@/models'
+import { VertexChatRoom, genVertexChatRoomPath } from '@common/models'
 import { add, serverTimestamp } from '@skeet-framework/firestore'
 import admin from 'firebase-admin'
 import { dotenv } from '@skeet-framework/utils'

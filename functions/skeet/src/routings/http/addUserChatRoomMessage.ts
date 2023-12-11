@@ -3,16 +3,16 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { add, get, query, update } from '@skeet-framework/firestore'
 import { getUserAuth } from '@/lib'
 import { OpenAI, OpenAIOptions } from '@skeet-framework/ai'
-import { AddUserChatRoomMessageParams } from '@/types/http/addUserChatRoomMessageParams'
+import { AddUserChatRoomMessageParams } from '@common/types/http/addUserChatRoomMessageParams'
 import { publicHttpOption } from '@/routings/options'
 import {
   genUserChatRoomMessagePath,
   genUserChatRoomPath,
   UserChatRoom,
   UserChatRoomMessage,
-} from '@/models'
+} from '@common/models'
 import { defineSecret } from 'firebase-functions/params'
-import { TypedRequestBody } from '@/types/http'
+import { TypedRequestBody } from '@common/types/http'
 
 const chatGptOrg = defineSecret('CHAT_GPT_ORG')
 const chatGptKey = defineSecret('CHAT_GPT_KEY')

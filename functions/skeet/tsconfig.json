@@ -5,7 +5,6 @@
     "noUnusedLocals": true,
     "outDir": "dist",
     "target": "ESNext",
-    "rootDir": ".",
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": ".",
@@ -19,10 +18,23 @@
     "lib": ["esnext"],
     "sourceMap": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"],
+      "@common/*": ["../../common/*"]
     }
   },
   "compileOnSave": true,
-  "include": ["src/*", "src/**/*", "build.ts", "devBuild.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts", "scripts/*"]
+  "ts-node": {
+    "compilerOptions": {
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext"
+    }
+  },
+  "include": [
+    "src/*",
+    "src/**/*",
+    "build.ts",
+    "devBuild.ts",
+    "../../common/**/*" // commonディレクトリを含める
+  ],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -2,16 +2,16 @@ import { db } from '@/index'
 import { onRequest } from 'firebase-functions/v2/https'
 import { getUserAuth } from '@/lib'
 import { publicHttpOption } from '@/routings/options'
-import { AddStreamUserChatRoomMessageParams } from '@/types/http/addStreamUserChatRoomMessageParams'
+import { AddStreamUserChatRoomMessageParams } from '@common/types/http/addStreamUserChatRoomMessageParams'
 import { defineSecret } from 'firebase-functions/params'
 import {
   UserChatRoom,
   UserChatRoomMessage,
   genUserChatRoomPath,
   genUserChatRoomMessagePath,
-} from '@/models'
+} from '@common/models'
 import { OpenAI, OpenAIMessage } from '@skeet-framework/ai'
-import { TypedRequestBody } from '@/types/http'
+import { TypedRequestBody } from '@common/types/http'
 import { add, get, query, update } from '@skeet-framework/firestore'
 import { inspect } from 'util'
 
