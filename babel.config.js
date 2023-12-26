@@ -26,6 +26,7 @@ module.exports = function (api) {
             '@assets': ['./assets'],
             '@lib': ['./lib'],
             '@root': ['.'],
+            '@common': ['./common'],
           },
         },
       ],

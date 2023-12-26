@@ -14,7 +14,7 @@ import { auth, db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { signOut } from 'firebase/auth'
-import { User, genUserPath } from '@/types/models'
+import { User, genUserPath } from '@common/models'
 import { update } from '@/lib/skeet/firestore'
 
 export default function EditUserProfile() {
