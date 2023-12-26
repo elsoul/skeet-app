@@ -12,7 +12,7 @@ import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import useScreens from '@/hooks/useScreens'
 import { auth, db } from '@/lib/firebase'
 import { signOut, User } from 'firebase/auth'
-import { genUserPath, User as UserModel } from '@/types/models'
+import { genUserPath, User as UserModel } from '@common/models'
 import { get } from '@/lib/skeet/firestore'
 
 const Stack = createNativeStackNavigator()

@@ -7,7 +7,8 @@
       "@/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
       "@lib/*": ["lib/*"],
-      "@root/*": ["./*"]
+      "@root/*": ["./*"],
+      "@common/*": ["./common/*"]
     }
   },
   "include": [
@@ -18,7 +19,8 @@
     "custom.d.ts",
     "App.tsx",
     "tests/**/*",
-    "metro.config.js"
+    "metro.config.js",
+    "common/**/*"
   ],
   "exclude": ["node_modules", ".expo", "dist"]
 }

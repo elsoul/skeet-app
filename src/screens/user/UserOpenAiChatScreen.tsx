@@ -20,7 +20,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import Toast from 'react-native-toast-message'
-import { UserChatRoom, genUserChatRoomPath } from '@/types/models'
+import { UserChatRoom, genUserChatRoomPath } from '@common/models'
 import { query } from '@/lib/skeet/firestore'
 
 export default function UserOpenAiChatScreen() {

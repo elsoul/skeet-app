@@ -1,6 +1,6 @@
-import { AddUserChatRoomMessageParams } from '@/types/http/skeet/addUserChatRoomMessageParams'
+import { AddUserChatRoomMessageParams } from '@common/types/http/addUserChatRoomMessageParams'
 import { postFetch } from '../jest.setup'
-import { CreateUserChatRoomParams } from '@/types/http/skeet/createUserChatRoomParams'
+import { CreateUserChatRoomParams } from '@common/types/http/createUserChatRoomParams'
 
 let userChatRoomId = ''
 describe('getUserChatRoomMessages', () => {
