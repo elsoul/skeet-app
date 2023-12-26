@@ -75,6 +75,7 @@ export default function ChatBox({
           genUserChatRoomPath(user.uid),
           currentChatRoomId
         )
+        if (!data) throw new Error('Chat room not found.')
         if (data.title !== '') {
           setFirstMessage(false)
         }
