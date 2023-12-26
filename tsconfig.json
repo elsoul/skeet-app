@@ -20,7 +20,8 @@
     "App.tsx",
     "tests/**/*",
     "metro.config.js",
-    "common/**/*"
+    "common/**/*",
+    "babel.config.js"
   ],
   "exclude": ["node_modules", ".expo", "dist"]
 }
