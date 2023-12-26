@@ -32,6 +32,7 @@ config.resolver = {
     '@assets': path.resolve(__dirname, 'assets'),
     '@lib': path.resolve(__dirname, 'lib'),
     '@root': path.resolve(__dirname),
+    '@common': path.resolve(__dirname, 'common'),
   },
 }
 
