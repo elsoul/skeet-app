@@ -24,7 +24,7 @@
     "@skeet-framework/ai": "1.7.10",
     "@skeet-framework/firestore": "2.4.2",
     "@skeet-framework/utils": "1.2.3",
-    "firebase-admin": "12.0.0",
+    "firebase-admin": "11.10.1",
     "firebase-functions": "4.5.0"
   },
   "devDependencies": {
