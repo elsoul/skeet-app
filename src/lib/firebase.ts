@@ -4,13 +4,12 @@ import { initializeApp, getApp, getApps } from 'firebase/app'
 import { connectAuthEmulator, getAuth } from 'firebase/auth'
 import { getStorage, connectStorageEmulator } from 'firebase/storage'
 import {
-  DocumentData,
-  FirestoreDataConverter,
-  QueryDocumentSnapshot,
   connectFirestoreEmulator,
   initializeFirestore,
 } from 'firebase/firestore'
 import { Platform } from 'react-native'
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions'
+import skeetCloudConfig from '@root/skeet-cloud.config.json'
 
 export const firebaseApp = !getApps().length
   ? initializeApp(firebaseConfig)
@@ -64,3 +63,13 @@ export const analytics =
   firebaseApp
     ? getAnalytics(firebaseApp)
     : undefined
+
+const getFirebaseFunction = () => {
+  const firebaseFunction = getFunctions(firebaseApp)
+  firebaseFunction.region = skeetCloudConfig.app.region
+  if (process.env.NODE_ENV !== 'production') {
+    connectFunctionsEmulator(firebaseFunction, platformDevIP, 5001)
+  }
+  return firebaseFunction
+}
+export const functions = firebaseApp ? getFirebaseFunction() : undefined
