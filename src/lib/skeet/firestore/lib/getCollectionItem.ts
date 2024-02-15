@@ -25,13 +25,13 @@ export const getCollectionItem = async <T extends DocumentData>(
   db: Firestore,
   collectionPath: string,
   docId: string
-): Promise<T | null> => {
+): Promise<T> => {
   const dataRef = createDocRef<T>(db, collectionPath, docId)
   const docSnap = await getDoc(dataRef)
   if (!docSnap.exists()) {
-    return null
+    throw new Error('Document not found at path: ' + dataRef.path)
   }
   const data = { id: docSnap.id, ...docSnap.data() }
-  if (!data) return null
+  if (!data) throw new Error('Document data not found at path: ' + dataRef.path)
   return data
 }
