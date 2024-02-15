@@ -1,6 +1,13 @@
 {
   "name": "skeet-func",
   "version": "1.0.0",
+  "engines": {
+    "pnpm": "8.15.2",
+    "npm": "please_use_pnpm_instead",
+    "node": "20",
+    "version": "0.0.1"
+  },
+  "packageManager": "pnpm@8.15.2",
   "scripts": {
     "lint": "eslint --ext .ts,.js --fix .",
     "update:packages": "ncu -u && pnpm i",
@@ -14,9 +21,6 @@
     "deploy": "firebase deploy --only functions",
     "nodemon": "npx ts-node devBuild.ts && node ./dist/index.js",
     "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "20"
   },
   "main": "dist/index.js",
   "dependencies": {

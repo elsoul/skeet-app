@@ -5,6 +5,13 @@
   "author": "ELSOUL LABO B.V.",
   "license": "Apache-2.0",
   "private": false,
+  "engines": {
+    "pnpm": "8.15.2",
+    "npm": "please_use_pnpm_instead",
+    "node": "20",
+    "version": "0.0.1"
+  },
+  "packageManager": "pnpm@8.15.2",
   "scripts": {
     "ci:version": "pnpm publish -r",
     "format": "prettier --write --ignore-unknown .",
