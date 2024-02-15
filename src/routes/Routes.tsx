@@ -12,7 +12,7 @@ import skeetCloudConfig from '@root/skeet-cloud.config.json'
 import useScreens from '@/hooks/useScreens'
 import { auth, db } from '@/lib/firebase'
 import { signOut, User } from 'firebase/auth'
-import { genUserPath, User as UserModel } from '@/types/models'
+import { genUserPath, User as UserModel } from '@common/models'
 import { get } from '@/lib/skeet/firestore'
 
 const Stack = createNativeStackNavigator()
@@ -39,11 +39,10 @@ export default function Routes() {
           setUser(defaultUser)
         }
         try {
-          const { username, iconUrl } = await get<UserModel>(
-            db,
-            genUserPath(),
-            fbUser.uid
-          )
+          const data = await get<UserModel>(db, genUserPath(), fbUser.uid)
+          if (!data) throw new Error('User not found.')
+
+          const { username, iconUrl } = data
           setUser({
             uid: fbUser.uid,
             email: fbUser.email ?? '',

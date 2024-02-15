@@ -1,5 +1,5 @@
-import { AddUserChatRoomMessageParams } from '@/types/http/skeet/addUserChatRoomMessageParams'
-import { CreateUserChatRoomParams } from '@/types/http/skeet/createUserChatRoomParams'
+import { AddUserChatRoomMessageParams } from '@common/types/http/addUserChatRoomMessageParams'
+import { CreateUserChatRoomParams } from '@common/types/http/createUserChatRoomParams'
 import { postFetch } from '../jest.setup'
 
 let userChatRoomId = ''
