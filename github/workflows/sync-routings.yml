@@ -1,16 +1,12 @@
-name: FirebaseRules
+name: skeet-sync-routings
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'firestore.rules'
-      - 'firestore.indexes.json'
-      - 'storage.rules'
-      - '.github/workflows/firebase-rules.yml'
+  workflow_run:
+    workflows: ['SkeetFunc']
+    types:
+      - completed
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -20,6 +16,20 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           version: 8
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -30,8 +40,9 @@ jobs:
         with:
           credentials_json: ${{ secrets.SKEET_GCP_SA_KEY }}
       - name: Install firebase tools
-        run: pnpm i -g firebase-tools
+        run: pnpm i -g @skeet-framework/cli
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
-      - name: Deploy rules to Firebase
-        run: firebase deploy --only firestore:rules,storage
+      - name: Sync routings
+        run: |
+          skeet sync routings || exit 1

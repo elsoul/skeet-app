@@ -1,22 +1,14 @@
-name: WebApp
+name: SkeetFunc
 on:
   push:
     branches:
       - main
     paths:
-      - 'src/**'
-      - 'assets/**'
-      - 'lib/**'
-      - '.github/workflows/webapp.yml'
-      - 'package.json'
-      - 'firebase.json'
-      - '.firebaserc'
-      - 'app.json'
-      - 'metro.config.js'
-      - 'babel.config.js'
+      - 'functions/skeet/**'
+      - '.github/workflows/skeet-func.yml'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -26,7 +18,12 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           version: 8
-
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.11.0'
       - name: Get pnpm store directory
         shell: bash
         run: |
@@ -39,8 +36,9 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -53,8 +51,8 @@ jobs:
       - name: GitHub repository setting
         run: git config --global url."https://github.com".insteadOf ssh://git@github.com
       - name: Install dependencies
-        run: pnpm install --workspace-root
+        run: pnpm -F skeet-func install --frozen-lockfile
       - name: Build App
-        run: pnpm build
+        run: pnpm -F skeet-func build
       - name: Deploy to Firebase
-        run: firebase deploy --only hosting
+        run: firebase deploy --only functions:skeet

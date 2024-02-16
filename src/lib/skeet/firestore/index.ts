@@ -8,8 +8,6 @@ export {
   queryCollectionItems as query,
   updateCollectionItem as update,
   deleteCollectionItem as remove,
-  onSnapshotCollectionItem as onSnapshot,
-  onSnapshotCollectionItems as onSnapshotQuery,
 } from './lib'
 
 export { serverTimestamp } from 'firebase/firestore'

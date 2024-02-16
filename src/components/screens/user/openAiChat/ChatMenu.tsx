@@ -52,7 +52,7 @@ import { format } from 'date-fns'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
-import { UserChatRoom, genUserChatRoomPath } from '@common/models'
+import { UserChatRoom, genUserChatRoomPath } from '@/types/models'
 import { add, query } from '@/lib/skeet/firestore'
 
 export type ChatRoom = {
